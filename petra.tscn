@@ -15,13 +15,10 @@ _camera = NodePath("PetraCamera")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_e5gy7")
 
-[node name="PetraCamera" type="Camera3D" parent="." unique_id=418983480 node_paths=PackedStringArray("_petra", "_nearWallState", "_gunRay", "_gun", "_standLeanPivot", "_crouchPivot", "_crouchLeanPivot")]
+[node name="PetraCamera" type="Camera3D" parent="." unique_id=418983480 node_paths=PackedStringArray("_petra", "_standLeanPivot", "_crouchPivot", "_crouchLeanPivot")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6091348, 0)
 script = ExtResource("2_xka01")
 _petra = NodePath("..")
-_nearWallState = NodePath("GunNearWall")
-_gunRay = NodePath("GunRaycast")
-_gun = NodePath("../CanvasLayer/SubViewportContainer/PetraGunViewport/PetraGunCamera/Gun")
 _standLeanPivot = NodePath("../Lean")
 _crouchPivot = NodePath("../Crouch")
 _crouchLeanPivot = NodePath("../CrouchLean")
@@ -72,14 +69,16 @@ cull_mask = 1047554
 script = ExtResource("3_u0x2d")
 _mainCamera = NodePath("../../../../PetraCamera")
 
-[node name="Gun" parent="CanvasLayer/SubViewportContainer/PetraGunViewport/PetraGunCamera" unique_id=1161929350 node_paths=PackedStringArray("_camera", "_aimPivot", "_rightLeanPivot", "_leftLeanPivot") instance=ExtResource("7_21de0")]
+[node name="Gun" parent="CanvasLayer/SubViewportContainer/PetraGunViewport/PetraGunCamera" unique_id=1161929350 node_paths=PackedStringArray("_camera", "_aimPivot", "_rightLeanPivot", "_leftLeanPivot", "_nearWallState", "_gunRay") instance=ExtResource("7_21de0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1907138, -0.4, -0.57133055)
 _camera = NodePath("../../../../../PetraCamera")
 _aimPivot = NodePath("../../../../../PetraCamera/AimPos")
 _rightLeanPivot = NodePath("../../../../../PetraCamera/GunLeanRight")
 _leftLeanPivot = NodePath("../../../../../PetraCamera/GunLeanLeft")
+_nearWallState = NodePath("../../../../../PetraCamera/GunNearWall")
+_gunRay = NodePath("../../../../../PetraCamera/GunRaycast")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="CanvasLayer/SubViewportContainer/PetraGunViewport/PetraGunCamera" unique_id=696784865]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.29887104, 0.15208638, -0.4609769)
+[node name="OmniLight3D" type="OmniLight3D" parent="CanvasLayer/SubViewportContainer/PetraGunViewport/PetraGunCamera/Gun" unique_id=696784865]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.10815725, 0.55208635, 0.11035365)
 layers = 2
 omni_range = 0.928
