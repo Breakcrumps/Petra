@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://dufjhe7hfan0i"]
+
+[ext_resource type="PackedScene" uid="uid://c7bjxg15tjfyr" path="res://petra.tscn" id="1_ulcgi"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ulcgi"]
+size = Vector2(100, 100)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ulcgi"]
+size = Vector3(100, 1, 100)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ulcgi"]
+sky_top_color = Color(0.4342689, 0.85571015, 0.9001173, 1)
+sky_horizon_color = Color(0.930273, 0.4198781, 0.9076459, 1)
+
+[sub_resource type="Sky" id="Sky_nxogm"]
+sky_material = SubResource("ProceduralSkyMaterial_ulcgi")
+
+[sub_resource type="Environment" id="Environment_ulcgi"]
+background_mode = 2
+sky = SubResource("Sky_nxogm")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ulcgi"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ulcgi"]
+
+[node name="Scene" type="Node3D" unique_id=128823444]
+
+[node name="Petra" parent="." unique_id=96141022 instance=ExtResource("1_ulcgi")]
+
+[node name="Floor" type="StaticBody3D" parent="." unique_id=458627652]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=1171783728]
+mesh = SubResource("PlaneMesh_ulcgi")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=223896726]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_ulcgi")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=422967208]
+environment = SubResource("Environment_ulcgi")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1779265408]
+transform = Transform3D(1, 0, 0, 0, 0.6401768, 0.76822764, 0, -0.76822764, 0.6401768, 0, 0, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=360200302]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=1853905335]
+mesh = SubResource("CylinderMesh_ulcgi")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=314218639]
+shape = SubResource("CylinderShape3D_ulcgi")
