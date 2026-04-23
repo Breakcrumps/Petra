@@ -1,2 +1,2 @@
-- [x] Guns and fire.
+- [ ] Guns and fire.
 - [ ] Stamina and health.

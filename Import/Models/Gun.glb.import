@@ -3,17 +3,17 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://buapyyd8s64sv"
-path="res://.godot/imported/Bullet.glb-b6a03abd2602639cb84985fc5b02d670.scn"
+uid="uid://djsfgqmqlyaum"
+path="res://.godot/imported/Gun.glb-4c81f2648ac9e7ddf07eeeaa1e422f6c.scn"
 
 [deps]
 
-source_file="res://Bullet.glb"
-dest_files=["res://.godot/imported/Bullet.glb-b6a03abd2602639cb84985fc5b02d670.scn"]
+source_file="res://Import/Models/Gun.glb"
+dest_files=["res://.godot/imported/Gun.glb-4c81f2648ac9e7ddf07eeeaa1e422f6c.scn"]
 
 [params]
 
-nodes/root_type="Area3D"
+nodes/root_type=""
 nodes/root_name=""
 nodes/root_script=null
 nodes/apply_root_scale=true

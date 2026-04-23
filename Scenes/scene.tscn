@@ -1,12 +1,15 @@
 [gd_scene format=3 uid="uid://dufjhe7hfan0i"]
 
-[ext_resource type="PackedScene" uid="uid://c7bjxg15tjfyr" path="res://petra.tscn" id="1_ulcgi"]
+[ext_resource type="PackedScene" uid="uid://c7bjxg15tjfyr" path="res://Characters/Petra/petra.tscn" id="1_lrus4"]
+[ext_resource type="Material" uid="uid://dpejxb1obcdno" path="res://Resources/Materials/test.tres" id="2_8t5iv"]
+[ext_resource type="Material" uid="uid://ecsfgfu6x8jm" path="res://Resources/Materials/test_obj.tres" id="3_yp48q"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ulcgi"]
-size = Vector2(100, 100)
+material = ExtResource("2_8t5iv")
+size = Vector2(1000, 1000)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ulcgi"]
-size = Vector3(100, 1, 100)
+size = Vector3(1000, 1, 1000)
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ulcgi"]
 sky_top_color = Color(0.4342689, 0.85571015, 0.9001173, 1)
@@ -20,14 +23,17 @@ background_mode = 2
 sky = SubResource("Sky_nxogm")
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_ulcgi"]
+material = ExtResource("3_yp48q")
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_ulcgi"]
 
 [node name="Scene" type="Node3D" unique_id=128823444]
 
-[node name="Petra" parent="." unique_id=96141022 instance=ExtResource("1_ulcgi")]
+[node name="Petra" parent="." unique_id=96141022 instance=ExtResource("1_lrus4")]
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=458627652]
+collision_layer = 4
+collision_mask = 5
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=1171783728]
 mesh = SubResource("PlaneMesh_ulcgi")
@@ -44,6 +50,8 @@ transform = Transform3D(1, 0, 0, 0, 0.6401768, 0.76822764, 0, -0.76822764, 0.640
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=360200302]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+collision_layer = 4
+collision_mask = 5
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=1853905335]
 mesh = SubResource("CylinderMesh_ulcgi")

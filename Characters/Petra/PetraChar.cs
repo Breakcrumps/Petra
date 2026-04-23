@@ -1,6 +1,10 @@
 using Godot;
+using Petra.Characters.Petra.Components;
+using Petra.Types;
 
-internal sealed partial class Petra : CharacterBody3D, IDamageable
+namespace Petra.Characters.Petra;
+
+internal sealed partial class PetraChar : CharacterBody3D, IDamageable
 {
   internal enum PetraState { Idle, Running, Crouching }
   internal PetraState CurrentState { get; private set; }
@@ -10,12 +14,14 @@ internal sealed partial class Petra : CharacterBody3D, IDamageable
   [Export] private int _maxHealth = 100;
   private int _health;
   
-  [Export] private float _walkSpeed = 10f;
-  [Export] private float _runSpeed = 20f;
+  [Export] private float _walkSpeed = 7f;
+  [Export] private float _runSpeed = 13f;
   [Export] private float _crouchSpeed = 5f;
 
   [Export] private float _jumpVelocity = 10f;
   [Export] private float _gravity = 30f;
+
+  internal float TimeMoving { get; private set; }
 
   public override void _Ready()
     => _health = _maxHealth;
@@ -47,6 +53,11 @@ internal sealed partial class Petra : CharacterBody3D, IDamageable
 
     Velocity = new Vector3(floorVelocity.X, yVelocity, -floorVelocity.Y);
     MoveAndSlide();
+    
+    if (Velocity != Vector3.Zero)
+      TimeMoving += (float)delta;
+    else
+      TimeMoving = 0f;
   }
 
   private static PetraState GetPetraState() => (

@@ -1,4 +1,8 @@
 using Godot;
+using Petra.Characters;
+using Petra.Types;
+
+namespace Petra.Import.Inherited;
 
 internal sealed partial class Bullet : Area3D
 {

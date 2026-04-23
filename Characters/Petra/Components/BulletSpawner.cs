@@ -1,9 +1,13 @@
 using Godot;
+using Petra.Import.Inherited;
 
+namespace Petra.Characters.Petra.Components;
+
+[GlobalClass]
 internal sealed partial class BulletSpawner : Node3D
 {
   internal PetraCamera Camera = null!;
-  [Export] private float _bulletSpeed = 100f;
+  [Export] private float _bulletSpeed = 800f;
   [Export] private PackedScene _bulletScene = null!;
   [Export] private Gun _gun = null!;
 

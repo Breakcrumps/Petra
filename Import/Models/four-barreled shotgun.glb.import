@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://djsfgqmqlyaum"
-path="res://.godot/imported/Gun.glb-56fef5fb3b591decf56e7997ab66d0cb.scn"
+uid="uid://bus6c87lg3jn0"
+path="res://.godot/imported/four-barreled shotgun.glb-397a21a66cabdbf54147ae85e096d3b3.scn"
 
 [deps]
 
-source_file="res://Gun.glb"
-dest_files=["res://.godot/imported/Gun.glb-56fef5fb3b591decf56e7997ab66d0cb.scn"]
+source_file="res://Import/Models/four-barreled shotgun.glb"
+dest_files=["res://.godot/imported/four-barreled shotgun.glb-397a21a66cabdbf54147ae85e096d3b3.scn"]
 
 [params]
 

@@ -1,12 +1,12 @@
 [gd_scene format=3 uid="uid://dpj0rs6lwh13h"]
 
-[ext_resource type="PackedScene" uid="uid://buapyyd8s64sv" path="res://Bullet.glb" id="1_v8qja"]
-[ext_resource type="Script" uid="uid://b6244pohihnlh" path="res://Bullet.cs" id="2_t4vbm"]
+[ext_resource type="PackedScene" uid="uid://buapyyd8s64sv" path="res://Import/Models/Bullet.glb" id="1_v8qja"]
+[ext_resource type="Script" uid="uid://b6244pohihnlh" path="res://Import/Inherited/Bullet.cs" id="2_t4vbm"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_v8qja"]
 size = Vector3(0.29, 0.29, 0.481)
 
-[node name="Bullet" unique_id=969598993 instance=ExtResource("1_v8qja")]
+[node name="Bullet" unique_id=1263868485 instance=ExtResource("1_v8qja")]
 script = ExtResource("2_t4vbm")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." index="1" unique_id=1022917757]
