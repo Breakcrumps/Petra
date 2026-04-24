@@ -47,6 +47,7 @@ environment = SubResource("Environment_ulcgi")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1779265408]
 transform = Transform3D(1, 0, 0, 0, 0.6401768, 0.76822764, 0, -0.76822764, 0.6401768, 0, 0, 0)
+light_color = Color(1, 0.4509804, 1, 1)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=360200302]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

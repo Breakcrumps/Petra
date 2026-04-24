@@ -23,6 +23,8 @@ internal sealed partial class Gun : Node3D
   [Export] private Node3D _crouchPivot = null!;
   [Export] private Node3D _crouchRightLeanPivot = null!;
   [Export] private Node3D _crouchLeftLeanPivot = null!;
+  [Export] private Node3D _runPivot = null!;
+  [Export] private Node3D _heapAimPivot = null!;
   private Vector3 _initPos;
   
   [ExportGroup("Lean Orientation")]
@@ -38,6 +40,9 @@ internal sealed partial class Gun : Node3D
   private Vector3 _wallOffset;
   private Vector3 _bobOffset;
   private Vector3 _bobRotOffset;
+  private Vector3 _recoilPosOffset;
+  private Vector3 _recoilRotOffset;
+  private Vector3 _jumpRotOffset;
 
   [ExportGroup("Weapon Sway")]
   [Export] private float _swayAmount = .5f;
@@ -49,6 +54,10 @@ internal sealed partial class Gun : Node3D
   [Export] private float _leftRightAmp = .05f;
   [Export] private float _returnToPosSpeed = 15f;
   [Export] private float _aimSpeed = 20f;
+  [Export] private Vector3 _recoilPosOffsetTarget = new(0f, .1f, .3f);
+  [Export] private Vector3 _recoilRotOffsetTarget = new(Mathf.Pi / 8f, 0f, 0f);
+  [Export] private Vector3 _aimRecoilPosOffsetTarget = new(0f, .1f, .2f);
+  [Export] private Vector3 _aimRecoilRotOffsetTarget = new(Mathf.Pi / 8f, 0f, 0f);
   private Vector2 _mouseRelative;
 
   public override void _Ready()
@@ -65,17 +74,20 @@ internal sealed partial class Gun : Node3D
 
   public override void _PhysicsProcess(double delta)
   {
+    _camera.BobFreq = _petra.CurrentState == PetraChar.PetraState.Running ? _camera.RunBobFreq : _camera.WalkBobFreq;
+    
+    HandleFire(delta);
+    UpdateSwayOffsets(delta);
+    UpdateBobOffsets(delta);
+    UpdateJumpOffsets(delta);
+
     if (Input.IsActionPressed("Aim"))
-    {
-      HandleAimLean(delta);
-    }
+      HandleAimPos(delta);
     else
-    {
-      HandleLean(delta);
-    }
+      HandlePos(delta);
   }
 
-  private void HandleAimLean(double delta)
+  private void HandleAimPos(double delta)
   {
     Vector3 nextPos;
     Quaternion nextOrient;
@@ -89,26 +101,35 @@ internal sealed partial class Gun : Node3D
 
     if (leanDir != 0f)
     {
-      nextPos = leanDir > 0f ? _rightLeanAimPivot.Position : _leftLeanAimPivot.Position;
+      if (_gunRay.IsColliding() || _petra.CurrentState == PetraChar.PetraState.Running)
+        nextPos = _heapAimPivot.Position;
+      else
+        nextPos = leanDir > 0f ? _rightLeanAimPivot.Position : _leftLeanAimPivot.Position;
       float leanAngle = leanDir == 1f ? _leanRightAngle : _leanLeftAngle;
       nextOrient = Quaternion.FromEuler(new Vector3(0f, 0f, leanAngle));
     }
     else
     {
-      nextPos = _aimPivot.Position;
-      nextOrient = Quaternion.Identity;
+      if (_gunRay.IsColliding() || _petra.CurrentState == PetraChar.PetraState.Running)
+      {
+        nextPos = _heapAimPivot.Position;
+        nextOrient = _heapAimPivot.Quaternion;
+      }
+      else
+      {
+        nextPos = _aimPivot.Position;
+        nextOrient = Quaternion.Identity;
+      }
     }
 
-    UpdateBobOffsets(delta);
-    UpdateSwayOffsets(delta);
-
-    Vector3 newPos = nextPos + _bobOffset + _swayOffset;
+    nextPos += _bobOffset + _swayOffset + _recoilPosOffset;
+    nextOrient *= Quaternion.FromEuler(_recoilRotOffset) * Quaternion.FromEuler(_jumpRotOffset);
     
-    Position = Position.Lerp(to: newPos, weight: _aimSpeed * (float)delta);
+    Position = Position.Lerp(to: nextPos, weight: _aimSpeed * (float)delta);
     Quaternion = Quaternion.Slerp(to: nextOrient, weight: 10f * (float)delta);
   }
 
-  private void HandleLean(double delta)
+  private void HandlePos(double delta)
   {
     Vector3 nextPos;
     Quaternion nextRot;
@@ -143,16 +164,19 @@ internal sealed partial class Gun : Node3D
     }
     else
     {
-      nextPos = defaultPos;
-      nextRot = Quaternion.Identity;
+      nextPos = _petra.CurrentState == PetraChar.PetraState.Running ? _runPivot.Position : defaultPos;
+      nextRot = _petra.CurrentState == PetraChar.PetraState.Running ? _runPivot.Quaternion : Quaternion.Identity;
     }
 
     UpdateNearWallOffsets(delta);
-    UpdateSwayOffsets(delta);
-    UpdateBobOffsets(delta);
 
-    nextPos += _wallOffset + _swayOffset + _bobOffset;
-    nextRot *= Quaternion.FromEuler(_rotOffset) * Quaternion.FromEuler(_bobRotOffset);
+    nextPos += _wallOffset + _swayOffset + _bobOffset + _recoilPosOffset;
+    nextRot *= (
+      Quaternion.FromEuler(_rotOffset)
+      * Quaternion.FromEuler(_bobRotOffset)
+      * Quaternion.FromEuler(_recoilRotOffset)
+      * Quaternion.FromEuler(_jumpRotOffset)
+    );
 
     Position = Position.Lerp(to: nextPos, weight: _leanSpeed * (float)delta);
     Quaternion = Quaternion.Slerp(to: nextRot, weight: _leanSpeed * (float)delta);
@@ -208,6 +232,42 @@ internal sealed partial class Gun : Node3D
     {
       _bobOffset = _bobOffset.Lerp(to: Vector3.Zero, weight: _returnToPosSpeed * (float)delta);
       _bobRotOffset = _bobRotOffset.Lerp(to: Vector3.Zero, weight: _returnToPosSpeed * (float)delta);
+    }
+  }
+
+  private void UpdateJumpOffsets(double delta)
+  {
+    if (_petra.Velocity.Y != 0f)
+    {
+      float targetRotOffset = -Mathf.Clamp(_petra.Velocity.Y, -10f, 10f) * Mathf.Pi / 200f;
+      _jumpRotOffset = _jumpRotOffset.Lerp(to: _jumpRotOffset with { X = targetRotOffset }, weight: 50f * (float)delta);
+    }
+    else
+    {
+      _jumpRotOffset = _jumpRotOffset.Lerp(to: Vector3.Zero, weight: 10f * (float)delta);
+    }
+  }
+
+  private void HandleFire(double delta)
+  {
+    if (
+      Input.IsActionJustPressed("Fire")
+      && (Input.IsActionPressed("Aim")
+        || !_gunRay.IsColliding()
+        && _petra.CurrentState != PetraChar.PetraState.Running
+      )
+    )
+    {
+      _bulletSpawner.Fire();
+      _recoilPosOffset = Input.IsActionPressed("Aim") ? _aimRecoilPosOffsetTarget : _recoilPosOffsetTarget;
+      _recoilRotOffset = Input.IsActionPressed("Aim") ? _aimRecoilRotOffsetTarget : _recoilRotOffsetTarget;
+      _recoilPosOffset.X = Input.IsActionPressed("Aim") ? (GD.Randf() - .5f) / 12f : (GD.Randf() - .5f) / 4f;
+      _recoilRotOffset.Y = Input.IsActionPressed("Aim") ? (GD.Randf() - .5f) / 12f : (GD.Randf() - .5f) / 4f;
+    }
+    else
+    {
+      _recoilPosOffset = _recoilPosOffset.Lerp(to: Vector3.Zero, weight: 20f * (float)delta);
+      _recoilRotOffset = _recoilRotOffset.Lerp(to: Vector3.Zero, weight: 20f * (float)delta);
     }
   }
 }

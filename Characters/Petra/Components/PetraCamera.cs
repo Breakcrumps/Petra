@@ -19,16 +19,20 @@ internal sealed partial class PetraCamera : Camera3D
 
   [Export] private float _leanSpeed = 10f;
 
-  [Export] internal float BobFreq { get; private set; } = 5f;
+  [Export] internal float WalkBobFreq { get; private set; } = 5f;
+  [Export] internal float RunBobFreq { get; private set; } = 10f;
+  internal float BobFreq { get; set; }
   [Export] private float _bobAmp = .1f;
   private Vector3 _bobOffset;
   private Vector3 _posWithoutBob;
+
 
   public override void _Ready()
   {
     Input.MouseMode = Input.MouseModeEnum.Captured;
     _defaultPos = Position;
     _posWithoutBob = Position;
+    BobFreq = WalkBobFreq;
   }
 
   public override void _UnhandledInput(InputEvent @event)
@@ -76,13 +80,14 @@ internal sealed partial class PetraCamera : Camera3D
 
     if (leanDir != 0f)
     {
+      float initY = leanPos.Y;
       leanPos.X *= leanDir;
       leanPos = leanPos.Rotated(Vector3.Up, Rotation.Y);
       _leanRaycast.TargetPosition = leanPos - _leanRaycast.Position;
       _leanRaycast.ForceShapecastUpdate();
       if (_leanRaycast.IsColliding())
-        leanPos.X = (_leanRaycast.GetCollisionPoint(0) - GlobalPosition).X * .95f;
-      _posWithoutBob = _posWithoutBob.Lerp(to: leanPos, weight: _leanSpeed * (float)delta);
+        leanPos = (_leanRaycast.GetCollisionPoint(0) - GlobalPosition) * .95f;
+      _posWithoutBob = _posWithoutBob.Lerp(to: leanPos with { Y = initY }, weight: _leanSpeed * (float)delta);
     }
     else
     {

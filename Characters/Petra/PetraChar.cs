@@ -14,14 +14,17 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   [Export] private int _maxHealth = 100;
   private int _health;
   
-  [Export] private float _walkSpeed = 7f;
-  [Export] private float _runSpeed = 13f;
-  [Export] private float _crouchSpeed = 5f;
+  [Export] private float _walkSpeed = 5f;
+  [Export] private float _runSpeed = 9f;
+  [Export] private float _crouchSpeed = 3f;
 
   [Export] private float _jumpVelocity = 10f;
   [Export] private float _gravity = 30f;
 
   internal float TimeMoving { get; private set; }
+
+  [Export] private float _jumpBufferTime = .1f;
+  private float _jumpBufferCounter;
 
   public override void _Ready()
     => _health = _maxHealth;
@@ -48,25 +51,36 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
     if (!IsOnFloor())
       yVelocity -= _gravity * (float)delta;
 
-    if (IsOnFloor() && Input.IsActionJustPressed("Jump"))
+    if (Input.IsActionJustPressed("Jump"))
+      _jumpBufferCounter = _jumpBufferTime;
+    else
+      _jumpBufferCounter = Mathf.Max(_jumpBufferCounter - (float)delta, 0f);
+
+    if (_jumpBufferCounter > 0f && IsOnFloor())
+    {
       yVelocity = _jumpVelocity;
+      _jumpBufferCounter = 0f;
+    }
 
     Velocity = new Vector3(floorVelocity.X, yVelocity, -floorVelocity.Y);
     MoveAndSlide();
     
-    if (Velocity != Vector3.Zero)
+    if (IsOnFloor() && (Velocity.X, Velocity.Z) != (0f, 0f))
       TimeMoving += (float)delta;
     else
       TimeMoving = 0f;
   }
 
-  private static PetraState GetPetraState() => (
-    Input.IsActionPressed("Crouch")
-    ? PetraState.Crouching
-    : Input.IsActionPressed("Run")
-    ? PetraState.Running
-    : PetraState.Idle
-  );
+  private PetraState GetPetraState()
+  {
+    if (Input.IsActionPressed("Run") && Velocity != Vector3.Zero)
+      return PetraState.Running;
+    else if (Input.IsActionJustPressed("Crouch"))
+      return CurrentState == PetraState.Crouching ? PetraState.Idle : PetraState.Crouching;
+    else if (CurrentState == PetraState.Crouching)
+      return PetraState.Crouching;
+    return PetraState.Idle;
+  }
 
   public void TakeDamage(Attack attack)
   {

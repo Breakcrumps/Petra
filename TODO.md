@@ -1,2 +1,11 @@
-- [ ] Guns and fire.
+- [x] Guns and fire.
+- [x] Special gun modes: near wall can't shoot and aiming just pulls the gun down close ready to shoot, the same for running.
+- [x] Gun movement in jump.
+- [ ] Make crouching more logical to account for crouching mid-jump.
+- [ ] Far Cry shooting?
+- [ ] Destructables.
+- [x] Jump buffer.
+- [ ] Slide.
+- [ ] Bullet holes and muzzle flash.
 - [ ] Stamina and health.
+- [ ] Heap fire addon. Make the weapon tilt to hit the target in the distance dynamically.

@@ -11,13 +11,10 @@ internal sealed partial class BulletSpawner : Node3D
   [Export] private PackedScene _bulletScene = null!;
   [Export] private Gun _gun = null!;
 
-  public override void _PhysicsProcess(double delta)
+  internal void Fire()
   {
-    if (!Input.IsActionJustPressed("Fire"))
-      return;
-
     Bullet bullet = _bulletScene.Instantiate<Bullet>();
-    bullet.Direction = -Camera.Basis.Z;
+    bullet.Direction = -_gun.GlobalBasis.Z;
     bullet.Speed = _bulletSpeed;
     bullet.Damage = _gun.Damage;
     GetTree().CurrentScene.AddChild(bullet);

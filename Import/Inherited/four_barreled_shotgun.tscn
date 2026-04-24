@@ -9,22 +9,22 @@
 script = ExtResource("2_ngdaj")
 _bulletSpawner = NodePath("BulletSpawner")
 
-[node name="butt for barrel with cylinder" parent="." index="0" unique_id=1705913181]
+[node name="butt for barrel with cylinder" parent="." index="0" unique_id=248501170]
 layers = 2
 
-[node name="cylinder 20" parent="." index="1" unique_id=272999734]
+[node name="cylinder 20" parent="." index="1" unique_id=1103064900]
 layers = 2
 
-[node name="barrel with cylinder" parent="." index="2" unique_id=523691074]
+[node name="barrel with cylinder" parent="." index="2" unique_id=1621908519]
 layers = 2
 
-[node name="Zcope" parent="." index="3" unique_id=1585850053]
+[node name="Zcope" parent="." index="3" unique_id=872294128]
 layers = 2
 
-[node name="cylinder 20 backup1" parent="." index="4" unique_id=541026391]
+[node name="cylinder 20 backup1" parent="." index="4" unique_id=918608470]
 layers = 2
 
-[node name="cylinder 20 backup2" parent="." index="5" unique_id=736181195]
+[node name="cylinder 20 backup2" parent="." index="5" unique_id=1632609459]
 layers = 2
 
 [node name="BulletSpawner" type="Node3D" parent="." index="6" unique_id=2020229866 node_paths=PackedStringArray("_gun")]
