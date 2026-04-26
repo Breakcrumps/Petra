@@ -14,10 +14,10 @@ internal sealed partial class BulletSpawner : Node3D
   internal void Fire()
   {
     Bullet bullet = _bulletScene.Instantiate<Bullet>();
-    bullet.Direction = -_gun.GlobalBasis.Z;
-    bullet.Speed = _bulletSpeed;
-    bullet.Damage = _gun.Damage;
     GetTree().CurrentScene.AddChild(bullet);
     bullet.GlobalPosition = GlobalPosition + Camera.GlobalPosition;
+    bullet.GlobalTransform = bullet.GlobalTransform.LookingAt(bullet.GlobalPosition - _gun.GlobalBasis.Z);
+    bullet.Speed = _bulletSpeed;
+    bullet.Damage = _gun.Damage;
   }
 }

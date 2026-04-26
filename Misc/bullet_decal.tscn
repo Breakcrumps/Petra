@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://b5q8eoiogls53"]
+
+[ext_resource type="Texture2D" uid="uid://24bsi7bd3sdt" path="res://Import/Images/foni-papik-pro-ea48-p-kartinki-dirka-ot-puli-na-prozrachnom-fone-1.png" id="1_udoyd"]
+
+[node name="BulletDecal" type="Decal" unique_id=136938511]
+size = Vector3(0.2, 0.2, 0.2)
+texture_albedo = ExtResource("1_udoyd")

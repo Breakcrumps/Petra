@@ -10,24 +10,27 @@
 [sub_resource type="SphereShape3D" id="SphereShape3D_vmorc"]
 radius = 0.1
 
-[node name="Petra" type="CharacterBody3D" unique_id=96141022 node_paths=PackedStringArray("_camera")]
+[node name="Petra" type="CharacterBody3D" unique_id=96141022 node_paths=PackedStringArray("_camera", "_slideCast")]
 collision_mask = 4
 script = ExtResource("1_dcfmr")
 _camera = NodePath("PetraCamera")
+_slideCast = NodePath("SlideCast")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=888296012]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_e5gy7")
 
-[node name="PetraCamera" type="Camera3D" parent="." unique_id=418983480 node_paths=PackedStringArray("_petra", "_leanRaycast", "_standLeanPivot", "_crouchPivot", "_crouchLeanPivot")]
+[node name="PetraCamera" type="Camera3D" parent="." unique_id=418983480 node_paths=PackedStringArray("_petra", "_gun", "_leanRaycast", "_standLeanPivot", "_crouchPivot", "_crouchLeanPivot", "_slideLeanPivot")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6091348, 0)
 fov = 60.0
 script = ExtResource("2_xka01")
 _petra = NodePath("..")
+_gun = NodePath("../CanvasLayer/SubViewportContainer/PetraGunViewport/PetraGunCamera/Gun")
 _leanRaycast = NodePath("../LeanCast")
 _standLeanPivot = NodePath("../Lean")
 _crouchPivot = NodePath("../Crouch")
 _crouchLeanPivot = NodePath("../CrouchLean")
+_slideLeanPivot = NodePath("../Slide")
 
 [node name="GunLeanRight" type="Node3D" parent="PetraCamera" unique_id=2054210899]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.200896, -0.34000003, -0.75)
@@ -57,10 +60,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18103135, -0.40999997, -0.5
 transform = Transform3D(1, 0, 0, 0, -0.56111586, -0.82773733, 0, 0.82773733, -0.56111586, 0.4801528, -0.08312583, -0.20461178)
 
 [node name="GunRun" type="Node3D" parent="PetraCamera" unique_id=2047722094]
-transform = Transform3D(0.16000137, -0.11030678, 0.98093426, 0.0177576, 0.9938976, 0.108868055, -0.9869571, 0, 0.16098376, -0.081998944, -0.41241443, -0.5652871)
+transform = Transform3D(0.16000137, -0.11030678, 0.98093426, 0.0177576, 0.9938976, 0.108868055, -0.9869571, 0, 0.16098376, -0.006445408, -0.41241443, -0.5652871)
+
+[node name="GunBackRun" type="Node3D" parent="PetraCamera" unique_id=904650628]
+transform = Transform3D(0.43779123, -0.10562161, 0.8928509, 0.017757598, 0.9938977, 0.10886804, -0.8989012, -0.031806596, 0.43699527, -0.006, -0.412, -0.622)
 
 [node name="GunHeapAim" type="Node3D" parent="PetraCamera" unique_id=527919832]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5767888, -0.5083715)
+
+[node name="GunSlide" type="Node3D" parent="PetraCamera" unique_id=680188914]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, -0.40388823, -0.37313437)
 
 [node name="GunRaycast" type="RayCast3D" parent="PetraCamera" unique_id=147648016]
 target_position = Vector3(0, 0, -1)
@@ -71,6 +80,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.609, 0)
 shape = SubResource("SphereShape3D_vmorc")
 collision_mask = 4
 
+[node name="SlideCast" type="RayCast3D" parent="." unique_id=1225813807]
+collision_mask = 4
+
 [node name="Lean" type="Node3D" parent="." unique_id=866703412]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5652243, 1.5232453, 0)
 
@@ -79,6 +91,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.652, 0.933, 0)
 
 [node name="Crouch" type="Node3D" parent="." unique_id=1603294396]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="Slide" type="Node3D" parent="." unique_id=1843441467]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2762096, 0)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=167758512]
 
@@ -102,7 +117,7 @@ cull_mask = 1047554
 script = ExtResource("3_u0x2d")
 _mainCamera = NodePath("../../../../PetraCamera")
 
-[node name="Gun" parent="CanvasLayer/SubViewportContainer/PetraGunViewport/PetraGunCamera" unique_id=38176796 node_paths=PackedStringArray("_petra", "_camera", "_rightLeanPivot", "_leftLeanPivot", "_aimPivot", "_rightLeanAimPivot", "_leftLeanAimPivot", "_crouchPivot", "_crouchRightLeanPivot", "_crouchLeftLeanPivot", "_runPivot", "_heapAimPivot", "_nearWallState", "_gunRay") instance=ExtResource("7_21de0")]
+[node name="Gun" parent="CanvasLayer/SubViewportContainer/PetraGunViewport/PetraGunCamera" unique_id=38176796 node_paths=PackedStringArray("_petra", "_camera", "_rightLeanPivot", "_leftLeanPivot", "_aimPivot", "_rightLeanAimPivot", "_leftLeanAimPivot", "_crouchPivot", "_crouchRightLeanPivot", "_crouchLeftLeanPivot", "_runPivot", "_backRunPivot", "_heapAimPivot", "_slidePivot", "_nearWallState", "_gunRay") instance=ExtResource("7_21de0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18306011, -0.35110945, -0.58030695)
 _petra = NodePath("../../../../..")
 _camera = NodePath("../../../../../PetraCamera")
@@ -115,7 +130,9 @@ _crouchPivot = NodePath("../../../../../PetraCamera/GunCrouch")
 _crouchRightLeanPivot = NodePath("../../../../../PetraCamera/GunCrouchLeanRight")
 _crouchLeftLeanPivot = NodePath("../../../../../PetraCamera/GunCrouchLeanLeft")
 _runPivot = NodePath("../../../../../PetraCamera/GunRun")
+_backRunPivot = NodePath("../../../../../PetraCamera/GunBackRun")
 _heapAimPivot = NodePath("../../../../../PetraCamera/GunHeapAim")
+_slidePivot = NodePath("../../../../../PetraCamera/GunSlide")
 _nearWallState = NodePath("../../../../../PetraCamera/GunNearWall")
 _gunRay = NodePath("../../../../../PetraCamera/GunRaycast")
 

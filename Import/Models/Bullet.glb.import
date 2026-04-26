@@ -13,7 +13,7 @@ dest_files=["res://.godot/imported/Bullet.glb-acdc2ffdcbfb653c062fd8251fe9ceb2.s
 
 [params]
 
-nodes/root_type="Area3D"
+nodes/root_type="res://Import/Inherited/Bullet.cs"
 nodes/root_name=""
 nodes/root_script=null
 nodes/apply_root_scale=true

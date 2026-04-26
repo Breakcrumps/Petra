@@ -15,6 +15,6 @@ layers = 2
 [node name="BulletSpawner" type="Node3D" parent="." index="1" unique_id=841923425 node_paths=PackedStringArray("_gun")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15040855, -0.5375972)
 script = ExtResource("3_8iju2")
-_bulletSpeed = 10.0
+_bulletSpeed = 360.0
 _bulletScene = ExtResource("4_7vd5q")
 _gun = NodePath("..")

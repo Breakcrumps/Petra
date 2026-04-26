@@ -6,10 +6,11 @@ namespace Petra.Characters.Petra;
 
 internal sealed partial class PetraChar : CharacterBody3D, IDamageable
 {
-  internal enum PetraState { Idle, Running, Crouching }
+  internal enum PetraState { Idle, Running, Crouching, Sliding }
   internal PetraState CurrentState { get; private set; }
 
   [Export] private PetraCamera _camera = null!;
+  [Export] private RayCast3D _slideCast = null!;
   
   [Export] private int _maxHealth = 100;
   private int _health;
@@ -26,13 +27,26 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   [Export] private float _jumpBufferTime = .1f;
   private float _jumpBufferCounter;
 
+  [Export] private float _slideTime = 1f;
+  [Export] private float _slideSpeed = 7f;
+  private Vector3 _slideDirection;
+  private float _slideTimer;
+
   public override void _Ready()
     => _health = _maxHealth;
   
   public override void _PhysicsProcess(double delta)
   {
-    CurrentState = GetPetraState();
-    
+    CurrentState = HandleState();
+
+    if (CurrentState != PetraState.Sliding)
+      HandleMovement(delta);
+    else
+      HandleSlide(delta);
+  }
+
+  private void HandleMovement(double delta)
+  {
     float speed = CurrentState switch
     {
       PetraState.Idle => _walkSpeed,
@@ -71,15 +85,76 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
       TimeMoving = 0f;
   }
 
-  private PetraState GetPetraState()
+  private void HandleSlide(double delta)
+  {
+    if (_slideCast.IsColliding())
+    {
+      CurrentState = PetraState.Crouching;
+      return;
+    }
+    
+    Velocity = _slideDirection * _slideSpeed;
+    MoveAndSlide();
+
+    _slideTimer -= (float)delta;
+
+    if (_slideTimer <= 0f)
+      CurrentState = PetraState.Crouching;
+  }
+
+  private PetraState HandleState() => CurrentState switch
+  {
+    PetraState.Idle => HandleIdleTransitions(),
+    PetraState.Running => HandleRunningTransitions(),
+    PetraState.Crouching => HandleCrouchTransitions(),
+    PetraState.Sliding => HandleSlideTransitions(),
+    _ => PetraState.Idle
+  };
+
+  private PetraState HandleIdleTransitions()
   {
     if (Input.IsActionPressed("Run") && Velocity != Vector3.Zero)
       return PetraState.Running;
     else if (Input.IsActionJustPressed("Crouch"))
-      return CurrentState == PetraState.Crouching ? PetraState.Idle : PetraState.Crouching;
-    else if (CurrentState == PetraState.Crouching)
       return PetraState.Crouching;
     return PetraState.Idle;
+  }
+
+
+  private PetraState HandleCrouchTransitions()
+  {
+    if (Input.IsActionPressed("Run") && Velocity != Vector3.Zero)
+      return PetraState.Running;
+    else if (Input.IsActionJustPressed("Crouch"))
+      return PetraState.Idle;
+    return PetraState.Crouching;
+  }
+
+
+  private PetraState HandleRunningTransitions()
+  {
+    if (Input.IsActionJustPressed("Crouch"))
+      return Input.IsActionPressed("Up") ? InitSlide() : PetraState.Crouching;
+    if (!Input.IsActionPressed("Run"))
+      return PetraState.Idle;
+    return PetraState.Running;
+  }
+
+  private static PetraState HandleSlideTransitions()
+  {
+    if (!Input.IsActionPressed("Up"))
+      return PetraState.Crouching;
+    else if (Input.IsActionJustPressed("Jump"))
+      return PetraState.Idle;
+    return PetraState.Sliding;
+  }
+
+  private PetraState InitSlide()
+  {
+    _slideDirection = Velocity.Normalized() with { Y = 0f };
+    _slideCast.TargetPosition = _slideDirection;
+    _slideTimer = _slideTime;
+    return PetraState.Sliding;
   }
 
   public void TakeDamage(Attack attack)

@@ -1,36 +1,50 @@
 using Godot;
+using Godot.Collections;
 using Petra.Characters;
 using Petra.Types;
 
 namespace Petra.Import.Inherited;
 
-internal sealed partial class Bullet : Area3D
+[GlobalClass]
+internal sealed partial class Bullet : Node3D
 {
+  [Export] private PackedScene _decalScene = null!;
   [Export] private float _secsToLive = 3f;
   private float _secsLived;
 
   internal int Damage { private get; set; }
-
   internal float Speed { private get; set; }
-  internal Vector3 Direction { private get; set; }
-
-  public override void _Ready()
-  {
-    BodyEntered += TryDamageBody;
-    GlobalTransform = GlobalTransform.LookingAt(GlobalPosition + Direction);
-  }
-
-  private void TryDamageBody(Node3D body)
-  {
-    if (body is IDamageable damageable)
-      damageable.TakeDamage(new Attack { Damage = Damage });
-
-    QueueFree();
-  }
 
   public override void _PhysicsProcess(double delta)
   {
-    GlobalPosition += Direction * Speed * (float)delta;
+    Vector3 nextPos = GlobalPosition - Basis.Z * Speed * (float)delta;
+
+    PhysicsDirectSpaceState3D spaceState = GetWorld3D().DirectSpaceState;
+    var query = PhysicsRayQueryParameters3D.Create(GlobalPosition, nextPos);
+    Dictionary result = spaceState.IntersectRay(query);
+
+    if (result.Count > 0)
+    {
+      Decal bulletHole = _decalScene.Instantiate<Decal>();
+      GetTree().CurrentScene.AddChild(bulletHole);
+      bulletHole.GlobalPosition = result["position"].AsVector3();
+      Vector3 normal = result["normal"].AsVector3();
+      Vector3 upVector = Mathf.Abs(normal.Dot(Vector3.Up)) > 0.99f 
+        ? Vector3.Forward 
+        : Vector3.Up;
+      bulletHole.LookAt(bulletHole.GlobalPosition + normal, upVector);
+      bulletHole.RotateObjectLocal(Vector3.Right, -Mathf.Pi / 2f);
+
+      if ((GodotObject)result["collider"] is IDamageable damageable)
+        damageable.TakeDamage(new Attack { Damage = Damage });
+
+      QueueFree();
+      return;
+    }
+    else
+    {
+      GlobalPosition = nextPos;
+    }
     
     _secsLived += (float)delta;
 

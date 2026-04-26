@@ -5,7 +5,10 @@
 - [ ] Far Cry shooting?
 - [ ] Destructables.
 - [x] Jump buffer.
-- [ ] Slide.
-- [ ] Bullet holes and muzzle flash.
+- [x] Slide.
+- [x] Bullet holes.
+- [ ] Muzzle flash.
+- [x] Shooting delay.
+- [x] FOV change when aiming.
 - [ ] Stamina and health.
 - [ ] Heap fire addon. Make the weapon tilt to hit the target in the distance dynamically.

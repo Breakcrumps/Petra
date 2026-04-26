@@ -2,14 +2,10 @@
 
 [ext_resource type="PackedScene" uid="uid://buapyyd8s64sv" path="res://Import/Models/Bullet.glb" id="1_v8qja"]
 [ext_resource type="Script" uid="uid://b6244pohihnlh" path="res://Import/Inherited/Bullet.cs" id="2_t4vbm"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_v8qja"]
-size = Vector3(0.047170408, 0.053884275, 0.080760255)
+[ext_resource type="PackedScene" uid="uid://b5q8eoiogls53" path="res://Misc/bullet_decal.tscn" id="3_h7smu"]
 
 [node name="Bullet" unique_id=1263868485 instance=ExtResource("1_v8qja")]
 collision_layer = 8
 collision_mask = 6
 script = ExtResource("2_t4vbm")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." index="1" unique_id=1022917757]
-shape = SubResource("BoxShape3D_v8qja")
+_decalScene = ExtResource("3_h7smu")

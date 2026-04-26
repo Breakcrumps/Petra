@@ -1,4 +1,5 @@
 using Godot;
+using Petra.Import.Inherited;
 
 namespace Petra.Characters.Petra.Components;
 
@@ -6,13 +7,17 @@ namespace Petra.Characters.Petra.Components;
 internal sealed partial class PetraCamera : Camera3D
 {
   [Export] private PetraChar _petra = null!;
-
+  [Export] private Gun _gun = null!;
   [Export] private ShapeCast3D _leanRaycast = null!;
 
   [Export] private Node3D _standLeanPivot = null!;
   [Export] private Node3D _crouchPivot = null!;
   [Export] private Node3D _crouchLeanPivot = null!;
+  [Export] private Node3D _slideLeanPivot = null!;
   private Vector3 _defaultPos;
+
+  [Export] private float _aimFov = 35f;
+  private float _defaultFov;
 
   [Export] private float _mouseSensitivity = .003f;
   [Export] private float _angleLimit = Mathf.Pi / 3f;
@@ -26,13 +31,13 @@ internal sealed partial class PetraCamera : Camera3D
   private Vector3 _bobOffset;
   private Vector3 _posWithoutBob;
 
-
   public override void _Ready()
   {
     Input.MouseMode = Input.MouseModeEnum.Captured;
     _defaultPos = Position;
     _posWithoutBob = Position;
     BobFreq = WalkBobFreq;
+    _defaultFov = Fov;
   }
 
   public override void _UnhandledInput(InputEvent @event)
@@ -53,11 +58,14 @@ internal sealed partial class PetraCamera : Camera3D
   {
     switch (_petra.CurrentState)
     {
+      case PetraChar.PetraState.Sliding:
+        Position = Position.Lerp(to: _slideLeanPivot.Position, weight: 10f * (float)delta);
+        return;
       case PetraChar.PetraState.Crouching:
-        HandleLeanPos(_crouchPivot.Position, _crouchLeanPivot.Position, delta);
+        HandleLeanPos(_crouchPivot.Position, _crouchLeanPivot.Position);
         break;
       default:
-        HandleLeanPos(_defaultPos, _standLeanPivot.Position, delta);
+        HandleLeanPos(_defaultPos, _standLeanPivot.Position);
         break;
     }
 
@@ -66,10 +74,12 @@ internal sealed partial class PetraCamera : Camera3D
     else
       _bobOffset = _bobOffset.Lerp(to: Vector3.Zero, weight: 10f * (float)delta);
 
-    Position = _posWithoutBob + _bobOffset;
+    Position = Position.Lerp(_posWithoutBob + _bobOffset, 10f * (float)delta);
+
+    Fov = Mathf.Lerp(from: Fov, to: _gun.InAim ? _aimFov : _defaultFov, weight: 15f * (float)delta);
   }
 
-  private void HandleLeanPos(Vector3 defaultPos, Vector3 leanPos, double delta)
+  private void HandleLeanPos(Vector3 defaultPos, Vector3 leanPos)
   {
     float leanDir = 0f;
 
@@ -87,11 +97,11 @@ internal sealed partial class PetraCamera : Camera3D
       _leanRaycast.ForceShapecastUpdate();
       if (_leanRaycast.IsColliding())
         leanPos = (_leanRaycast.GetCollisionPoint(0) - GlobalPosition) * .95f;
-      _posWithoutBob = _posWithoutBob.Lerp(to: leanPos with { Y = initY }, weight: _leanSpeed * (float)delta);
+      _posWithoutBob = leanPos with { Y = initY };
     }
     else
     {
-      _posWithoutBob = _posWithoutBob.Lerp(to: defaultPos, weight: _leanSpeed * (float)delta);
+      _posWithoutBob = defaultPos;
     }
   }
 }

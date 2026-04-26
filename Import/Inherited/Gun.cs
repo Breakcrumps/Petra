@@ -4,9 +4,12 @@ using Petra.Characters.Petra.Components;
 
 namespace Petra.Import.Inherited;
 
+[GlobalClass]
 internal sealed partial class Gun : Node3D
 {
   [Export] internal int Damage { get; private set; } = 50;
+  [Export] private float _delayTime = .075f;
+  private float _delayTimer;
 
   [Export] private BulletSpawner _bulletSpawner = null!;
 
@@ -24,7 +27,9 @@ internal sealed partial class Gun : Node3D
   [Export] private Node3D _crouchRightLeanPivot = null!;
   [Export] private Node3D _crouchLeftLeanPivot = null!;
   [Export] private Node3D _runPivot = null!;
+  [Export] private Node3D _backRunPivot = null!;
   [Export] private Node3D _heapAimPivot = null!;
+  [Export] private Node3D _slidePivot = null!;
   private Vector3 _initPos;
   
   [ExportGroup("Lean Orientation")]
@@ -56,9 +61,11 @@ internal sealed partial class Gun : Node3D
   [Export] private float _aimSpeed = 20f;
   [Export] private Vector3 _recoilPosOffsetTarget = new(0f, .1f, .3f);
   [Export] private Vector3 _recoilRotOffsetTarget = new(Mathf.Pi / 8f, 0f, 0f);
-  [Export] private Vector3 _aimRecoilPosOffsetTarget = new(0f, .1f, .2f);
+  [Export] private Vector3 _aimRecoilPosOffsetTarget = new(0f, .01f, .2f);
   [Export] private Vector3 _aimRecoilRotOffsetTarget = new(Mathf.Pi / 8f, 0f, 0f);
   private Vector2 _mouseRelative;
+
+  internal bool InAim { get; private set; }
 
   public override void _Ready()
   {
@@ -74,12 +81,20 @@ internal sealed partial class Gun : Node3D
 
   public override void _PhysicsProcess(double delta)
   {
+    if (_petra.CurrentState == PetraChar.PetraState.Sliding)
+    {
+      Position = Position.Lerp(to: _slidePivot.Position, weight: 10f * (float)delta);
+      return;
+    }
+    
     _camera.BobFreq = _petra.CurrentState == PetraChar.PetraState.Running ? _camera.RunBobFreq : _camera.WalkBobFreq;
     
     HandleFire(delta);
     UpdateSwayOffsets(delta);
     UpdateBobOffsets(delta);
     UpdateJumpOffsets(delta);
+
+    InAim = false;
 
     if (Input.IsActionPressed("Aim"))
       HandleAimPos(delta);
@@ -102,9 +117,14 @@ internal sealed partial class Gun : Node3D
     if (leanDir != 0f)
     {
       if (_gunRay.IsColliding() || _petra.CurrentState == PetraChar.PetraState.Running)
+      {
         nextPos = _heapAimPivot.Position;
+      }
       else
+      {
         nextPos = leanDir > 0f ? _rightLeanAimPivot.Position : _leftLeanAimPivot.Position;
+        InAim = true;
+      }
       float leanAngle = leanDir == 1f ? _leanRightAngle : _leanLeftAngle;
       nextOrient = Quaternion.FromEuler(new Vector3(0f, 0f, leanAngle));
     }
@@ -117,6 +137,7 @@ internal sealed partial class Gun : Node3D
       }
       else
       {
+        InAim = true;
         nextPos = _aimPivot.Position;
         nextOrient = Quaternion.Identity;
       }
@@ -164,8 +185,16 @@ internal sealed partial class Gun : Node3D
     }
     else
     {
-      nextPos = _petra.CurrentState == PetraChar.PetraState.Running ? _runPivot.Position : defaultPos;
-      nextRot = _petra.CurrentState == PetraChar.PetraState.Running ? _runPivot.Quaternion : Quaternion.Identity;
+      if (_petra.CurrentState == PetraChar.PetraState.Running)
+      {
+        nextPos = Input.IsActionPressed("Down") ? _backRunPivot.Position : _runPivot.Position;
+        nextRot = Input.IsActionPressed("Down") ? _backRunPivot.Quaternion : _runPivot.Quaternion;
+      }
+      else
+      {
+        nextPos = defaultPos;
+        nextRot = Quaternion.Identity;
+      }
     }
 
     UpdateNearWallOffsets(delta);
@@ -256,6 +285,7 @@ internal sealed partial class Gun : Node3D
         || !_gunRay.IsColliding()
         && _petra.CurrentState != PetraChar.PetraState.Running
       )
+      && _delayTimer == 0f
     )
     {
       _bulletSpawner.Fire();
@@ -263,11 +293,13 @@ internal sealed partial class Gun : Node3D
       _recoilRotOffset = Input.IsActionPressed("Aim") ? _aimRecoilRotOffsetTarget : _recoilRotOffsetTarget;
       _recoilPosOffset.X = Input.IsActionPressed("Aim") ? (GD.Randf() - .5f) / 12f : (GD.Randf() - .5f) / 4f;
       _recoilRotOffset.Y = Input.IsActionPressed("Aim") ? (GD.Randf() - .5f) / 12f : (GD.Randf() - .5f) / 4f;
+      _delayTimer = _delayTime;
     }
     else
     {
       _recoilPosOffset = _recoilPosOffset.Lerp(to: Vector3.Zero, weight: 20f * (float)delta);
       _recoilRotOffset = _recoilRotOffset.Lerp(to: Vector3.Zero, weight: 20f * (float)delta);
+      _delayTimer = Mathf.Max(_delayTimer - (float)delta, 0f);
     }
   }
 }
