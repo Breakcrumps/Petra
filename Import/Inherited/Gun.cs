@@ -61,8 +61,8 @@ internal sealed partial class Gun : Node3D
   [Export] private float _aimSpeed = 20f;
   [Export] private Vector3 _recoilPosOffsetTarget = new(0f, .1f, .3f);
   [Export] private Vector3 _recoilRotOffsetTarget = new(Mathf.Pi / 8f, 0f, 0f);
-  [Export] private Vector3 _aimRecoilPosOffsetTarget = new(0f, .01f, .2f);
-  [Export] private Vector3 _aimRecoilRotOffsetTarget = new(Mathf.Pi / 8f, 0f, 0f);
+  [Export] private Vector3 _aimRecoilPosOffsetTarget = new(0f, .05f, .1f);
+  [Export] private Vector3 _aimRecoilRotOffsetTarget = new(Mathf.Pi / 100f, 0f, 0f);
   private Vector2 _mouseRelative;
 
   internal bool InAim { get; private set; }
@@ -293,6 +293,11 @@ internal sealed partial class Gun : Node3D
       _recoilRotOffset = Input.IsActionPressed("Aim") ? _aimRecoilRotOffsetTarget : _recoilRotOffsetTarget;
       _recoilPosOffset.X = Input.IsActionPressed("Aim") ? (GD.Randf() - .5f) / 12f : (GD.Randf() - .5f) / 4f;
       _recoilRotOffset.Y = Input.IsActionPressed("Aim") ? (GD.Randf() - .5f) / 12f : (GD.Randf() - .5f) / 4f;
+      if (_petra.CurrentState == PetraChar.PetraState.Crouching)
+      {
+        _recoilPosOffset.Y *= .5f;
+        _recoilRotOffset.X *= .5f;
+      }
       _delayTimer = _delayTime;
     }
     else

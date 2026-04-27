@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://bna12vodjoo2y"]
+
+[ext_resource type="Shader" uid="uid://dyuxqv5d4ryue" path="res://Shaders/tracer.gdshader" id="1_1levq"]
+[ext_resource type="Script" uid="uid://b6244pohihnlh" path="res://Import/Inherited/Bullet.cs" id="2_be53c"]
+[ext_resource type="PackedScene" uid="uid://b5q8eoiogls53" path="res://Misc/bullet_decal.tscn" id="3_88rjr"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1levq"]
+render_priority = 0
+shader = ExtResource("1_1levq")
+shader_parameter/color = Color(1, 0.3, 0.1, 1)
+shader_parameter/glow_intensity = 50.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_o6n4r"]
+material = SubResource("ShaderMaterial_1levq")
+top_radius = 0.01
+bottom_radius = 0.033
+height = 1.75
+cap_top = false
+
+[node name="Bullet" type="Node3D" unique_id=1075784854]
+script = ExtResource("2_be53c")
+_decalScene = ExtResource("3_88rjr")
+
+[node name="BulletMesh" type="MeshInstance3D" parent="." unique_id=1939254051]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -0.875)
+mesh = SubResource("CylinderMesh_o6n4r")

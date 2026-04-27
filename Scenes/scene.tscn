@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://c7bjxg15tjfyr" path="res://Characters/Petra/petra.tscn" id="1_lrus4"]
 [ext_resource type="Material" uid="uid://dpejxb1obcdno" path="res://Resources/Materials/test.tres" id="2_8t5iv"]
 [ext_resource type="Material" uid="uid://ecsfgfu6x8jm" path="res://Resources/Materials/test_obj.tres" id="3_yp48q"]
+[ext_resource type="PackedScene" uid="uid://bna12vodjoo2y" path="res://Misc/bullet.tscn" id="4_8t5iv"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ulcgi"]
 material = ExtResource("2_8t5iv")
@@ -21,6 +22,8 @@ sky_material = SubResource("ProceduralSkyMaterial_ulcgi")
 [sub_resource type="Environment" id="Environment_ulcgi"]
 background_mode = 2
 sky = SubResource("Sky_nxogm")
+glow_enabled = true
+glow_normalized = true
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_ulcgi"]
 material = ExtResource("3_yp48q")
@@ -59,3 +62,6 @@ mesh = SubResource("CylinderMesh_ulcgi")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=314218639]
 shape = SubResource("CylinderShape3D_ulcgi")
+
+[node name="Bullet" parent="." unique_id=1075784854 instance=ExtResource("4_8t5iv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5376437, 3.2468646)

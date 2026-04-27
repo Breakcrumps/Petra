@@ -3,18 +3,17 @@
 [ext_resource type="PackedScene" uid="uid://djsfgqmqlyaum" path="res://Import/Models/Gun.glb" id="1_vk1bi"]
 [ext_resource type="Script" uid="uid://0vvkd38ntjkp" path="res://Import/Inherited/Gun.cs" id="2_dk5gl"]
 [ext_resource type="Script" uid="uid://c0f18fq4jm3j6" path="res://Characters/Petra/Components/BulletSpawner.cs" id="3_8iju2"]
-[ext_resource type="PackedScene" uid="uid://dpj0rs6lwh13h" path="res://Import/Inherited/bullet.tscn" id="4_7vd5q"]
+[ext_resource type="PackedScene" uid="uid://bna12vodjoo2y" path="res://Misc/bullet.tscn" id="4_e2f1j"]
 
 [node name="Gun" unique_id=38176796 node_paths=PackedStringArray("_bulletSpawner") instance=ExtResource("1_vk1bi")]
 script = ExtResource("2_dk5gl")
 _bulletSpawner = NodePath("BulletSpawner")
 
-[node name="Cube" parent="." index="0" unique_id=941165607]
+[node name="Cube" parent="." index="0" unique_id=1704501691]
 layers = 2
 
 [node name="BulletSpawner" type="Node3D" parent="." index="1" unique_id=841923425 node_paths=PackedStringArray("_gun")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15040855, -0.5375972)
 script = ExtResource("3_8iju2")
-_bulletSpeed = 360.0
-_bulletScene = ExtResource("4_7vd5q")
+_bulletScene = ExtResource("4_e2f1j")
 _gun = NodePath("..")
