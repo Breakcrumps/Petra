@@ -3,7 +3,7 @@ using Godot.Collections;
 using Petra.Characters;
 using Petra.Types;
 
-namespace Petra.Import.Inherited;
+namespace Petra.Resources.Objects.Guns;
 
 [GlobalClass]
 internal sealed partial class Bullet : Node3D

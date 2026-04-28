@@ -7,7 +7,8 @@
 - [x] Jump buffer.
 - [x] Slide.
 - [x] Bullet holes.
-- [ ] Muzzle flash.
+- [x] Muzzle flash.
+- [ ] Conditional wall-piercing.
 - [x] Shooting delay.
 - [x] FOV change when aiming.
 - [ ] Stamina and health.

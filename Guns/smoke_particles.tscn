@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://bl8yrxw8wui7h"]
+
+[sub_resource type="Gradient" id="Gradient_1slqg"]
+offsets = PackedFloat32Array(0.2418438, 0.61063814, 1)
+colors = PackedColorArray(0.05490196, 0.05490196, 0.05490196, 1, 0.044718236, 0.044718243, 0.044718236, 0.52156866, 0.12051072, 0.12051081, 0.12051078, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_nu52r"]
+gradient = SubResource("Gradient_1slqg")
+
+[sub_resource type="Curve" id="Curve_srsvn"]
+_limits = [0.0, 1.0, 0.0, 2.0]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_b57wb"]
+curve = SubResource("Curve_srsvn")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_gagwa"]
+direction = Vector3(0, 0, -1)
+spread = 7.0
+initial_velocity_min = 4.0
+initial_velocity_max = 20.0
+gravity = Vector3(0, 5, 0)
+scale_min = 0.5
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_b57wb")
+color_ramp = SubResource("GradientTexture1D_nu52r")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_moidx"]
+vertex_color_use_as_albedo = true
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+proximity_fade_enabled = true
+proximity_fade_distance = 0.1
+
+[sub_resource type="QuadMesh" id="QuadMesh_ftijp"]
+material = SubResource("StandardMaterial3D_moidx")
+size = Vector2(0.01, 0.01)
+
+[node name="SmokeParticles" type="GPUParticles3D" unique_id=2053997479]
+emitting = false
+amount = 10
+lifetime = 0.5
+one_shot = true
+explosiveness = 0.8
+process_material = SubResource("ParticleProcessMaterial_gagwa")
+draw_pass_1 = SubResource("QuadMesh_ftijp")

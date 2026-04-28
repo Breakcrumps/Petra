@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="GunData" format=3 uid="uid://bioasj3vn5dju"]
+
+[ext_resource type="Script" uid="uid://jmvdrsp67nbl" path="res://Types/PosAndRot.cs" id="1_1x0kb"]
+[ext_resource type="Script" uid="uid://bgtvkw8450an2" path="res://Guns/GunData.cs" id="2_1x0kb"]
+[ext_resource type="ArrayMesh" uid="uid://cja4rpvrtljt1" path="res://Import/Models/Mesh/Rifle_Cube_006.res" id="2_04ots"]
+
+[sub_resource type="Resource" id="Resource_1x0kb"]
+script = ExtResource("1_1x0kb")
+Position = Vector3(0, 0.05, 0.1)
+Rotation = Vector3(0.03141593, 0, 0)
+
+[sub_resource type="Resource" id="Resource_04ots"]
+script = ExtResource("1_1x0kb")
+Position = Vector3(0, 0.1, 0.3)
+Rotation = Vector3(0.3926991, 0, 0)
+
+[resource]
+script = ExtResource("2_1x0kb")
+Mesh = ExtResource("2_04ots")
+BulletSpawnerPos = Vector3(0, 0.09312841, -1.7514957)
+DefaultPos = Vector3(0.41694176, -0.28543097, -0.6437776)
+RightLeanPos = Vector3(0.200896, -0.34000003, -0.75)
+LeftLeanPos = Vector3(0.33288902, -0.34000003, -0.75)
+AimPos = Vector3(0, -0.23659396, -0.7946253)
+RightLeanAimPos = Vector3(-0.07, -0.23699999, -0.795)
+LeftLeanAimPos = Vector3(0.07, -0.23699999, -0.795)
+CrouchPos = Vector3(0.36580187, -0.2943045, -0.61737144)
+CrouchRightLeanPos = Vector3(0.048294246, -0.40999997, -0.5)
+CrouchLeftLeanPos = Vector3(0.18103135, -0.40999997, -0.5)
+RunPos = Vector3(-0.006445408, -0.41241443, -0.5652871)
+RunOrient = Quaternion(-0.035777166, 0.6467056, 0.042085633, 0.76073694)
+BackRunPos = Vector3(-0.006, -0.412, -0.622)
+BackRunOrient = Quaternion(-0.04152833, 0.52894026, 0.03642258, 0.8468595)
+HeapAimPos = Vector3(0, -0.5767888, -0.5083715)
+HeapAimOrient = Quaternion(0, 0, 0, 1)
+SlidePos = Vector3(0, -0.40388823, -0.37313437)
+NearWallPos = Vector3(0.4801528, -0.08312583, -0.20461178)
+NearWallRot = Vector3(2.1665297, 0, 0)
+metadata/_custom_type_script = "uid://bgtvkw8450an2"

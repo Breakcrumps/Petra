@@ -1,5 +1,6 @@
 using Godot;
 using Petra.Characters.Petra.Components;
+using Petra.Resources.Objects.Guns;
 using Petra.Types;
 
 namespace Petra.Characters.Petra;
@@ -11,6 +12,7 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
 
   [Export] private PetraCamera _camera = null!;
   [Export] private RayCast3D _slideCast = null!;
+  [Export] internal Gun Gun { get; private set; } = null!;
   
   [Export] private int _maxHealth = 100;
   private int _health;

@@ -1,5 +1,5 @@
 using Godot;
-using Petra.Import.Inherited;
+using Petra.Resources.Objects.Guns;
 
 namespace Petra.Characters.Petra.Components;
 
@@ -55,7 +55,7 @@ internal sealed partial class PetraCamera : Camera3D
   }
 
   public override void _PhysicsProcess(double delta)
-  {
+  {  
     switch (_petra.CurrentState)
     {
       case PetraChar.PetraState.Sliding:

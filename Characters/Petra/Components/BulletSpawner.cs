@@ -1,5 +1,5 @@
 using Godot;
-using Petra.Import.Inherited;
+using Petra.Resources.Objects.Guns;
 
 namespace Petra.Characters.Petra.Components;
 
@@ -18,6 +18,6 @@ internal sealed partial class BulletSpawner : Node3D
     bullet.GlobalPosition = GlobalPosition + Camera.GlobalPosition;
     bullet.GlobalTransform = bullet.GlobalTransform.LookingAt(bullet.GlobalPosition - _gun.GlobalBasis.Z);
     bullet.Speed = _bulletSpeed;
-    bullet.Damage = _gun.Damage;
+    bullet.Damage = _gun.GunData.Damage;
   }
 }

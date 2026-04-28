@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="GunData" format=3 uid="uid://oktx1sepmnm"]
+
+[ext_resource type="Script" uid="uid://jmvdrsp67nbl" path="res://Types/PosAndRot.cs" id="1_7y68i"]
+[ext_resource type="ArrayMesh" uid="uid://deqye2ojc1nh6" path="res://Import/Models/Mesh/Gun_Cube.res" id="2_7y68i"]
+[ext_resource type="Script" uid="uid://bgtvkw8450an2" path="res://Guns/GunData.cs" id="2_dui8t"]
+
+[sub_resource type="Resource" id="Resource_ifyor"]
+script = ExtResource("1_7y68i")
+Position = Vector3(0, 0.05, 0.1)
+Rotation = Vector3(0.03141593, 0, 0)
+
+[sub_resource type="Resource" id="Resource_7lney"]
+script = ExtResource("1_7y68i")
+Position = Vector3(0, 0.1, 0.3)
+Rotation = Vector3(0.3926991, 0, 0)
+
+[resource]
+script = ExtResource("2_dui8t")
+Mesh = ExtResource("2_7y68i")
+metadata/_custom_type_script = "uid://bgtvkw8450an2"
