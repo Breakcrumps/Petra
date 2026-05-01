@@ -15,6 +15,10 @@ run/main_scene="uid://dufjhe7hfan0i"
 config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
+[display]
+
+window/size/mode=3
+
 [dotnet]
 
 project/assembly_name="Petra"
@@ -98,3 +102,5 @@ Pause={
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+anti_aliasing/quality/msaa_3d=1
+textures/default_filters/texture_mipmap_bias=-0.5

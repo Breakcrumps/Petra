@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Petra.GlobalNodes;
+namespace Petra.Utils;
 
 [GlobalClass]
 internal sealed partial class GameFlowController : Node

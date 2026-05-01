@@ -8,12 +8,12 @@ namespace Petra.Characters.Petra;
 internal sealed partial class PetraChar : CharacterBody3D, IDamageable
 {
   internal enum PetraState { Idle, Running, Crouching, Sliding }
-  internal PetraState CurrentState { get; private set; }
+  internal PetraState CurrentState;
 
   [Export] private PetraCamera _camera = null!;
   [Export] private RayCast3D _slideCast = null!;
-  [Export] internal Gun Gun { get; private set; } = null!;
-  
+  [Export] internal Gun Gun = null!;
+
   [Export] private int _maxHealth = 100;
   private int _health;
   
@@ -24,7 +24,7 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   [Export] private float _jumpVelocity = 10f;
   [Export] private float _gravity = 30f;
 
-  internal float TimeMoving { get; private set; }
+  internal float TimeMoving;
 
   [Export] private float _jumpBufferTime = .1f;
   private float _jumpBufferCounter;

@@ -24,12 +24,14 @@ internal sealed partial class PetraCamera : Camera3D
 
   [Export] private float _leanSpeed = 10f;
 
-  [Export] internal float WalkBobFreq { get; private set; } = 5f;
-  [Export] internal float RunBobFreq { get; private set; } = 10f;
-  internal float BobFreq { get; set; }
+  [Export] internal float WalkBobFreq = 5f;
+  [Export] internal float RunBobFreq = 10f;
+  internal float BobFreq;
   [Export] private float _bobAmp = .1f;
   private Vector3 _bobOffset;
   private Vector3 _posWithoutBob;
+
+  private Vector3 _nextRot;
 
   public override void _Ready()
   {
@@ -38,6 +40,7 @@ internal sealed partial class PetraCamera : Camera3D
     _posWithoutBob = Position;
     BobFreq = WalkBobFreq;
     _defaultFov = Fov;
+    _nextRot = Rotation;
   }
 
   public override void _UnhandledInput(InputEvent @event)
@@ -45,17 +48,15 @@ internal sealed partial class PetraCamera : Camera3D
     if (@event is not InputEventMouseMotion mouseMotion)
       return;
 
-    Vector3 newRotation = Rotation;
-
-    newRotation.X -= mouseMotion.Relative.Y * _mouseSensitivity;
-    newRotation.X = Mathf.Clamp(newRotation.X, -_angleLimit, _angleLimit);
-    newRotation.Y -= mouseMotion.Relative.X * _mouseSensitivity;
-
-    Rotation = newRotation;
+    _nextRot.X -= mouseMotion.Relative.Y * _mouseSensitivity;
+    _nextRot.X = Mathf.Clamp(_nextRot.X, -_angleLimit, _angleLimit);
+    _nextRot.Y -= mouseMotion.Relative.X * _mouseSensitivity;
   }
 
   public override void _PhysicsProcess(double delta)
-  {  
+  {
+    Rotation = _nextRot;
+
     switch (_petra.CurrentState)
     {
       case PetraChar.PetraState.Sliding:

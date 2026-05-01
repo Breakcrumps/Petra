@@ -12,8 +12,8 @@ internal sealed partial class Bullet : Node3D
   [Export] private float _secsToLive = 3f;
   private float _secsLived;
 
-  internal int Damage { private get; set; }
-  internal float Speed { private get; set; }
+  internal int Damage;
+  internal float Speed;
 
   public override void _PhysicsProcess(double delta)
   {
@@ -36,7 +36,7 @@ internal sealed partial class Bullet : Node3D
       bulletHole.RotateObjectLocal(Vector3.Right, -Mathf.Pi / 2f);
 
       if ((GodotObject)result["collider"] is IDamageable damageable)
-        damageable.TakeDamage(new Attack { Damage = Damage });
+        damageable.TakeDamage(new Attack(damage: Damage));
 
       QueueFree();
       return;

@@ -1,0 +1,82 @@
+[gd_scene format=3 uid="uid://duhfh584n8ah"]
+
+[ext_resource type="Script" uid="uid://dqejlsefvmibk" path="res://Ui/DebugGraphics/ToneMapOptionMenu.cs" id="1_ewm1d"]
+[ext_resource type="Script" uid="uid://cw1tsm4kye4wq" path="res://Ui/DebugGraphics/SsaoToggleBtn.cs" id="2_b1tkk"]
+[ext_resource type="Script" uid="uid://bkt8qrymhsgel" path="res://Ui/DebugGraphics/SdfgiToggleBtn.cs" id="3_ksuho"]
+[ext_resource type="Script" uid="uid://d0bp2vwt78ug1" path="res://Ui/DebugGraphics/FogToggleBtn.cs" id="3_yyt4t"]
+
+[node name="CanvasLayer" type="CanvasLayer" unique_id=72371128]
+process_mode = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1317259246]
+custom_minimum_size = Vector2(200, 0)
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=1568567124]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer" unique_id=1752967480]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1268953384]
+layout_mode = 2
+text = "Video Settings"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=702209239]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer" unique_id=1391373963]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=949011137]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2" unique_id=1469510860]
+layout_mode = 2
+text = "Tonemap"
+
+[node name="ToneMapOptionMenu" type="OptionButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2" unique_id=1135005139]
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "Linear"
+popup/item_0/id = 0
+popup/item_1/text = "ACES"
+popup/item_1/id = 1
+script = ExtResource("1_ewm1d")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=1067654535]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer" unique_id=1978737605]
+layout_mode = 2
+text = "SSAO"
+
+[node name="SsaoToggleBtn" type="CheckButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer" unique_id=1140226714]
+layout_mode = 2
+text = "On"
+script = ExtResource("2_b1tkk")
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=256358544]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer3" unique_id=1304639865]
+layout_mode = 2
+text = "SDFGI"
+
+[node name="SdfgiToggleBtn" type="CheckButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer3" unique_id=508058137]
+layout_mode = 2
+text = "On"
+script = ExtResource("3_ksuho")
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=1056405740]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer4" unique_id=2012036912]
+layout_mode = 2
+text = "Fog"
+
+[node name="FogToggleBtn" type="CheckButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer4" unique_id=1674253968]
+layout_mode = 2
+text = "On"
+script = ExtResource("3_yyt4t")

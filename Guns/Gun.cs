@@ -8,8 +8,8 @@ namespace Petra.Resources.Objects.Guns;
 [GlobalClass]
 internal sealed partial class Gun : Node3D
 {
-  [Export] internal GunData GunData { get; private set; } = null!;
-  [Export] internal BulletSpawner BulletSpawner { get; private set; } = null!;
+  [Export] internal GunData GunData = null!;
+  [Export] internal BulletSpawner BulletSpawner = null!;
   private float _delayTimer;
 
   [Export] private PetraChar _petra = null!;
@@ -39,7 +39,7 @@ internal sealed partial class Gun : Node3D
   private PosAndRot _jumpOffset = new();
   private Vector2 _mouseRelative;
 
-  internal bool InAim { get; private set; }
+  internal bool InAim;
 
   public override void _Ready()
   {

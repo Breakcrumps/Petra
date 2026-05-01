@@ -2,5 +2,8 @@ namespace Petra.Types;
 
 internal readonly struct Attack
 {
-  internal required int Damage { get; init; }
+  internal readonly int Damage;
+
+  internal Attack(int damage)
+    => Damage = damage;
 }
