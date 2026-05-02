@@ -13,3 +13,4 @@
 - [x] FOV change when aiming.
 - [ ] Stamina and health.
 - [ ] Heap fire addon. Make the weapon tilt to hit the target in the distance dynamically.
+- [ ] Make fog Color(0.0, 0.153, 0.0) outdoors.

@@ -1,0 +1,12 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bbrjmhkhvm4n3"]
+
+[ext_resource type="Texture2D" uid="uid://dues2ah4nrsb0" path="res://Import/Models/Room_bed.png" id="1_powlx"]
+
+[resource]
+resource_name = "M_Transparent"
+transparency = 1
+cull_mode = 2
+albedo_texture = ExtResource("1_powlx")
+roughness = 0.0
+refraction_enabled = true
+refraction_scale = 0.02

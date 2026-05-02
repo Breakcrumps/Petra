@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bdsu2ycf2tvyk"]
+
+[ext_resource type="Texture2D" uid="uid://dues2ah4nrsb0" path="res://Import/Models/Room_bed.png" id="1_nvw77"]
+
+[resource]
+resource_name = "Material"
+cull_mode = 2
+albedo_texture = ExtResource("1_nvw77")

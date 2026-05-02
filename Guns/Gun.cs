@@ -8,7 +8,12 @@ namespace Petra.Resources.Objects.Guns;
 [GlobalClass]
 internal sealed partial class Gun : Node3D
 {
-  [Export] internal GunData GunData = null!;
+  [Export] private GunData? _gunData1;
+  [Export] private GunData? _gunData2;
+  [Export] private GunData? _gunData3;
+  [Export] private GunData? _gunData4;
+  internal GunData GunData = null!;
+
   [Export] internal BulletSpawner BulletSpawner = null!;
   private float _delayTimer;
 
@@ -43,6 +48,21 @@ internal sealed partial class Gun : Node3D
 
   public override void _Ready()
   {
+    if (_gunData1 is not null)
+      GunData = _gunData1;
+    else if (_gunData2 is not null)
+      GunData = _gunData2;
+    else if (_gunData3 is not null)
+      GunData = _gunData3;
+    else if (_gunData4 is not null)
+      GunData = _gunData4;
+    else
+    {
+      GD.Print("No GunData in the gun! Destroying the gun.");
+      QueueFree();
+      return;
+    }
+    
     BulletSpawner.Position = GunData.BulletSpawnerPos;
     BulletSpawner.Camera = _camera;
 
@@ -110,6 +130,15 @@ internal sealed partial class Gun : Node3D
 
   public override void _PhysicsProcess(double delta)
   {
+    if (Input.IsActionPressed("Weapon1") && _gunData1 is not null)
+      LoadData(_gunData1);
+    else if (Input.IsActionPressed("Weapon2") && _gunData2 is not null)
+      LoadData(_gunData2);
+    else if (Input.IsActionPressed("Weapon3") && _gunData3 is not null)
+      LoadData(_gunData3);
+    else if (Input.IsActionPressed("Weapon4") && _gunData4 is not null)
+      LoadData(_gunData4);
+    
     if (_petra.CurrentState == PetraChar.PetraState.Sliding)
     {
       Position = Position.Lerp(to: GunData.SlidePos, weight: 10f * (float)delta);

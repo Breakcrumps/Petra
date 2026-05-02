@@ -1,92 +1,38 @@
 [gd_scene format=3 uid="uid://dufjhe7hfan0i"]
 
 [ext_resource type="PackedScene" uid="uid://c7bjxg15tjfyr" path="res://Characters/Petra/petra.tscn" id="1_lrus4"]
-[ext_resource type="Environment" uid="uid://ugvkbgt0w1ar" path="res://Env/main_env.tres" id="2_f6sb3"]
+[ext_resource type="Environment" uid="uid://ugvkbgt0w1ar" path="res://Env/main_env.tres" id="2_ubbiv"]
 [ext_resource type="Script" uid="uid://d3flasw4gdch6" path="res://Utils/CurrentEnv.cs" id="3_fi6k0"]
 [ext_resource type="PackedScene" uid="uid://bna12vodjoo2y" path="res://Guns/bullet.tscn" id="4_8t5iv"]
-[ext_resource type="Material" uid="uid://ecsfgfu6x8jm" path="res://Resources/Materials/test_obj.tres" id="5_6yy46"]
-[ext_resource type="Script" uid="uid://bearupc2hj5gh" path="res://Scenes/WeaponGiver.cs" id="5_yp48q"]
-[ext_resource type="Resource" uid="uid://bioasj3vn5dju" path="res://Guns/GunTypes/RifleData.tres" id="6_3bdrj"]
-[ext_resource type="Resource" uid="uid://oktx1sepmnm" path="res://Guns/GunTypes/PistolData.tres" id="7_ubbiv"]
+[ext_resource type="PackedScene" uid="uid://biv6c8e8rqbyr" path="res://Scenes/room.tscn" id="6_3bdrj"]
 [ext_resource type="Script" uid="uid://o2jk6nlu8wud" path="res://Utils/GameFlowController.cs" id="8_6yy46"]
-[ext_resource type="Material" uid="uid://dpejxb1obcdno" path="res://Resources/Materials/test.tres" id="8_f6sb3"]
 [ext_resource type="PackedScene" uid="uid://duhfh584n8ah" path="res://Ui/DebugGraphics/debug_graphics_ui.tscn" id="10_mn0nn"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_yp48q"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_3bdrj"]
-material = ExtResource("5_6yy46")
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_6yy46"]
-size = Vector3(500, 200, 500)
-
-[sub_resource type="BoxMesh" id="BoxMesh_f6sb3"]
-material = ExtResource("8_f6sb3")
-flip_faces = true
-size = Vector3(500, 200, 500)
+[sub_resource type="CylinderMesh" id="CylinderMesh_3bdrj"]
 
 [node name="Scene" type="Node3D" unique_id=128823444]
 
 [node name="Petra" parent="." unique_id=96141022 instance=ExtResource("1_lrus4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0828495, 0, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=422967208]
-environment = ExtResource("2_f6sb3")
+environment = ExtResource("2_ubbiv")
 script = ExtResource("3_fi6k0")
 
 [node name="Bullet" parent="." unique_id=1075784854 instance=ExtResource("4_8t5iv")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5376437, 3.2468646)
 
-[node name="WeaponGiver" type="Area3D" parent="." unique_id=594739384]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, -3.5222516)
-script = ExtResource("5_yp48q")
-_gunData = ExtResource("6_3bdrj")
-metadata/_custom_type_script = "uid://bearupc2hj5gh"
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="WeaponGiver" unique_id=1152941318]
-shape = SubResource("BoxShape3D_yp48q")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="WeaponGiver" unique_id=67185651]
-mesh = SubResource("BoxMesh_3bdrj")
-
-[node name="WeaponGiver2" type="Area3D" parent="." unique_id=1400786233]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8916671, 0.4, -3.5222516)
-script = ExtResource("5_yp48q")
-_gunData = ExtResource("7_ubbiv")
-metadata/_custom_type_script = "uid://bearupc2hj5gh"
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="WeaponGiver2" unique_id=1411226231]
-shape = SubResource("BoxShape3D_yp48q")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="WeaponGiver2" unique_id=1171282614]
-mesh = SubResource("BoxMesh_3bdrj")
-
 [node name="GameFlowController" type="Node" parent="." unique_id=128183926]
 script = ExtResource("8_6yy46")
 metadata/_custom_type_script = "uid://o2jk6nlu8wud"
 
-[node name="CSGCombiner3D" type="CSGCombiner3D" parent="." unique_id=1004076644]
-use_collision = true
-collision_layer = 4
-collision_mask = 7
-
-[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D" unique_id=467036634]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -50, 0)
-size = Vector3(500, 100, 500)
-material = ExtResource("8_f6sb3")
-
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="CSGCombiner3D" unique_id=1193482384]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1.3912171)
-material = ExtResource("5_6yy46")
-
-[node name="Walls" type="StaticBody3D" parent="." unique_id=780348731]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls" unique_id=1729939335]
-shape = SubResource("BoxShape3D_6yy46")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Walls" unique_id=1462638621]
-mesh = SubResource("BoxMesh_f6sb3")
-
-[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=472977165]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0615782, 1.029885, -4.5104184)
-
 [node name="CanvasLayer" parent="." unique_id=72371128 instance=ExtResource("10_mn0nn")]
+
+[node name="Room" parent="." unique_id=82118540 instance=ExtResource("6_3bdrj")]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1160389218]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4383335, 0, 0)
+mesh = SubResource("CylinderMesh_3bdrj")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1325333697]
+transform = Transform3D(-0.16031499, 0.38427928, -0.9091913, 0.0667294, 0.92321694, 0.37844115, 0.98480785, 0, -0.17364822, 0, 0, 0)
