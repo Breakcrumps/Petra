@@ -197,7 +197,7 @@ internal sealed partial class Gun : Node3D
       {
         InAim = true;
         nextPos = GunData.AimPos;
-        nextOrient = Quaternion.Identity;
+        nextOrient = GunData.DefaultOrient;
       }
     }
 
@@ -211,7 +211,7 @@ internal sealed partial class Gun : Node3D
   private void HandlePos(double delta)
   {
     Vector3 nextPos;
-    Quaternion nextRot;
+    Quaternion nextOrient;
     
     float leanDir = 0f;
 
@@ -239,26 +239,26 @@ internal sealed partial class Gun : Node3D
     {
       nextPos = leanDir > 0f ? rightLeanPos : leftLeanPos;
       float leanAngle = leanDir > 0f ? GunData.LeanRightAngle : GunData.LeanLeftAngle;
-      nextRot = Quaternion.FromEuler(new Vector3(0f, 0f, leanAngle));
+      nextOrient = Quaternion.FromEuler(new Vector3(0f, 0f, leanAngle));
     }
     else
     {
       if (_petra.CurrentState == PetraChar.PetraState.Running)
       {
         nextPos = Input.IsActionPressed("Down") ? GunData.BackRunPos : GunData.RunPos;
-        nextRot = Input.IsActionPressed("Down") ? GunData.BackRunOrient: GunData.RunOrient;
+        nextOrient = Input.IsActionPressed("Down") ? GunData.BackRunOrient: GunData.RunOrient;
       }
       else
       {
         nextPos = defaultPos;
-        nextRot = Quaternion.Identity;
+        nextOrient = GunData.DefaultOrient;
       }
     }
 
     UpdateNearWallOffsets(delta);
 
     nextPos += _nearWallOffset.Position + _swayOffset.Position + _bobOffset.Position + _recoilOffset.Position;
-    nextRot *= (
+    nextOrient *= (
       Quaternion.FromEuler(_nearWallOffset.Rotation)
       * Quaternion.FromEuler(_bobOffset.Rotation)
       * Quaternion.FromEuler(_recoilOffset.Rotation)
@@ -266,7 +266,7 @@ internal sealed partial class Gun : Node3D
     );
 
     Position = Position.Lerp(to: nextPos, weight: GunData.LeanSpeed * (float)delta);
-    Quaternion = Quaternion.Slerp(to: nextRot, weight: GunData.LeanSpeed * (float)delta);
+    Quaternion = Quaternion.Slerp(to: nextOrient, weight: GunData.LeanSpeed * (float)delta);
   }
 
   private void UpdateNearWallOffsets(double delta)

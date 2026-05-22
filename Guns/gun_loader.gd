@@ -37,6 +37,7 @@ func bake() -> void:
 		target_res.BulletSpawnerPos = bullet_spawner_local_pivot.position
 	if default_pivot:
 		target_res.DefaultPos = default_pivot.position
+		target_res.DefaultOrient = default_pivot.quaternion
 	if right_lean_pivot:
 		target_res.RightLeanPos = right_lean_pivot.position
 	if left_lean_pivot:

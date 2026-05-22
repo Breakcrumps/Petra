@@ -18,6 +18,7 @@ internal sealed partial class GunData : Resource
   [ExportGroup("Pivots")]
   [Export] internal Vector3 BulletSpawnerPos = new(0, 0.15040855f, -0.5375972f);
   [Export] internal Vector3 DefaultPos = new(0.18306011f, -0.35110945f, -0.58030695f);
+  [Export] internal Quaternion DefaultOrient = Quaternion.Identity;
   [Export] internal Vector3 RightLeanPos = new(0.200896f, -0.34000003f, -0.75f);
   [Export] internal Vector3 LeftLeanPos = new(0.33288902f, -0.34000003f, -0.75f);
   [Export] internal Vector3 AimPos = new(0f, -0.23659396f, -0.7946253f);

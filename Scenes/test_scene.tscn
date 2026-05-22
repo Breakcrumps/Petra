@@ -1,0 +1,100 @@
+[gd_scene format=3 uid="uid://cgosgldx2dpwx"]
+
+[ext_resource type="Material" uid="uid://dpejxb1obcdno" path="res://Resources/Materials/test.tres" id="1_r5l72"]
+[ext_resource type="PackedScene" uid="uid://c7bjxg15tjfyr" path="res://Characters/Petra/petra.tscn" id="2_50ct6"]
+[ext_resource type="Environment" uid="uid://ugvkbgt0w1ar" path="res://Env/main_env.tres" id="3_ak5v8"]
+[ext_resource type="Script" uid="uid://d3flasw4gdch6" path="res://Utils/CurrentEnv.cs" id="4_x033f"]
+[ext_resource type="Script" uid="uid://o2jk6nlu8wud" path="res://Utils/GameFlowController.cs" id="5_rdbpf"]
+[ext_resource type="Material" uid="uid://ecsfgfu6x8jm" path="res://Resources/Materials/test_obj.tres" id="6_x033f"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_hb2xm"]
+material = ExtResource("1_r5l72")
+size = Vector2(100, 100)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ak5v8"]
+size = Vector3(100, 1, 100)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rdbpf"]
+material = ExtResource("6_x033f")
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_oho3u"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_x033f"]
+material = ExtResource("6_x033f")
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_rdbpf"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_oho3u"]
+material = ExtResource("6_x033f")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_d3awe"]
+
+[node name="TestScene" type="Node3D" unique_id=1521745058]
+
+[node name="Floor" type="StaticBody3D" parent="." unique_id=1975136998]
+collision_layer = 4
+collision_mask = 7
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=1568098617]
+mesh = SubResource("PlaneMesh_hb2xm")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=962437792]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_ak5v8")
+
+[node name="Petra" parent="." unique_id=96141022 instance=ExtResource("2_50ct6")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1967732712]
+environment = ExtResource("3_ak5v8")
+script = ExtResource("4_x033f")
+
+[node name="GameFlowController" type="Node" parent="." unique_id=1575913716]
+script = ExtResource("5_rdbpf")
+metadata/_custom_type_script = "uid://o2jk6nlu8wud"
+
+[node name="Obstacle" type="StaticBody3D" parent="." unique_id=1108192497]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -4.738)
+collision_layer = 4
+collision_mask = 7
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle" unique_id=521900876]
+mesh = SubResource("CylinderMesh_rdbpf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle" unique_id=939871139]
+shape = SubResource("CylinderShape3D_oho3u")
+
+[node name="Obstacle2" type="StaticBody3D" parent="." unique_id=613868700]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.162112, 1, -2.7560308)
+collision_layer = 4
+collision_mask = 7
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle2" unique_id=1978197271]
+mesh = SubResource("CylinderMesh_rdbpf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle2" unique_id=1797674198]
+shape = SubResource("CylinderShape3D_oho3u")
+
+[node name="Obstacle3" type="StaticBody3D" parent="." unique_id=333196052]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.98813784, 0.49999976, -3.1134899)
+collision_layer = 4
+collision_mask = 7
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle3" unique_id=1532462185]
+mesh = SubResource("SphereMesh_x033f")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle3" unique_id=432606081]
+shape = SubResource("SphereShape3D_rdbpf")
+
+[node name="Obstacle4" type="StaticBody3D" parent="." unique_id=192365847]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.44108045, 0.49999976, -3.3072999)
+collision_layer = 4
+collision_mask = 7
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle4" unique_id=1792156478]
+mesh = SubResource("BoxMesh_oho3u")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle4" unique_id=581242466]
+shape = SubResource("BoxShape3D_d3awe")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1002726114]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45709372, 1.6963279, -2.3507395)
