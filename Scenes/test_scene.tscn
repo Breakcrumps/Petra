@@ -31,6 +31,13 @@ material = ExtResource("6_x033f")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_d3awe"]
 
+[sub_resource type="BoxMesh" id="BoxMesh_d3awe"]
+material = ExtResource("6_x033f")
+size = Vector3(4, 0.8, 4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_oho3u"]
+size = Vector3(4, 0.8, 4)
+
 [node name="TestScene" type="Node3D" unique_id=1521745058]
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=1975136998]
@@ -60,6 +67,7 @@ collision_layer = 4
 collision_mask = 7
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle" unique_id=521900876]
+layers = 4
 mesh = SubResource("CylinderMesh_rdbpf")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle" unique_id=939871139]
@@ -71,6 +79,7 @@ collision_layer = 4
 collision_mask = 7
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle2" unique_id=1978197271]
+layers = 4
 mesh = SubResource("CylinderMesh_rdbpf")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle2" unique_id=1797674198]
@@ -82,6 +91,7 @@ collision_layer = 4
 collision_mask = 7
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle3" unique_id=1532462185]
+layers = 4
 mesh = SubResource("SphereMesh_x033f")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle3" unique_id=432606081]
@@ -93,14 +103,27 @@ collision_layer = 4
 collision_mask = 7
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle4" unique_id=1792156478]
+layers = 4
 mesh = SubResource("BoxMesh_oho3u")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle4" unique_id=581242466]
 shape = SubResource("BoxShape3D_d3awe")
 
+[node name="Obstacle5" type="StaticBody3D" parent="." unique_id=1805055577]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.441, 0.4, 2.912)
+collision_layer = 4
+collision_mask = 7
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacle5" unique_id=1572149470]
+layers = 4
+mesh = SubResource("BoxMesh_d3awe")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacle5" unique_id=1735282644]
+shape = SubResource("BoxShape3D_oho3u")
+
 [node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1002726114]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45709372, 8.424871, -2.3507395)
-light_energy = 100.0
+light_energy = 50.0
 omni_range = 100.0
 
 [node name="Node" type="Node" parent="." unique_id=578479518 node_paths=PackedStringArray("_parent")]

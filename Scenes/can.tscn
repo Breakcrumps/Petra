@@ -9,8 +9,14 @@ radius = 0.085
 
 [node name="low_poly_soda_can" unique_id=99888575 instance=ExtResource("1_jqupc")]
 collision_layer = 16
-collision_mask = 15
+collision_mask = 31
 script = ExtResource("2_7lw62")
+
+[node name="defaultMaterial" parent="Sketchfab_model/Collada visual scene group/Cylinder_001" parent_id_path=PackedInt32Array(1504742464) index="0" unique_id=61325123]
+layers = 4
+
+[node name="defaultMaterial_001" parent="Sketchfab_model/Collada visual scene group/Cylinder_001" parent_id_path=PackedInt32Array(1504742464) index="1" unique_id=1667185088]
+layers = 4
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." index="1" unique_id=1611045685]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.141, 0)
