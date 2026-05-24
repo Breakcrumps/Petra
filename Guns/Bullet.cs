@@ -35,25 +35,38 @@ internal sealed partial class Bullet : Node3D
       bulletHole.LookAt(bulletHole.GlobalPosition + normal, upVector);
       bulletHole.RotateObjectLocal(Vector3.Right, -Mathf.Pi / 2f);
 
-      if ((GodotObject)result["collider"] is IDamageable damageable)
+      GodotObject collider = (GodotObject)result["collider"];
+
+      if (collider is IDamageable damageable)
         damageable.TakeDamage(new Attack(damage: Damage));
 
-      if ((GodotObject)result["collider"] is RigidBody3D rigidBody)
+      if (collider is RigidBody3D rigidBody)
       {
         Vector3 impulse = -Basis.Z * (Speed * .0075f);
         Vector3 hitPoint = bulletHole.GlobalPosition - rigidBody.GlobalPosition;
         float distToHitPoint = hitPoint.Length();
-        float impulseMult = -14f * distToHitPoint * distToHitPoint + 1f;
+        float impulseMult = -7f * distToHitPoint * distToHitPoint + 1f;
         rigidBody.ApplyImpulse(impulseMult * impulse, hitPoint);
       }
 
-      QueueFree();
-      return;
+      if (collider is IPenetrable penetrable)
+      {
+        Damage -= penetrable.DamageReduction;
+
+        if (Damage <= 0)
+        {
+          QueueFree();
+          return;
+        }
+      }
+      else
+      {
+        QueueFree();
+        return;
+      }
     }
-    else
-    {
-      GlobalPosition = nextPos;
-    }
+    
+    GlobalPosition = nextPos;
     
     _secsLived += (float)delta;
 

@@ -6,6 +6,8 @@
 [ext_resource type="Script" uid="uid://d3flasw4gdch6" path="res://Utils/CurrentEnv.cs" id="4_x033f"]
 [ext_resource type="Script" uid="uid://o2jk6nlu8wud" path="res://Utils/GameFlowController.cs" id="5_rdbpf"]
 [ext_resource type="Material" uid="uid://ecsfgfu6x8jm" path="res://Resources/Materials/test_obj.tres" id="6_x033f"]
+[ext_resource type="Script" uid="uid://c3b1s4yuuojil" path="res://Scenes/CanSpawner.cs" id="7_oho3u"]
+[ext_resource type="PackedScene" uid="uid://s8kx0qq384um" path="res://Scenes/can.tscn" id="8_d3awe"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_hb2xm"]
 material = ExtResource("1_r5l72")
@@ -97,4 +99,11 @@ mesh = SubResource("BoxMesh_oho3u")
 shape = SubResource("BoxShape3D_d3awe")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1002726114]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45709372, 1.6963279, -2.3507395)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45709372, 8.424871, -2.3507395)
+light_energy = 100.0
+omni_range = 100.0
+
+[node name="Node" type="Node" parent="." unique_id=578479518 node_paths=PackedStringArray("_parent")]
+script = ExtResource("7_oho3u")
+_parent = NodePath("..")
+_canScene = ExtResource("8_d3awe")

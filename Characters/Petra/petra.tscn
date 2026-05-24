@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://420qp4km7kud" path="res://Characters/Petra/Components/PetraGunCamera.cs" id="3_u0x2d"]
 [ext_resource type="Resource" uid="uid://bioasj3vn5dju" path="res://Guns/GunTypes/RifleData.tres" id="5_6be6t"]
 [ext_resource type="Script" uid="uid://c0f18fq4jm3j6" path="res://Characters/Petra/Components/BulletSpawner.cs" id="5_wx6ak"]
-[ext_resource type="Resource" uid="uid://oktx1sepmnm" path="res://Guns/GunTypes/PistolData.tres" id="6_6uxd7"]
+[ext_resource type="Resource" uid="uid://oktx1sepmnm" path="res://Guns/GunTypes/Hi-Power.tres" id="6_6uxd7"]
 [ext_resource type="PackedScene" uid="uid://bl8yrxw8wui7h" path="res://Guns/smoke_particles.tscn" id="6_522tq"]
 [ext_resource type="PackedScene" uid="uid://bna12vodjoo2y" path="res://Guns/bullet.tscn" id="7_522tq"]
 [ext_resource type="PackedScene" uid="uid://dl6bu8a7c4kx2" path="res://Guns/sparks_particles.tscn" id="7_ya1fb"]
@@ -122,7 +122,7 @@ stretch = true
 own_world_3d = true
 transparent_bg = true
 handle_input_locally = false
-size = Vector2i(320, 240)
+size = Vector2i(400, 300)
 render_target_update_mode = 4
 
 [node name="PetraGunCamera" type="Camera3D" parent="CanvasLayer/SubViewportContainer/PetraGunViewport" unique_id=468325678 node_paths=PackedStringArray("_mainCamera")]

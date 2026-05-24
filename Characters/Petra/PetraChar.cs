@@ -39,7 +39,7 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   
   public override void _PhysicsProcess(double delta)
   {
-    CurrentState = HandleState();
+    CurrentState = GetState();
 
     if (CurrentState != PetraState.Sliding)
       HandleMovement(delta);
@@ -104,7 +104,7 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
       CurrentState = PetraState.Crouching;
   }
 
-  private PetraState HandleState() => CurrentState switch
+  private PetraState GetState() => CurrentState switch
   {
     PetraState.Idle => HandleIdleTransitions(),
     PetraState.Running => HandleRunningTransitions(),
@@ -137,7 +137,7 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   {
     if (Input.IsActionJustPressed("Crouch"))
       return Input.IsActionPressed("Up") ? InitSlide() : PetraState.Crouching;
-    if (!Input.IsActionPressed("Run"))
+    if (!Input.IsActionPressed("Run") || Velocity == Vector3.Zero)
       return PetraState.Idle;
     return PetraState.Running;
   }
