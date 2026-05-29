@@ -4,12 +4,12 @@
 [ext_resource type="ArrayMesh" uid="uid://b8na5ct4q7bl7" path="res://Import/Models/Mesh/Hi-Pow_Browning_HP_BrowningHP_0.res" id="2_xijfp"]
 [ext_resource type="Script" uid="uid://bgtvkw8450an2" path="res://Guns/GunData.cs" id="3_s8dip"]
 
-[sub_resource type="Resource" id="Resource_kl8cr"]
+[sub_resource type="Resource" id="Resource_x0jyt"]
 script = ExtResource("1_x0jyt")
 Position = Vector3(0, 0.05, 0.1)
 Rotation = Vector3(0.03141593, 0, 0)
 
-[sub_resource type="Resource" id="Resource_myt36"]
+[sub_resource type="Resource" id="Resource_xijfp"]
 script = ExtResource("1_x0jyt")
 Position = Vector3(0, 0.1, 0.3)
 Rotation = Vector3(0.3926991, 0, 0)

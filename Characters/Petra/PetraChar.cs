@@ -160,10 +160,5 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   }
 
   public void TakeDamage(Attack attack)
-  {
-    _health -= attack.Damage;
-
-    if (_health <= 0)
-      GD.Print("You died.");
-  }
+    => _health -= attack.Damage;
 }

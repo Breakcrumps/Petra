@@ -1,7 +1,7 @@
-using System;
 using Godot;
 using Godot.Collections;
 using Petra.Characters;
+using Petra.Characters.Petra;
 using Petra.Types;
 
 namespace Petra.Resources.Objects.Guns;
@@ -16,32 +16,44 @@ internal sealed partial class Bullet : Node3D
   internal int Damage;
   internal float Speed;
 
+  internal PetraChar Petra = null!;
+
   public override void _PhysicsProcess(double delta)
   {
-    Vector3 nextMove = -Basis.Z * Speed * (float)delta;
-    Vector3 targetPos = GlobalPosition + nextMove;
+    Vector3 nextPos = GlobalPosition - Basis.Z * Speed * (float)delta;
+    CheckCollisions(GlobalPosition, nextPos);
+    GlobalPosition = nextPos;
+    
+    _secsLived += (float)delta;
 
+    if (_secsLived >= _secsToLive)
+      QueueFree();
+  }
+
+  internal void CheckCollisions(Vector3 from, Vector3 to, bool excludePetra = false, bool hitBackFaces = false)
+  {
     PhysicsDirectSpaceState3D spaceState = GetWorld3D().DirectSpaceState;
     Array<Rid> exclude = [];
 
+    if (excludePetra)
+      exclude.Add(Petra.GetRid());
+
     while (Damage > 0)
     {
-      var query = PhysicsRayQueryParameters3D.Create(GlobalPosition, targetPos);
+      var query = PhysicsRayQueryParameters3D.Create(from, to);
       query.Exclude = exclude;
+      query.HitBackFaces = hitBackFaces;
       Dictionary result = spaceState.IntersectRay(query);
 
       if (result.Count == 0)
-      {
-        GlobalPosition = targetPos;
         break;
-      }
 
-      Vector3 hitPosition = result["position"].AsVector3();
+      Vector3 hitPos = result["position"].AsVector3();
       Vector3 normal = result["normal"].AsVector3();
       Node collider = (Node)(GodotObject)result["collider"];
       Rid hitRid = result["rid"].AsRid();
 
-      SpawnDecal(hitPosition, normal, collider);
+      SpawnDecal(hitPos, normal, collider);
 
       if (collider is IDamageable damageable)
         damageable.TakeDamage(new Attack(damage: Damage));
@@ -49,7 +61,7 @@ internal sealed partial class Bullet : Node3D
       if (collider is RigidBody3D rigidBody)
       {
         Vector3 impulse = -Basis.Z * (Speed * .0075f);
-        Vector3 hitPoint = hitPosition - rigidBody.GlobalPosition;
+        Vector3 hitPoint = hitPos - rigidBody.GlobalPosition;
         float distToHitPoint = hitPoint.Length();
         float impulseMult = -7f * distToHitPoint * distToHitPoint + 1f;
         rigidBody.ApplyImpulse(impulseMult * impulse, hitPoint);
@@ -69,7 +81,7 @@ internal sealed partial class Bullet : Node3D
   
         while (true)
         {
-          var exitQuery = PhysicsRayQueryParameters3D.Create(targetPos, hitPosition);
+          var exitQuery = PhysicsRayQueryParameters3D.Create(to, hitPos);
           exitQuery.Exclude = exitExclude;
           Dictionary exitResult = spaceState.IntersectRay(exitQuery);
 
@@ -90,7 +102,7 @@ internal sealed partial class Bullet : Node3D
         }
 
         exclude.Add(hitRid);
-        GlobalPosition = hitPosition - Basis.Z * 0.01f;
+        from = hitPos - Basis.Z * 0.01f;
       }
       else
       {
@@ -98,11 +110,6 @@ internal sealed partial class Bullet : Node3D
         return;
       }
     }
-    
-    _secsLived += (float)delta;
-
-    if (_secsLived >= _secsToLive)
-      QueueFree();
   }
 
   private void SpawnDecal(Vector3 hitPosition, Vector3 normal, Node collider)

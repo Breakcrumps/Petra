@@ -58,13 +58,11 @@ internal sealed partial class Gun : Node3D
       GunData = _gunData4;
     else
     {
-      GD.Print("No GunData in the gun! Destroying the gun.");
       QueueFree();
       return;
     }
     
     BulletSpawner.Position = GunData.BulletSpawnerPos;
-    BulletSpawner.Camera = _camera;
 
     _localMuzzleFlashes = new OmniLight3D[2];
     CreateLocalMuzzleFlash(0, -Basis.Z + Basis.Y);
@@ -360,8 +358,6 @@ internal sealed partial class Gun : Node3D
         _recoilOffset.Rotation.X *= .5f;
       }
       _delayTimer = GunData.DelayTime;
-      // _localMuzzleFlash.Visible = true;
-      // _muzzleFlash.Visible = true;
       _muzzleTimer = GunData.MuzzleTime;
       _muzzleFlash.LightEnergy = _defaultMuzzleEnergy;
       for (int i = 0; i < _localMuzzleFlashes.Length; i++)
@@ -369,13 +365,13 @@ internal sealed partial class Gun : Node3D
       _muzzleFlashSprite.Visible = true;
 
       GpuParticles3D nextSmoke = _smokePool[_nextParticleIdx];
-      nextSmoke.GlobalPosition = _camera.GlobalPosition + BulletSpawner.GlobalPosition;
+      nextSmoke.GlobalPosition = BulletSpawner.GlobalPosition;
       nextSmoke.Transform = nextSmoke.Transform.LookingAt(nextSmoke.GlobalPosition - BulletSpawner.GlobalBasis.Z);
       nextSmoke.Restart();
       nextSmoke.AmountRatio = GD.Randf();
       nextSmoke.Emitting = true;
       DelayedParticles nextSparks = _sparksPool[_nextParticleIdx];
-      nextSparks.GlobalPosition = _camera.GlobalPosition + BulletSpawner.GlobalPosition;
+      nextSparks.GlobalPosition = BulletSpawner.GlobalPosition;
       nextSparks.Transform = nextSparks.Transform.LookingAt(nextSparks.GlobalPosition - BulletSpawner.GlobalBasis.Z);
       nextSparks.AmountRatio = GD.Randf();
       nextSparks.Emit();

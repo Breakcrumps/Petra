@@ -123,7 +123,8 @@ shape = SubResource("BoxShape3D_oho3u")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1002726114]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45709372, 8.424871, -2.3507395)
-light_energy = 50.0
+layers = 3
+light_energy = 100.0
 omni_range = 100.0
 
 [node name="Node" type="Node" parent="." unique_id=578479518 node_paths=PackedStringArray("_parent")]

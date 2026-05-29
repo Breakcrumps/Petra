@@ -31,6 +31,7 @@ shape = SubResource("CapsuleShape3D_e5gy7")
 
 [node name="PetraCamera" type="Camera3D" parent="." unique_id=418983480 node_paths=PackedStringArray("_petra", "_gun", "_leanRaycast", "_standLeanPivot", "_crouchPivot", "_crouchLeanPivot", "_slideLeanPivot")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6091348, 0)
+cull_mask = 1048573
 fov = 60.0
 script = ExtResource("2_xka01")
 _petra = NodePath("..")
@@ -103,7 +104,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5652243, 1.5232453, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.652, 0.933, 0)
 
 [node name="Crouch" type="Node3D" parent="." unique_id=1603294396]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -0.133)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="Slide" type="Node3D" parent="." unique_id=1843441467]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2762096, 0)
@@ -119,13 +120,13 @@ grow_vertical = 2
 stretch = true
 
 [node name="PetraGunViewport" type="SubViewport" parent="CanvasLayer/SubViewportContainer" unique_id=624680960]
-own_world_3d = true
 transparent_bg = true
 handle_input_locally = false
 size = Vector2i(400, 300)
 render_target_update_mode = 4
 
 [node name="PetraGunCamera" type="Camera3D" parent="CanvasLayer/SubViewportContainer/PetraGunViewport" unique_id=468325678 node_paths=PackedStringArray("_mainCamera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6102986, 0)
 cull_mask = 1047554
 script = ExtResource("3_u0x2d")
 _mainCamera = NodePath("../../../../PetraCamera")
@@ -144,16 +145,14 @@ _sparksScene = ExtResource("7_ya1fb")
 _muzzleFlashImage = ExtResource("8_la8vp")
 _muzzleFlash = NodePath("../../../../../PetraCamera/MuzzleFlash")
 
-[node name="BulletSpawner" type="Node3D" parent="CanvasLayer/SubViewportContainer/PetraGunViewport/PetraGunCamera/Gun" unique_id=754845921 node_paths=PackedStringArray("_gun")]
+[node name="BulletSpawner" type="Node3D" parent="CanvasLayer/SubViewportContainer/PetraGunViewport/PetraGunCamera/Gun" unique_id=754845921 node_paths=PackedStringArray("_camera", "_petra", "_gun")]
 script = ExtResource("5_wx6ak")
+_camera = NodePath("../../../../../../PetraCamera")
+_petra = NodePath("../../../../../..")
 _bulletSpeed = 300.0
 _bulletScene = ExtResource("7_522tq")
 _gun = NodePath("..")
 metadata/_custom_type_script = "uid://c0f18fq4jm3j6"
-
-[node name="OmniLight3D" type="OmniLight3D" parent="CanvasLayer/SubViewportContainer/PetraGunViewport/PetraGunCamera/Gun" unique_id=1439323809]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.40490818, 1.1291263, 0.06347066)
-layers = 2
 
 [node name="GunLoader" type="Node" parent="." unique_id=1383353187 node_paths=PackedStringArray("default_pivot")]
 script = ExtResource("12_20rfk")
