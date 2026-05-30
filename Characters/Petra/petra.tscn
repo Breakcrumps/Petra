@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://c7bjxg15tjfyr"]
 
 [ext_resource type="Script" uid="uid://dknpccl414s0n" path="res://Characters/Petra/PetraChar.cs" id="1_dcfmr"]
+[ext_resource type="Script" uid="uid://oik5vd440u75" path="res://Characters/Petra/Components/PetraCollision.cs" id="2_07x6y"]
 [ext_resource type="Script" uid="uid://c5etbjaaat57t" path="res://Characters/Petra/Components/PetraCamera.cs" id="2_xka01"]
 [ext_resource type="Script" uid="uid://420qp4km7kud" path="res://Characters/Petra/Components/PetraGunCamera.cs" id="3_u0x2d"]
 [ext_resource type="Resource" uid="uid://bioasj3vn5dju" path="res://Guns/GunTypes/RifleData.tres" id="5_6be6t"]
@@ -25,11 +26,15 @@ _camera = NodePath("PetraCamera")
 _slideCast = NodePath("SlideCast")
 Gun = NodePath("CanvasLayer/SubViewportContainer/PetraGunViewport/PetraGunCamera/Gun")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=888296012]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=888296012 node_paths=PackedStringArray("_petra", "_crouchPivot", "_slidePivot")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_e5gy7")
+script = ExtResource("2_07x6y")
+_petra = NodePath("..")
+_crouchPivot = NodePath("../Crouch")
+_slidePivot = NodePath("../Slide")
 
-[node name="PetraCamera" type="Camera3D" parent="." unique_id=418983480 node_paths=PackedStringArray("_petra", "_gun", "_leanRaycast", "_standLeanPivot", "_crouchPivot", "_crouchLeanPivot", "_slideLeanPivot")]
+[node name="PetraCamera" type="Camera3D" parent="." unique_id=418983480 node_paths=PackedStringArray("_petra", "_gun", "_leanRaycast", "_standLeanPivot", "_crouchPivot", "_crouchLeanPivot", "_slidePivot")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6091348, 0)
 cull_mask = 1048573
 fov = 60.0
@@ -40,7 +45,7 @@ _leanRaycast = NodePath("../LeanCast")
 _standLeanPivot = NodePath("../Lean")
 _crouchPivot = NodePath("../Crouch")
 _crouchLeanPivot = NodePath("../CrouchLean")
-_slideLeanPivot = NodePath("../Slide")
+_slidePivot = NodePath("../Slide")
 _mouseSensitivity = 0.005
 
 [node name="GunLeanRight" type="Node3D" parent="PetraCamera" unique_id=2054210899]

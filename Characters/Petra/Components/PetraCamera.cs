@@ -13,7 +13,7 @@ internal sealed partial class PetraCamera : Camera3D
   [Export] private Node3D _standLeanPivot = null!;
   [Export] private Node3D _crouchPivot = null!;
   [Export] private Node3D _crouchLeanPivot = null!;
-  [Export] private Node3D _slideLeanPivot = null!;
+  [Export] private Node3D _slidePivot = null!;
   private Vector3 _defaultPos;
 
   [Export] private float _aimFov = 35f;
@@ -60,7 +60,7 @@ internal sealed partial class PetraCamera : Camera3D
     switch (_petra.CurrentState)
     {
       case PetraChar.PetraState.Sliding:
-        Position = Position.Lerp(to: _slideLeanPivot.Position, weight: 10f * (float)delta);
+        Position = Position.Lerp(to: _slidePivot.Position, weight: 10f * (float)delta);
         return;
       case PetraChar.PetraState.Crouching:
         HandleLeanPos(_crouchPivot.Position, _crouchLeanPivot.Position);
