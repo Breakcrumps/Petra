@@ -172,7 +172,7 @@ internal sealed partial class Gun : Node3D
 
     if (leanDir != 0f)
     {
-      if (_gunRay.IsColliding() || _petra.CurrentState == PetraChar.PetraState.Running)
+      if (_gunRay.IsColliding() || Input.IsActionPressed("Heap"))
       {
         nextPos = GunData.HeapAimPos;
       }
@@ -186,7 +186,7 @@ internal sealed partial class Gun : Node3D
     }
     else
     {
-      if (_gunRay.IsColliding() || _petra.CurrentState == PetraChar.PetraState.Running)
+      if (_gunRay.IsColliding() || Input.IsActionPressed("Heap"))
       {
         nextPos = GunData.HeapAimPos;
         nextOrient = GunData.HeapAimOrient;
@@ -208,6 +208,20 @@ internal sealed partial class Gun : Node3D
 
   private void HandlePos(double delta)
   {
+    if (Input.IsActionPressed("Heap"))
+    {
+      Vector3 heapPos = Input.IsActionPressed("Down") ? GunData.BackRunPos : GunData.RunPos;
+      Quaternion heapOrient = Input.IsActionPressed("Down") ? GunData.BackRunOrient : GunData.RunOrient;
+      heapPos += _swayOffset.Position + _bobOffset.Position;
+      heapOrient *= (
+        Quaternion.FromEuler(_bobOffset.Rotation)
+        * Quaternion.FromEuler(_jumpOffset.Rotation)
+      );
+      Position = Position.Lerp(to: heapPos, weight: GunData.LeanSpeed * (float)delta);
+      Quaternion = Quaternion.Slerp(to: heapOrient, weight: GunData.LeanSpeed * (float)delta);
+      return;
+    }
+    
     Vector3 nextPos;
     Quaternion nextOrient;
     
@@ -309,9 +323,10 @@ internal sealed partial class Gun : Node3D
   {
     if (_petra.TimeMoving != 0f)
     {
-      _bobOffset.Position.Y = -GunData.BobAmp * Mathf.Abs(Mathf.Sin(_camera.BobFreq * _petra.TimeMoving));
-      _bobOffset.Position.X = -GunData.LeftRightAmp * Mathf.Abs(Mathf.PosMod(_petra.TimeMoving - Mathf.Pi / _camera.BobFreq,  2f * Mathf.Pi / _camera.BobFreq) - Mathf.Pi / _camera.BobFreq);
-      _bobOffset.Rotation.X = GunData.BobRotAmp * Mathf.Abs(Mathf.Sin(_camera.BobFreq * (_petra.TimeMoving + .01f * _camera.BobFreq)));
+      float bobCoef = Input.IsActionPressed("Aim") ? .3f : 1f;
+      _bobOffset.Position.Y = bobCoef * -GunData.BobAmp * Mathf.Abs(Mathf.Sin(_camera.BobFreq * _petra.TimeMoving));
+      _bobOffset.Position.X = bobCoef * -GunData.LeftRightAmp * Mathf.Abs(Mathf.PosMod(_petra.TimeMoving - Mathf.Pi / _camera.BobFreq,  2f * Mathf.Pi / _camera.BobFreq) - Mathf.Pi / _camera.BobFreq);
+      _bobOffset.Rotation.X = bobCoef * GunData.BobRotAmp * Mathf.Abs(Mathf.Sin(_camera.BobFreq * (_petra.TimeMoving + .01f * _camera.BobFreq)));
     }
     else
     {
@@ -338,6 +353,9 @@ internal sealed partial class Gun : Node3D
 
   private void HandleFire(double delta)
   {
+    if (Input.IsActionPressed("Heap") && !Input.IsActionPressed("Aim"))
+      return;
+    
     if (
       Input.IsActionJustPressed("Fire")
       && (Input.IsActionPressed("Aim")

@@ -98,7 +98,7 @@ collision_mask = 4
 collision_mask = 4
 
 [node name="Lean" type="Node3D" parent="." unique_id=866703412]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5652243, 1.5232453, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.48976374, 1.5979681, 0)
 
 [node name="CrouchLean" type="Node3D" parent="." unique_id=1321308146]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.652, 0.933, 0)
@@ -145,9 +145,8 @@ _sparksScene = ExtResource("7_ya1fb")
 _muzzleFlashImage = ExtResource("8_la8vp")
 _muzzleFlash = NodePath("../../../../../PetraCamera/MuzzleFlash")
 
-[node name="BulletSpawner" type="Node3D" parent="CanvasLayer/SubViewportContainer/PetraGunViewport/PetraGunCamera/Gun" unique_id=754845921 node_paths=PackedStringArray("_camera", "_petra", "_gun")]
+[node name="BulletSpawner" type="Node3D" parent="CanvasLayer/SubViewportContainer/PetraGunViewport/PetraGunCamera/Gun" unique_id=754845921 node_paths=PackedStringArray("_petra", "_gun")]
 script = ExtResource("5_wx6ak")
-_camera = NodePath("../../../../../../PetraCamera")
 _petra = NodePath("../../../../../..")
 _bulletSpeed = 300.0
 _bulletScene = ExtResource("7_522tq")

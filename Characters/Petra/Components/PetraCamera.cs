@@ -25,7 +25,7 @@ internal sealed partial class PetraCamera : Camera3D
   [Export] private float _leanSpeed = 10f;
 
   [Export] internal float WalkBobFreq = 5f;
-  [Export] internal float RunBobFreq = 10f;
+  [Export] internal float RunBobFreq = 9f;
   internal float BobFreq;
   [Export] private float _bobAmp = .1f;
   private Vector3 _bobOffset;
