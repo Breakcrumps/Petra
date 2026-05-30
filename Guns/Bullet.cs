@@ -3,8 +3,9 @@ using Godot.Collections;
 using Petra.Characters;
 using Petra.Characters.Petra;
 using Petra.Types;
+using Petra.Utils;
 
-namespace Petra.Resources.Objects.Guns;
+namespace Petra.Guns;
 
 [GlobalClass]
 internal sealed partial class Bullet : Node3D
@@ -53,7 +54,10 @@ internal sealed partial class Bullet : Node3D
       Node collider = (Node)(GodotObject)result["collider"];
       Rid hitRid = result["rid"].AsRid();
 
-      SpawnDecal(hitPos, normal, collider);
+      if (collider is IBreakable breakable)
+        breakable.Breaker.Break(hitPos, -Basis.Z * (Speed * .0075f));
+      else
+        SpawnDecal(hitPos, normal, collider);
 
       if (collider is IDamageable damageable)
         damageable.TakeDamage(new Attack(damage: Damage));

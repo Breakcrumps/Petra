@@ -1,6 +1,6 @@
 using Godot;
 using Petra.Characters.Petra.Components;
-using Petra.Resources.Objects.Guns;
+using Petra.Guns;
 using Petra.Types;
 
 namespace Petra.Characters.Petra;
@@ -136,7 +136,12 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   private PetraState HandleRunningTransitions()
   {
     if (Input.IsActionJustPressed("Crouch"))
-      return Input.IsActionPressed("Up") ? InitSlide() : PetraState.Crouching;
+    {
+      if (Input.IsActionPressed("Up") && IsOnFloor() && Velocity != Vector3.Zero)
+        return InitSlide();
+      if (Velocity == Vector3.Zero)
+        return PetraState.Crouching;
+    }
     if (!Input.IsActionPressed("Run") || Velocity == Vector3.Zero)
       return PetraState.Idle;
     return PetraState.Running;

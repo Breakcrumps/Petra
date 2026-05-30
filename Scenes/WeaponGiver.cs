@@ -1,6 +1,6 @@
 using Godot;
 using Petra.Characters.Petra;
-using Petra.Resources.Objects.Guns;
+using Petra.Guns;
 
 namespace Petra.Scenes;
 

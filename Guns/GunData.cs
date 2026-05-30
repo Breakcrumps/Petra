@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Petra.Resources.Objects.Guns;
+namespace Petra.Guns;
 
 [GlobalClass]
 internal sealed partial class GunData : Resource

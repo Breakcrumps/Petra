@@ -1,9 +1,8 @@
 using Godot;
 using Petra.Characters.Petra;
 using Petra.Characters.Petra.Components;
-using Petra.Guns;
 
-namespace Petra.Resources.Objects.Guns;
+namespace Petra.Guns;
 
 [GlobalClass]
 internal sealed partial class Gun : Node3D
@@ -354,7 +353,10 @@ internal sealed partial class Gun : Node3D
   private void HandleFire(double delta)
   {
     if (Input.IsActionPressed("Heap") && !Input.IsActionPressed("Aim"))
+    {
+      HandleRecoil(delta);
       return;
+    }
     
     if (
       Input.IsActionJustPressed("Fire")
@@ -364,50 +366,56 @@ internal sealed partial class Gun : Node3D
       )
       && _delayTimer == 0f
     )
-    {
-      BulletSpawner.Fire();
-      _recoilOffset.Position = Input.IsActionPressed("Aim") ? GunData.AimRecoilOffsetTarget.Position : GunData.RecoilOffsetTarget.Position;
-      _recoilOffset.Rotation = Input.IsActionPressed("Aim") ? GunData.AimRecoilOffsetTarget.Rotation : GunData.RecoilOffsetTarget.Rotation;
-      _recoilOffset.Position.X = Input.IsActionPressed("Aim") ? (GD.Randf() - .5f) / 12f : (GD.Randf() - .5f) / 4f;
-      _recoilOffset.Rotation.Y = Input.IsActionPressed("Aim") ? (GD.Randf() - .5f) / 12f : (GD.Randf() - .5f) / 4f;
-      if (_petra.CurrentState == PetraChar.PetraState.Crouching)
-      {
-        _recoilOffset.Position.Y *= .5f;
-        _recoilOffset.Rotation.X *= .5f;
-      }
-      _delayTimer = GunData.DelayTime;
-      _muzzleTimer = GunData.MuzzleTime;
-      _muzzleFlash.LightEnergy = _defaultMuzzleEnergy;
-      for (int i = 0; i < _localMuzzleFlashes.Length; i++)
-        _localMuzzleFlashes[i].LightEnergy = GunData.LocalMuzzleFlashEnergy;
-      _muzzleFlashSprite.Visible = true;
-
-      GpuParticles3D nextSmoke = _smokePool[_nextParticleIdx];
-      nextSmoke.GlobalPosition = BulletSpawner.GlobalPosition;
-      nextSmoke.Transform = nextSmoke.Transform.LookingAt(nextSmoke.GlobalPosition - BulletSpawner.GlobalBasis.Z);
-      nextSmoke.Restart();
-      nextSmoke.AmountRatio = GD.Randf();
-      nextSmoke.Emitting = true;
-      DelayedParticles nextSparks = _sparksPool[_nextParticleIdx];
-      nextSparks.GlobalPosition = BulletSpawner.GlobalPosition;
-      nextSparks.Transform = nextSparks.Transform.LookingAt(nextSparks.GlobalPosition - BulletSpawner.GlobalBasis.Z);
-      nextSparks.AmountRatio = GD.Randf();
-      nextSparks.Emit();
-      _nextParticleIdx = (_nextParticleIdx + 1) % _poolSize;
-    }
+      Fire();
     else
-    {
-      _recoilOffset.Position = _recoilOffset.Position.Lerp(to: Vector3.Zero, weight: 20f * (float)delta);
-      _recoilOffset.Rotation = _recoilOffset.Rotation.Lerp(to: Vector3.Zero, weight: 20f * (float)delta);
-      _delayTimer = Mathf.Max(_delayTimer - (float)delta, 0f);
+      HandleRecoil(delta);
+  }
 
-      _muzzleTimer = Mathf.Max(_muzzleTimer - (float)delta, 0f);
-      for (int i = 0; i < _localMuzzleFlashes.Length; i++)
-      {
-        _localMuzzleFlashes[i].LightEnergy = Mathf.Lerp(0f, GunData.LocalMuzzleFlashEnergy, _muzzleTimer / GunData.MuzzleTime);
-        _muzzleFlashSprite.Transparency = Mathf.Lerp(1f, 0f, _muzzleTimer / GunData.MuzzleTime);
-      }
-      _muzzleFlash.LightEnergy = Mathf.Lerp(0f, _defaultMuzzleEnergy, _muzzleTimer / GunData.MuzzleTime);
+  private void Fire()
+  {
+    BulletSpawner.Fire();
+    _recoilOffset.Position = Input.IsActionPressed("Aim") ? GunData.AimRecoilOffsetTarget.Position : GunData.RecoilOffsetTarget.Position;
+    _recoilOffset.Rotation = Input.IsActionPressed("Aim") ? GunData.AimRecoilOffsetTarget.Rotation : GunData.RecoilOffsetTarget.Rotation;
+    _recoilOffset.Position.X = Input.IsActionPressed("Aim") ? (GD.Randf() - .5f) / 12f : (GD.Randf() - .5f) / 4f;
+    _recoilOffset.Rotation.Y = Input.IsActionPressed("Aim") ? (GD.Randf() - .5f) / 12f : (GD.Randf() - .5f) / 4f;
+    if (_petra.CurrentState == PetraChar.PetraState.Crouching)
+    {
+      _recoilOffset.Position.Y *= .5f;
+      _recoilOffset.Rotation.X *= .5f;
     }
+    _delayTimer = GunData.DelayTime;
+    _muzzleTimer = GunData.MuzzleTime;
+    _muzzleFlash.LightEnergy = _defaultMuzzleEnergy;
+    for (int i = 0; i < _localMuzzleFlashes.Length; i++)
+      _localMuzzleFlashes[i].LightEnergy = GunData.LocalMuzzleFlashEnergy;
+    _muzzleFlashSprite.Visible = true;
+
+    GpuParticles3D nextSmoke = _smokePool[_nextParticleIdx];
+    nextSmoke.GlobalPosition = BulletSpawner.GlobalPosition;
+    nextSmoke.Transform = nextSmoke.Transform.LookingAt(nextSmoke.GlobalPosition - BulletSpawner.GlobalBasis.Z);
+    nextSmoke.Restart();
+    nextSmoke.AmountRatio = GD.Randf();
+    nextSmoke.Emitting = true;
+    DelayedParticles nextSparks = _sparksPool[_nextParticleIdx];
+    nextSparks.GlobalPosition = BulletSpawner.GlobalPosition;
+    nextSparks.Transform = nextSparks.Transform.LookingAt(nextSparks.GlobalPosition - BulletSpawner.GlobalBasis.Z);
+    nextSparks.AmountRatio = GD.Randf();
+    nextSparks.Emit();
+    _nextParticleIdx = (_nextParticleIdx + 1) % _poolSize;
+  }
+
+  private void HandleRecoil(double delta)
+  {
+    _recoilOffset.Position = _recoilOffset.Position.Lerp(to: Vector3.Zero, weight: 20f * (float)delta);
+    _recoilOffset.Rotation = _recoilOffset.Rotation.Lerp(to: Vector3.Zero, weight: 20f * (float)delta);
+    _delayTimer = Mathf.Max(_delayTimer - (float)delta, 0f);
+
+    _muzzleTimer = Mathf.Max(_muzzleTimer - (float)delta, 0f);
+    for (int i = 0; i < _localMuzzleFlashes.Length; i++)
+    {
+      _localMuzzleFlashes[i].LightEnergy = Mathf.Lerp(0f, GunData.LocalMuzzleFlashEnergy, _muzzleTimer / GunData.MuzzleTime);
+      _muzzleFlashSprite.Transparency = Mathf.Lerp(1f, 0f, _muzzleTimer / GunData.MuzzleTime);
+    }
+    _muzzleFlash.LightEnergy = Mathf.Lerp(0f, _defaultMuzzleEnergy, _muzzleTimer / GunData.MuzzleTime);
   }
 }
