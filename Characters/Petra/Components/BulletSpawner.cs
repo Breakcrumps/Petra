@@ -18,7 +18,7 @@ internal sealed partial class BulletSpawner : Node3D
     bullet.GlobalPosition = GlobalPosition;
     bullet.GlobalTransform = bullet.GlobalTransform.LookingAt(GlobalPosition - _gun.GlobalBasis.Z);
     bullet.Speed = _bulletSpeed;
-    bullet.Damage = _gun.GunData.Damage;
+    bullet.Damage = _gun.CurrentGunData!.Damage;
     bullet.Petra = _petra;
 
     Vector3 backTarget = GlobalPosition + 2f * bullet.GlobalBasis.Z;

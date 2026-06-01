@@ -1,3 +1,4 @@
+using System;
 using Godot;
 using Petra.Characters.Petra;
 using Petra.Characters.Petra.Components;
@@ -11,7 +12,13 @@ internal sealed partial class Gun : Node3D
   [Export] private GunData? _gunData2;
   [Export] private GunData? _gunData3;
   [Export] private GunData? _gunData4;
-  internal GunData GunData = null!;
+  private GunData?[] _gunDatas = new GunData?[4];
+  internal GunData? CurrentGunData;
+  private Node3D?[] _gunNodes = new Node3D?[4];
+  private Node3D? _currentGunNode;
+  private AnimationPlayer? _currentGunAnimPlayer;
+
+  private int _curCartridges;
 
   [Export] internal BulletSpawner BulletSpawner = null!;
   private float _delayTimer;
@@ -34,6 +41,7 @@ internal sealed partial class Gun : Node3D
   private float _muzzleTimer;
   private float _defaultMuzzleEnergy;
 
+  [Obsolete]
   private MeshInstance3D _meshNode = null!;
 
   private PosAndRot _swayOffset = new();
@@ -44,24 +52,37 @@ internal sealed partial class Gun : Node3D
   private Vector2 _mouseRelative;
 
   internal bool InAim;
+  private bool _inReload;
 
   public override void _Ready()
   {
+    _gunDatas = [_gunData1, _gunData2, _gunData3, _gunData4];
+    
     if (_gunData1 is not null)
-      GunData = _gunData1;
-    else if (_gunData2 is not null)
-      GunData = _gunData2;
-    else if (_gunData3 is not null)
-      GunData = _gunData3;
-    else if (_gunData4 is not null)
-      GunData = _gunData4;
-    else
+      _gunNodes[0] = _gunData1.GunScene.Instantiate<Node3D>();
+    if (_gunData2 is not null)
+      _gunNodes[1] = _gunData2.GunScene.Instantiate<Node3D>();
+    if (_gunData3 is not null)
+      _gunNodes[2] = _gunData3.GunScene.Instantiate<Node3D>();
+    if (_gunData4 is not null)
+      _gunNodes[3] = _gunData4.GunScene.Instantiate<Node3D>();
+
+    for (int i = 0; i < 4; i++)
     {
-      QueueFree();
-      return;
+      if (_gunDatas[i] is not null)
+      {
+        CurrentGunData = _gunDatas[i];
+        _currentGunNode = _gunNodes[i];
+        AddChild(_currentGunNode);
+        _currentGunAnimPlayer = _currentGunNode!.GetNode<AnimationPlayer>("AnimationPlayer");
+        _currentGunAnimPlayer.Play("Cock");
+        _curCartridges = CurrentGunData!.MaxCartridges;
+        break;
+      }
     }
     
-    BulletSpawner.Position = GunData.BulletSpawnerPos;
+    if (CurrentGunData is not null)
+      BulletSpawner.Position = CurrentGunData.BulletSpawnerPos;
 
     _localMuzzleFlashes = new OmniLight3D[2];
     CreateLocalMuzzleFlash(0, -Basis.Z + Basis.Y);
@@ -96,11 +117,6 @@ internal sealed partial class Gun : Node3D
     _muzzleFlashSprite.Layers = 2;
     _muzzleFlashSprite.Texture = _muzzleFlashImage;
     _muzzleFlashSprite.Scale *= .25f;
-
-    _meshNode = new();
-    AddChild(_meshNode);
-    _meshNode.Layers = 2;
-    _meshNode.Mesh = GunData.Mesh;
   }
 
   private void CreateLocalMuzzleFlash(int idx, Vector3 offset)
@@ -108,15 +124,28 @@ internal sealed partial class Gun : Node3D
     BulletSpawner.AddChild(_localMuzzleFlashes[idx] = new());
     _localMuzzleFlashes[idx].LightEnergy = 0f;
     _localMuzzleFlashes[idx].Position = offset;
-    _localMuzzleFlashes[idx].LightColor = GunData.MuzzleFlashColor;
+    _localMuzzleFlashes[idx].LightColor = CurrentGunData!.MuzzleFlashColor;
     _localMuzzleFlashes[idx].Layers = 2;
   }
 
-  internal void LoadData(GunData data)
+  private void TryLoadData(int idx)
+    => TryLoadData(_gunDatas[idx], _gunNodes[idx]);
+
+  private void TryLoadData(GunData? data, Node3D? node)
   {
-    GunData = data;
-    BulletSpawner.Position = GunData.BulletSpawnerPos;
-    _meshNode.Mesh = GunData.Mesh;
+    if (node is null || data is null)
+      return;
+    
+    CurrentGunData = data;
+    BulletSpawner.Position = CurrentGunData.BulletSpawnerPos;
+
+    if (_currentGunNode is not null)
+      RemoveChild(_currentGunNode);
+    _currentGunNode = node;
+    _currentGunAnimPlayer = _currentGunNode.GetNode<AnimationPlayer>("AnimationPlayer");
+    AddChild(_currentGunNode);
+    _currentGunAnimPlayer.Play("Cock");
+    _curCartridges = CurrentGunData.MaxCartridges;
   }
 
   public override void _UnhandledInput(InputEvent @event)
@@ -127,18 +156,21 @@ internal sealed partial class Gun : Node3D
 
   public override void _PhysicsProcess(double delta)
   {
-    if (Input.IsActionPressed("Weapon1") && _gunData1 is not null)
-      LoadData(_gunData1);
-    else if (Input.IsActionPressed("Weapon2") && _gunData2 is not null)
-      LoadData(_gunData2);
-    else if (Input.IsActionPressed("Weapon3") && _gunData3 is not null)
-      LoadData(_gunData3);
-    else if (Input.IsActionPressed("Weapon4") && _gunData4 is not null)
-      LoadData(_gunData4);
+    if (Input.IsActionJustPressed("Weapon1"))
+      TryLoadData(idx: 0);
+    else if (Input.IsActionJustPressed("Weapon2"))
+      TryLoadData(idx: 1);
+    else if (Input.IsActionJustPressed("Weapon3"))
+      TryLoadData(idx: 2);
+    else if (Input.IsActionJustPressed("Weapon4"))
+      TryLoadData(idx: 3);
+
+    if (CurrentGunData is null)
+      return;
     
     if (_petra.CurrentState == PetraChar.PetraState.Sliding)
     {
-      Position = Position.Lerp(to: GunData.SlidePos, weight: 10f * (float)delta);
+      Position = Position.Lerp(to: CurrentGunData.SlidePos, weight: 10f * (float)delta);
       return;
     }
     
@@ -155,6 +187,8 @@ internal sealed partial class Gun : Node3D
       HandleAimPos(delta);
     else
       HandlePos(delta);
+
+    HandleReload();
   }
 
   private void HandleAimPos(double delta)
@@ -173,35 +207,35 @@ internal sealed partial class Gun : Node3D
     {
       if (_gunRay.IsColliding() || Input.IsActionPressed("Heap"))
       {
-        nextPos = GunData.HeapAimPos;
+        nextPos = CurrentGunData!.HeapAimPos;
       }
       else
       {
-        nextPos = leanDir > 0f ? GunData.RightLeanAimPos : GunData.LeftLeanAimPos;
+        nextPos = leanDir > 0f ? CurrentGunData!.RightLeanAimPos : CurrentGunData!.LeftLeanAimPos;
         InAim = true;
       }
-      float leanAngle = leanDir == 1f ? GunData.LeanRightAngle : GunData.LeanLeftAngle;
+      float leanAngle = leanDir == 1f ? CurrentGunData.LeanRightAngle : CurrentGunData.LeanLeftAngle;
       nextOrient = Quaternion.FromEuler(new Vector3(0f, 0f, leanAngle));
     }
     else
     {
       if (_gunRay.IsColliding() || Input.IsActionPressed("Heap"))
       {
-        nextPos = GunData.HeapAimPos;
-        nextOrient = GunData.HeapAimOrient;
+        nextPos = CurrentGunData!.HeapAimPos;
+        nextOrient = CurrentGunData.HeapAimOrient;
       }
       else
       {
         InAim = true;
-        nextPos = GunData.AimPos;
-        nextOrient = GunData.DefaultOrient;
+        nextPos = CurrentGunData!.AimPos;
+        nextOrient = CurrentGunData.DefaultOrient;
       }
     }
 
     nextPos += _bobOffset.Position + _swayOffset.Position + _recoilOffset.Position;
     nextOrient *= Quaternion.FromEuler(_recoilOffset.Rotation) * Quaternion.FromEuler(_jumpOffset.Rotation);
     
-    Position = Position.Lerp(to: nextPos, weight: GunData.AimSpeed * (float)delta);
+    Position = Position.Lerp(to: nextPos, weight: CurrentGunData.AimSpeed * (float)delta);
     Quaternion = Quaternion.Slerp(to: nextOrient, weight: 10f * (float)delta);
   }
 
@@ -209,15 +243,15 @@ internal sealed partial class Gun : Node3D
   {
     if (Input.IsActionPressed("Heap"))
     {
-      Vector3 heapPos = Input.IsActionPressed("Down") ? GunData.BackRunPos : GunData.RunPos;
-      Quaternion heapOrient = Input.IsActionPressed("Down") ? GunData.BackRunOrient : GunData.RunOrient;
+      Vector3 heapPos = Input.IsActionPressed("Down") ? CurrentGunData!.BackRunPos : CurrentGunData!.RunPos;
+      Quaternion heapOrient = Input.IsActionPressed("Down") ? CurrentGunData.BackRunOrient : CurrentGunData.RunOrient;
       heapPos += _swayOffset.Position + _bobOffset.Position;
       heapOrient *= (
         Quaternion.FromEuler(_bobOffset.Rotation)
         * Quaternion.FromEuler(_jumpOffset.Rotation)
       );
-      Position = Position.Lerp(to: heapPos, weight: GunData.LeanSpeed * (float)delta);
-      Quaternion = Quaternion.Slerp(to: heapOrient, weight: GunData.LeanSpeed * (float)delta);
+      Position = Position.Lerp(to: heapPos, weight: CurrentGunData.LeanSpeed * (float)delta);
+      Quaternion = Quaternion.Slerp(to: heapOrient, weight: CurrentGunData.LeanSpeed * (float)delta);
       return;
     }
     
@@ -235,34 +269,34 @@ internal sealed partial class Gun : Node3D
 
     if (_petra.CurrentState == PetraChar.PetraState.Crouching)
     {
-      defaultPos = GunData.CrouchPos;
-      rightLeanPos = GunData.CrouchRightLeanPos;
-      leftLeanPos = GunData.CrouchLeftLeanPos;
+      defaultPos = CurrentGunData!.CrouchPos;
+      rightLeanPos = CurrentGunData.CrouchRightLeanPos;
+      leftLeanPos = CurrentGunData.CrouchLeftLeanPos;
     }
     else
     {
-      defaultPos = GunData.DefaultPos;
-      rightLeanPos = GunData.RightLeanPos;
-      leftLeanPos = GunData.LeftLeanPos;
+      defaultPos = CurrentGunData!.DefaultPos;
+      rightLeanPos = CurrentGunData.RightLeanPos;
+      leftLeanPos = CurrentGunData.LeftLeanPos;
     }
 
     if (leanDir != 0f)
     {
       nextPos = leanDir > 0f ? rightLeanPos : leftLeanPos;
-      float leanAngle = leanDir > 0f ? GunData.LeanRightAngle : GunData.LeanLeftAngle;
+      float leanAngle = leanDir > 0f ? CurrentGunData.LeanRightAngle : CurrentGunData.LeanLeftAngle;
       nextOrient = Quaternion.FromEuler(new Vector3(0f, 0f, leanAngle));
     }
     else
     {
       if (_petra.CurrentState == PetraChar.PetraState.Running)
       {
-        nextPos = Input.IsActionPressed("Down") ? GunData.BackRunPos : GunData.RunPos;
-        nextOrient = Input.IsActionPressed("Down") ? GunData.BackRunOrient: GunData.RunOrient;
+        nextPos = Input.IsActionPressed("Down") ? CurrentGunData.BackRunPos : CurrentGunData.RunPos;
+        nextOrient = Input.IsActionPressed("Down") ? CurrentGunData.BackRunOrient: CurrentGunData.RunOrient;
       }
       else
       {
         nextPos = defaultPos;
-        nextOrient = GunData.DefaultOrient;
+        nextOrient = CurrentGunData.DefaultOrient;
       }
     }
 
@@ -276,8 +310,8 @@ internal sealed partial class Gun : Node3D
       * Quaternion.FromEuler(_jumpOffset.Rotation)
     );
 
-    Position = Position.Lerp(to: nextPos, weight: GunData.LeanSpeed * (float)delta);
-    Quaternion = Quaternion.Slerp(to: nextOrient, weight: GunData.LeanSpeed * (float)delta);
+    Position = Position.Lerp(to: nextPos, weight: CurrentGunData.LeanSpeed * (float)delta);
+    Quaternion = Quaternion.Slerp(to: nextOrient, weight: CurrentGunData.LeanSpeed * (float)delta);
   }
 
   private void UpdateNearWallOffsets(double delta)
@@ -290,12 +324,12 @@ internal sealed partial class Gun : Node3D
       float collisionDist = _gunRay.GetCollisionPoint().DistanceTo(_gunRay.GlobalPosition);
       float proximity = Mathf.Clamp(1.0f - (collisionDist / maxDist), 0f, 1f);
       
-      targetPosOffset = proximity * (GunData.NearWallPos - GunData.DefaultPos);
-      targetOrientation = proximity * GunData.NearWallRot;
+      targetPosOffset = proximity * (CurrentGunData!.NearWallPos - CurrentGunData.DefaultPos);
+      targetOrientation = proximity * CurrentGunData.NearWallRot;
     }
 
-    _nearWallOffset.Position = _nearWallOffset.Position.Lerp(to: targetPosOffset, weight: GunData.PullBackSpeed * (float)delta);
-    _nearWallOffset.Rotation = _nearWallOffset.Rotation.Lerp(to: targetOrientation, weight: GunData.PullBackSpeed * (float)delta);
+    _nearWallOffset.Position = _nearWallOffset.Position.Lerp(to: targetPosOffset, weight: CurrentGunData!.PullBackSpeed * (float)delta);
+    _nearWallOffset.Rotation = _nearWallOffset.Rotation.Lerp(to: targetOrientation, weight: CurrentGunData.PullBackSpeed * (float)delta);
   }
 
   private void UpdateSwayOffsets(double delta)
@@ -305,15 +339,15 @@ internal sealed partial class Gun : Node3D
     else if ((_mouseRelative.X > 0 && _swayOffset.Position.X > 0) || (_mouseRelative.X < 0 && _swayOffset.Position.X < 0))
       _mouseRelative.X = 0;
     
-    float targetSwayX = -_mouseRelative.X * GunData.SwayAmount;
-    float targetSwayY = _mouseRelative.Y * GunData.SwayAmount;
+    float targetSwayX = -_mouseRelative.X * CurrentGunData!.SwayAmount;
+    float targetSwayY = _mouseRelative.Y * CurrentGunData.SwayAmount;
 
-    targetSwayX = Mathf.Clamp(targetSwayX, -GunData.SwayThreshold, GunData.SwayThreshold);
-    targetSwayY = Mathf.Clamp(targetSwayY, -GunData.SwayThreshold, GunData.SwayThreshold);
+    targetSwayX = Mathf.Clamp(targetSwayX, -CurrentGunData.SwayThreshold, CurrentGunData.SwayThreshold);
+    targetSwayY = Mathf.Clamp(targetSwayY, -CurrentGunData.SwayThreshold, CurrentGunData.SwayThreshold);
 
     Vector3 targetSway = new(targetSwayX, targetSwayY, 0);
 
-    _swayOffset.Position = _swayOffset.Position.Lerp(targetSway, GunData.SwayLerpSpeed * (float)delta);
+    _swayOffset.Position = _swayOffset.Position.Lerp(targetSway, CurrentGunData.SwayLerpSpeed * (float)delta);
 
     _mouseRelative *= .2f;
   }
@@ -323,14 +357,14 @@ internal sealed partial class Gun : Node3D
     if (_petra.TimeMoving != 0f)
     {
       float bobCoef = Input.IsActionPressed("Aim") ? .3f : 1f;
-      _bobOffset.Position.Y = bobCoef * -GunData.BobAmp * Mathf.Abs(Mathf.Sin(_camera.BobFreq * _petra.TimeMoving));
-      _bobOffset.Position.X = bobCoef * -GunData.LeftRightAmp * Mathf.Abs(Mathf.PosMod(_petra.TimeMoving - Mathf.Pi / _camera.BobFreq,  2f * Mathf.Pi / _camera.BobFreq) - Mathf.Pi / _camera.BobFreq);
-      _bobOffset.Rotation.X = bobCoef * GunData.BobRotAmp * Mathf.Abs(Mathf.Sin(_camera.BobFreq * (_petra.TimeMoving + .01f * _camera.BobFreq)));
+      _bobOffset.Position.Y = bobCoef * -CurrentGunData!.BobAmp * Mathf.Abs(Mathf.Sin(_camera.BobFreq * _petra.TimeMoving));
+      _bobOffset.Position.X = bobCoef * -CurrentGunData.LeftRightAmp * Mathf.Abs(Mathf.PosMod(_petra.TimeMoving - Mathf.Pi / _camera.BobFreq,  2f * Mathf.Pi / _camera.BobFreq) - Mathf.Pi / _camera.BobFreq);
+      _bobOffset.Rotation.X = bobCoef * CurrentGunData.BobRotAmp * Mathf.Abs(Mathf.Sin(_camera.BobFreq * (_petra.TimeMoving + .01f * _camera.BobFreq)));
     }
     else
     {
-      _bobOffset.Position = _bobOffset.Position.Lerp(to: Vector3.Zero, weight: GunData.ReturnToPosSpeed * (float)delta);
-      _bobOffset.Rotation = _bobOffset.Rotation.Lerp(to: Vector3.Zero, weight: GunData.ReturnToPosSpeed * (float)delta);
+      _bobOffset.Position = _bobOffset.Position.Lerp(to: Vector3.Zero, weight: CurrentGunData!.ReturnToPosSpeed * (float)delta);
+      _bobOffset.Rotation = _bobOffset.Rotation.Lerp(to: Vector3.Zero, weight: CurrentGunData.ReturnToPosSpeed * (float)delta);
     }
   }
 
@@ -352,7 +386,7 @@ internal sealed partial class Gun : Node3D
 
   private void HandleFire(double delta)
   {
-    if (Input.IsActionPressed("Heap") && !Input.IsActionPressed("Aim"))
+    if (Input.IsActionPressed("Heap") && !Input.IsActionPressed("Aim") || _curCartridges == 0)
     {
       HandleRecoil(delta);
       return;
@@ -374,8 +408,12 @@ internal sealed partial class Gun : Node3D
   private void Fire()
   {
     BulletSpawner.Fire();
-    _recoilOffset.Position = Input.IsActionPressed("Aim") ? GunData.AimRecoilOffsetTarget.Position : GunData.RecoilOffsetTarget.Position;
-    _recoilOffset.Rotation = Input.IsActionPressed("Aim") ? GunData.AimRecoilOffsetTarget.Rotation : GunData.RecoilOffsetTarget.Rotation;
+    if (--_curCartridges != 0)
+      _currentGunAnimPlayer!.Play("Shoot");
+    else
+      _currentGunAnimPlayer!.Play("ShootLast");
+    _recoilOffset.Position = Input.IsActionPressed("Aim") ? CurrentGunData!.AimRecoilOffsetTarget.Position : CurrentGunData!.RecoilOffsetTarget.Position;
+    _recoilOffset.Rotation = Input.IsActionPressed("Aim") ? CurrentGunData.AimRecoilOffsetTarget.Rotation : CurrentGunData.RecoilOffsetTarget.Rotation;
     _recoilOffset.Position.X = Input.IsActionPressed("Aim") ? (GD.Randf() - .5f) / 12f : (GD.Randf() - .5f) / 4f;
     _recoilOffset.Rotation.Y = Input.IsActionPressed("Aim") ? (GD.Randf() - .5f) / 12f : (GD.Randf() - .5f) / 4f;
     if (_petra.CurrentState == PetraChar.PetraState.Crouching)
@@ -383,11 +421,11 @@ internal sealed partial class Gun : Node3D
       _recoilOffset.Position.Y *= .5f;
       _recoilOffset.Rotation.X *= .5f;
     }
-    _delayTimer = GunData.DelayTime;
-    _muzzleTimer = GunData.MuzzleTime;
+    _delayTimer = CurrentGunData.DelayTime;
+    _muzzleTimer = CurrentGunData.MuzzleTime;
     _muzzleFlash.LightEnergy = _defaultMuzzleEnergy;
     for (int i = 0; i < _localMuzzleFlashes.Length; i++)
-      _localMuzzleFlashes[i].LightEnergy = GunData.LocalMuzzleFlashEnergy;
+      _localMuzzleFlashes[i].LightEnergy = CurrentGunData.LocalMuzzleFlashEnergy;
     _muzzleFlashSprite.Visible = true;
 
     GpuParticles3D nextSmoke = _smokePool[_nextParticleIdx];
@@ -413,9 +451,24 @@ internal sealed partial class Gun : Node3D
     _muzzleTimer = Mathf.Max(_muzzleTimer - (float)delta, 0f);
     for (int i = 0; i < _localMuzzleFlashes.Length; i++)
     {
-      _localMuzzleFlashes[i].LightEnergy = Mathf.Lerp(0f, GunData.LocalMuzzleFlashEnergy, _muzzleTimer / GunData.MuzzleTime);
-      _muzzleFlashSprite.Transparency = Mathf.Lerp(1f, 0f, _muzzleTimer / GunData.MuzzleTime);
+      _localMuzzleFlashes[i].LightEnergy = Mathf.Lerp(0f, CurrentGunData!.LocalMuzzleFlashEnergy, _muzzleTimer / CurrentGunData.MuzzleTime);
+      _muzzleFlashSprite.Transparency = Mathf.Lerp(1f, 0f, _muzzleTimer / CurrentGunData.MuzzleTime);
     }
-    _muzzleFlash.LightEnergy = Mathf.Lerp(0f, _defaultMuzzleEnergy, _muzzleTimer / GunData.MuzzleTime);
+    _muzzleFlash.LightEnergy = Mathf.Lerp(0f, _defaultMuzzleEnergy, _muzzleTimer / CurrentGunData!.MuzzleTime);
+  }
+
+  private void HandleReload()
+  {
+    if (!Input.IsActionJustPressed("Reload"))
+      return;
+
+    _inReload = true;
+
+    if (_curCartridges == 0)
+      _currentGunAnimPlayer!.Play("ReloadLast");
+    else
+      _currentGunAnimPlayer!.Play("Reload");
+
+    _curCartridges = CurrentGunData!.MaxCartridges;
   }
 }

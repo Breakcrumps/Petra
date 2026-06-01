@@ -4,7 +4,6 @@
 [ext_resource type="Script" uid="uid://oik5vd440u75" path="res://Characters/Petra/Components/PetraCollision.cs" id="2_07x6y"]
 [ext_resource type="Script" uid="uid://c5etbjaaat57t" path="res://Characters/Petra/Components/PetraCamera.cs" id="2_xka01"]
 [ext_resource type="Script" uid="uid://420qp4km7kud" path="res://Characters/Petra/Components/PetraGunCamera.cs" id="3_u0x2d"]
-[ext_resource type="Resource" uid="uid://bioasj3vn5dju" path="res://Guns/GunTypes/RifleData.tres" id="5_6be6t"]
 [ext_resource type="Script" uid="uid://c0f18fq4jm3j6" path="res://Characters/Petra/Components/BulletSpawner.cs" id="5_wx6ak"]
 [ext_resource type="Resource" uid="uid://oktx1sepmnm" path="res://Guns/GunTypes/Hi-Power.tres" id="6_6uxd7"]
 [ext_resource type="PackedScene" uid="uid://bl8yrxw8wui7h" path="res://Guns/smoke_particles.tscn" id="6_522tq"]
@@ -139,8 +138,7 @@ _mainCamera = NodePath("../../../../PetraCamera")
 [node name="Gun" type="Node3D" parent="CanvasLayer/SubViewportContainer/PetraGunViewport/PetraGunCamera" unique_id=1445379131 node_paths=PackedStringArray("BulletSpawner", "_petra", "_camera", "_gunRay", "_muzzleFlash")]
 transform = Transform3D(0.99939084, 0, -0.034899496, 0, 1, 0, 0.034899496, 0, 0.99939084, 0.18306011, -0.35110945, -0.58030695)
 script = ExtResource("8_ya1fb")
-_gunData1 = ExtResource("5_6be6t")
-_gunData2 = ExtResource("6_6uxd7")
+_gunData1 = ExtResource("6_6uxd7")
 BulletSpawner = NodePath("BulletSpawner")
 _petra = NodePath("../../../../..")
 _camera = NodePath("../../../../../PetraCamera")

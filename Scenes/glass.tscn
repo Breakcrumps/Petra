@@ -11,7 +11,7 @@ data = PackedVector3Array(-0.0641, -1.5461, 1, -0.0641, 1.5461, -1, -0.0641, 1.5
 collision_layer = 4
 collision_mask = 15
 script = ExtResource("2_x0sly")
-DamageReduction = 1
+DamageReduction = 5
 BrokenScene = ExtResource("3_a2nsn")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." index="1" unique_id=616451653]
