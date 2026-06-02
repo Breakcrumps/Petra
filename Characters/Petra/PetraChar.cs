@@ -160,6 +160,7 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   {
     _slideDirection = Velocity.Normalized() with { Y = 0f };
     _slideCast.TargetPosition = _slideDirection;
+    _slideCast.ForceRaycastUpdate();
     _slideTimer = _slideTime;
     return PetraState.Sliding;
   }

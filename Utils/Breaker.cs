@@ -45,8 +45,8 @@ internal readonly struct Breaker
         continue;
 
       Vector3 difVector = shard.GlobalPosition - hitPos;
-      Vector3 radialImpulse = difVector.Normalized() * (float)GD.RandRange(2.0, 4.0);
-      Vector3 forwardImpulse = hitImpulse * 7f * (float)GD.RandRange(0.5, 1.5) / (1f + difVector.Length());
+      Vector3 radialImpulse = difVector.Normalized() * (float)GD.RandRange(.5, 1.0);
+      Vector3 forwardImpulse = hitImpulse * (float)GD.RandRange(0.5, 1.0) / (1f + difVector.Length());
       shard.ApplyCentralImpulse(radialImpulse + forwardImpulse);
 
       shard.AngularVelocity = new Vector3(

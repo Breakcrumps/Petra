@@ -21,7 +21,7 @@ internal sealed partial class BulletSpawner : Node3D
     bullet.Damage = _gun.CurrentGunData!.Damage;
     bullet.Petra = _petra;
 
-    Vector3 backTarget = GlobalPosition + 2f * bullet.GlobalBasis.Z;
+    Vector3 backTarget = GlobalPosition + 1.5f * bullet.GlobalBasis.Z;
     bullet.CheckCollisions(backTarget, GlobalPosition, excludePetra: true, hitBackFaces: true);
   }
 }

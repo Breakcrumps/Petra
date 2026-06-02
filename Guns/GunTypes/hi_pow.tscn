@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://cnkikshw6uwnv"]
+
+[ext_resource type="PackedScene" uid="uid://c5k6v5hyqa325" path="res://Import/Models/Hi-Pow.glb" id="1_uqkn2"]
+
+[node name="Hi-Pow" unique_id=1715231856 instance=ExtResource("1_uqkn2")]
+
+[node name="Skeleton3D" parent="Armature" parent_id_path=PackedInt32Array(1754608954) index="0" unique_id=456542315]
+bones/0/position = Vector3(5.3556003e-18, -0.07285545, 0.0061370195)
+bones/0/rotation = Quaternion(-0.11892264, 1.1836332e-07, -1.4176681e-08, 0.99290353)
+bones/1/rotation = Quaternion(0.7714919, -2.2753684e-07, -9.19689e-08, 0.6362393)
+bones/2/position = Vector3(6.657107e-09, 0.21588898, -0.027921937)
+bones/3/position = Vector3(-2.1963292e-11, -0.0010078953, 8.1793354e-05)
+bones/4/rotation = Quaternion(0.78589344, -1.9154833e-13, 1.873714e-07, 0.61836195)

@@ -1,4 +1,3 @@
-using System;
 using Godot;
 using Petra.Characters.Petra;
 using Petra.Characters.Petra.Components;
@@ -12,11 +11,12 @@ internal sealed partial class Gun : Node3D
   [Export] private GunData? _gunData2;
   [Export] private GunData? _gunData3;
   [Export] private GunData? _gunData4;
-  private GunData?[] _gunDatas = new GunData?[4];
+  private GunData?[] _gunDatas = null!;
   internal GunData? CurrentGunData;
-  private Node3D?[] _gunNodes = new Node3D?[4];
-  private Node3D? _currentGunNode;
+  private GunNode?[] _gunNodes = new GunNode?[4];
+  private GunNode? _currentGunNode;
   private AnimationPlayer? _currentGunAnimPlayer;
+  private Node3D? _currentShellEjectPivot;
 
   private int _curCartridges;
 
@@ -41,9 +41,6 @@ internal sealed partial class Gun : Node3D
   private float _muzzleTimer;
   private float _defaultMuzzleEnergy;
 
-  [Obsolete]
-  private MeshInstance3D _meshNode = null!;
-
   private PosAndRot _swayOffset = new();
   private PosAndRot _nearWallOffset = new();
   private PosAndRot _bobOffset = new();
@@ -59,13 +56,13 @@ internal sealed partial class Gun : Node3D
     _gunDatas = [_gunData1, _gunData2, _gunData3, _gunData4];
     
     if (_gunData1 is not null)
-      _gunNodes[0] = _gunData1.GunScene.Instantiate<Node3D>();
+      _gunNodes[0] = _gunData1.GunScene.Instantiate<GunNode>();
     if (_gunData2 is not null)
-      _gunNodes[1] = _gunData2.GunScene.Instantiate<Node3D>();
+      _gunNodes[1] = _gunData2.GunScene.Instantiate<GunNode>();
     if (_gunData3 is not null)
-      _gunNodes[2] = _gunData3.GunScene.Instantiate<Node3D>();
+      _gunNodes[2] = _gunData3.GunScene.Instantiate<GunNode>();
     if (_gunData4 is not null)
-      _gunNodes[3] = _gunData4.GunScene.Instantiate<Node3D>();
+      _gunNodes[3] = _gunData4.GunScene.Instantiate<GunNode>();
 
     for (int i = 0; i < 4; i++)
     {
@@ -77,6 +74,9 @@ internal sealed partial class Gun : Node3D
         _currentGunAnimPlayer = _currentGunNode!.GetNode<AnimationPlayer>("AnimationPlayer");
         _currentGunAnimPlayer.Play("Cock");
         _curCartridges = CurrentGunData!.MaxCartridges;
+        _currentShellEjectPivot = _currentGunNode.GetNode<Node3D>("ShellDir");
+        _currentGunNode.ShellEjected += EjectShell;
+        _currentGunNode.AmmoRefilled += () => _curCartridges = CurrentGunData.MaxCartridges;
         break;
       }
     }
@@ -131,7 +131,7 @@ internal sealed partial class Gun : Node3D
   private void TryLoadData(int idx)
     => TryLoadData(_gunDatas[idx], _gunNodes[idx]);
 
-  private void TryLoadData(GunData? data, Node3D? node)
+  private void TryLoadData(GunData? data, GunNode? node)
   {
     if (node is null || data is null)
       return;
@@ -145,6 +145,7 @@ internal sealed partial class Gun : Node3D
     _currentGunAnimPlayer = _currentGunNode.GetNode<AnimationPlayer>("AnimationPlayer");
     AddChild(_currentGunNode);
     _currentGunAnimPlayer.Play("Cock");
+    _currentShellEjectPivot = _currentGunNode.GetNode<Node3D>("ShellDir");
     _curCartridges = CurrentGunData.MaxCartridges;
   }
 
@@ -156,6 +157,9 @@ internal sealed partial class Gun : Node3D
 
   public override void _PhysicsProcess(double delta)
   {
+    if (Input.IsActionJustPressed("SlowDownTime"))
+      Engine.TimeScale = Engine.TimeScale == 1f ? .1f : 1f;
+    
     if (Input.IsActionJustPressed("Weapon1"))
       TryLoadData(idx: 0);
     else if (Input.IsActionJustPressed("Weapon2"))
@@ -468,7 +472,16 @@ internal sealed partial class Gun : Node3D
       _currentGunAnimPlayer!.Play("ReloadLast");
     else
       _currentGunAnimPlayer!.Play("Reload");
-
-    _curCartridges = CurrentGunData!.MaxCartridges;
+  }
+  
+  private void EjectShell()
+  {
+    RigidBody3D shell = CurrentGunData!.ShellScene.Instantiate<RigidBody3D>();
+    GetTree().CurrentScene.AddChild(shell);
+    shell.GlobalTransform = _currentShellEjectPivot!.GlobalTransform;
+    shell.ApplyCentralImpulse(_currentShellEjectPivot.GlobalBasis.X * 6f);
+    shell.ApplyTorqueImpulse(_currentShellEjectPivot.GlobalBasis.X * (float)GD.RandRange(-2.0, 2.0));
+    shell.ApplyTorqueImpulse(_currentShellEjectPivot.GlobalBasis.Y * (float)GD.RandRange(-2.0, 2.0));
+    shell.ApplyTorqueImpulse(_currentShellEjectPivot.GlobalBasis.Z * (float)GD.RandRange(-2.5, 2.5));
   }
 }

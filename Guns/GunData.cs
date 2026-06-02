@@ -6,6 +6,7 @@ namespace Petra.Guns;
 internal sealed partial class GunData : Resource
 {
   [Export] internal PackedScene GunScene = null!;
+  [Export] internal PackedScene ShellScene = null!;
   
   [Export] internal int MaxCartridges = 14;
   [Export] internal int Damage = 50;
