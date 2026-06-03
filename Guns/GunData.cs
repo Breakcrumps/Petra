@@ -5,10 +5,8 @@ namespace Petra.Guns;
 [GlobalClass]
 internal sealed partial class GunData : Resource
 {
-  [Export] internal PackedScene GunScene = null!;
-  [Export] internal PackedScene ShellScene = null!;
-  
-  [Export] internal int MaxCartridges = 14;
+  [Export] internal int CartridgesInMag = 14;
+  [Export] internal int CartridgesChambered = 1;
   [Export] internal int Damage = 50;
   [Export] internal float DelayTime = .075f;
   [Export] internal float LeanLeftAngle = Mathf.Pi / 10f;

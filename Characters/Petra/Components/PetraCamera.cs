@@ -7,7 +7,7 @@ namespace Petra.Characters.Petra.Components;
 internal sealed partial class PetraCamera : Camera3D
 {
   [Export] private PetraChar _petra = null!;
-  [Export] private Gun _gun = null!;
+  [Export] private GunsWrapper _gun = null!;
   [Export] private ShapeCast3D _leanRaycast = null!;
 
   [Export] private Node3D _standLeanPivot = null!;
