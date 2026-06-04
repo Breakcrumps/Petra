@@ -16,7 +16,7 @@ internal sealed partial class PetraCamera : Camera3D
   [Export] private Node3D _slidePivot = null!;
   private Vector3 _defaultPos;
 
-  [Export] private float _aimFov = 35f;
+  [Export] private float _aimFov = 50f;
   private float _defaultFov;
 
   [Export] private float _mouseSensitivity = .003f;

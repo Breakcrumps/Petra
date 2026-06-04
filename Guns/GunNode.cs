@@ -18,7 +18,7 @@ internal sealed partial class GunNode : Node3D
     RigidBody3D shell = _shellScene.Instantiate<RigidBody3D>();
     GetTree().CurrentScene.AddChild(shell);
     shell.GlobalTransform = _shellEjectPivot.GlobalTransform;
-    shell.ApplyCentralImpulse(_shellEjectPivot.GlobalBasis.X * 6f);
+    shell.ApplyCentralImpulse(_shellEjectPivot.GlobalBasis.X * .05f);
     shell.ApplyTorqueImpulse(_shellEjectPivot.GlobalBasis.X * (float)GD.RandRange(-2.0, 2.0));
     shell.ApplyTorqueImpulse(_shellEjectPivot.GlobalBasis.Y * (float)GD.RandRange(-2.0, 2.0));
     shell.ApplyTorqueImpulse(_shellEjectPivot.GlobalBasis.Z * (float)GD.RandRange(-2.5, 2.5));

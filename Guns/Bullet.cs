@@ -1,7 +1,6 @@
 using Godot;
 using Godot.Collections;
 using Petra.Characters;
-using Petra.Characters.Petra;
 using Petra.Types;
 using Petra.Utils;
 
@@ -17,8 +16,6 @@ internal sealed partial class Bullet : Node3D
   internal int Damage;
   internal float Speed;
 
-  internal PetraChar Petra = null!;
-
   public override void _PhysicsProcess(double delta)
   {
     Vector3 nextPos = GlobalPosition - Basis.Z * Speed * (float)delta;
@@ -31,19 +28,20 @@ internal sealed partial class Bullet : Node3D
       QueueFree();
   }
 
-  internal void CheckCollisions(Vector3 from, Vector3 to, bool excludePetra = false, bool hitBackFaces = false)
+  internal void CheckCollisions(Vector3 from, Vector3 to, PhysicsBody3D? excludedBody = null, bool hitBackFaces = false)
   {
     PhysicsDirectSpaceState3D spaceState = GetWorld3D().DirectSpaceState;
     Array<Rid> exclude = [];
 
-    if (excludePetra)
-      exclude.Add(Petra.GetRid());
+    if (excludedBody is not null)
+      exclude.Add(excludedBody.GetRid());
 
     while (Damage > 0)
     {
       var query = PhysicsRayQueryParameters3D.Create(from, to);
       query.Exclude = exclude;
       query.HitBackFaces = hitBackFaces;
+      query.CollisionMask = uint.MaxValue;
       Dictionary result = spaceState.IntersectRay(query);
 
       if (result.Count == 0)
@@ -55,7 +53,7 @@ internal sealed partial class Bullet : Node3D
       Rid hitRid = result["rid"].AsRid();
 
       if (collider is IBreakable breakable)
-        breakable.Breaker.Break(hitPos, -Basis.Z * (Speed * .0075f));
+        breakable.Breaker.Break(hitPos, -Speed * .0075f * Basis.Z);
       else
         SpawnDecal(hitPos, normal, collider);
 
@@ -64,7 +62,7 @@ internal sealed partial class Bullet : Node3D
 
       if (collider is RigidBody3D rigidBody)
       {
-        Vector3 impulse = -Basis.Z * (Speed * .0075f);
+        Vector3 impulse = -Speed * .0075f * Basis.Z;
         Vector3 hitPoint = hitPos - rigidBody.GlobalPosition;
         float distToHitPoint = hitPoint.Length();
         float impulseMult = -7f * distToHitPoint * distToHitPoint + 1f;

@@ -9,9 +9,7 @@ radius = 0.01
 [node name="ShellHi-Pow" unique_id=946931811 instance=ExtResource("1_yqojd")]
 collision_layer = 16
 collision_mask = 14
-
-[node name="Shell" parent="." index="0" unique_id=1563428812]
-layers = 2
+mass = 0.008
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." index="1" unique_id=997781767]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)

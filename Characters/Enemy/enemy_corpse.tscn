@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://cx5wpscvjay5s"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_047fb"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pluh0"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_47fdi"]
+size = Vector3(0.7, 0.3, 0.2)
+
+[node name="EnemyCorpse" type="RigidBody3D" unique_id=1128417888]
+collision_layer = 2
+collision_mask = 15
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=593969880]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_047fb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=959364541]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_pluh0")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=991502692]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5219003, -0.44949496)
+mesh = SubResource("BoxMesh_47fdi")

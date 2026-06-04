@@ -17,8 +17,6 @@ config/icon="res://icon.svg"
 
 [display]
 
-window/size/viewport_width=400
-window/size/viewport_height=300
 window/size/mode=3
 window/stretch/mode="viewport"
 
@@ -133,6 +131,7 @@ SlowDownTime={
 3d_physics/layer_2="Enemy"
 3d_physics/layer_3="World"
 3d_physics/layer_4="PlayerAttacks"
+3d_physics/layer_5="DynamicObjects"
 
 [physics]
 

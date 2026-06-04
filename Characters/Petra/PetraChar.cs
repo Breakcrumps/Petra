@@ -1,6 +1,7 @@
 using Godot;
 using Petra.Characters.Petra.Components;
 using Petra.Guns;
+using Petra.Static;
 using Petra.Types;
 
 namespace Petra.Characters.Petra;
@@ -33,6 +34,9 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   [Export] private float _slideSpeed = 7f;
   private Vector3 _slideDirection;
   private float _slideTimer;
+
+  public override void _EnterTree()
+    => GlobalInstances.Petra = this;
 
   public override void _Ready()
     => _health = _maxHealth;
@@ -95,7 +99,13 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
       return;
     }
     
-    Velocity = _slideDirection * _slideSpeed;
+    Vector3 newVelocity = _slideDirection * _slideSpeed;
+
+    if (!IsOnFloor())
+      newVelocity.Y = Velocity.Y - _gravity * (float)delta;
+    
+    Velocity = newVelocity;
+    
     MoveAndSlide();
 
     _slideTimer -= (float)delta;
@@ -166,5 +176,10 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   }
 
   public void TakeDamage(Attack attack)
-    => _health -= attack.Damage;
+  {
+    _health -= attack.Damage;
+
+    if (_health <= 0f)
+      GD.Print("You Died!");
+  }
 }

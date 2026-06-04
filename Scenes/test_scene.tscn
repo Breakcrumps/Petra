@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://c3b1s4yuuojil" path="res://Scenes/MultipleSpawner.cs" id="7_oho3u"]
 [ext_resource type="PackedScene" uid="uid://cjkek7w6ogkjv" path="res://Scenes/glass.tscn" id="9_d3awe"]
 [ext_resource type="PackedScene" uid="uid://s8kx0qq384um" path="res://Scenes/can.tscn" id="9_yglu3"]
+[ext_resource type="PackedScene" uid="uid://dm7t077licaos" path="res://Characters/Enemy/enemy.tscn" id="10_yglu3"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_hb2xm"]
 material = ExtResource("1_r5l72")
@@ -149,3 +150,6 @@ transform = Transform3D(0.7852953, 0, 0.6191214, 0, 1, 0, -0.6191214, 0, 0.78529
 
 [node name="Glass3" parent="." unique_id=619240305 instance=ExtResource("9_d3awe")]
 transform = Transform3D(0.70703274, 0, -0.70718074, 0, 1, 0, 0.70718074, 0, 0.70703274, -4.9021072, 1.5460646, -3.3246927)
+
+[node name="Enemy" parent="." unique_id=1642376714 instance=ExtResource("10_yglu3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10.733835)
