@@ -14,5 +14,9 @@ script = ExtResource("2_x0sly")
 DamageReduction = 5
 BrokenScene = ExtResource("3_a2nsn")
 
+[node name="Cube" parent="." index="0" unique_id=1746680399]
+transform = Transform3D(0.5, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5463015, 0)
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." index="1" unique_id=616451653]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5463015, 0)
 shape = SubResource("ConcavePolygonShape3D_x0sly")

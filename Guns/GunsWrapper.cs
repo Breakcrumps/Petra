@@ -7,6 +7,9 @@ namespace Petra.Guns;
 [GlobalClass]
 internal sealed partial class GunsWrapper : Node3D
 {
+  private enum FocusMode { Sight, Target, Squint }
+  private FocusMode _focusMode;
+  
   [Export] private PackedScene? _gunScene1;
   [Export] private PackedScene? _gunScene2;
   [Export] private PackedScene? _gunScene3;

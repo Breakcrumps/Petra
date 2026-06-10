@@ -1,21 +1,26 @@
 [gd_scene format=3 uid="uid://dm7t077licaos"]
 
 [ext_resource type="Script" uid="uid://biffbk85sccu7" path="res://Characters/Enemy/EnemyChar.cs" id="1_bxjv2"]
+[ext_resource type="PackedScene" uid="uid://cx5wpscvjay5s" path="res://Characters/Enemy/enemy_corpse.tscn" id="2_ebh2g"]
 [ext_resource type="Script" uid="uid://c0f18fq4jm3j6" path="res://Characters/Petra/Components/BulletSpawner.cs" id="2_kmuhc"]
 [ext_resource type="PackedScene" uid="uid://bna12vodjoo2y" path="res://Guns/bullet.tscn" id="3_qiabt"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_kmuhc"]
+radius = 0.49
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qiabt"]
+radius = 0.49
 
 [sub_resource type="BoxMesh" id="BoxMesh_ebh2g"]
 size = Vector3(0.7, 0.3, 0.2)
 
-[node name="Enemy" type="CharacterBody3D" unique_id=1642376714 node_paths=PackedStringArray("_bulletSpawner")]
+[node name="Enemy" type="CharacterBody3D" unique_id=1642376714 node_paths=PackedStringArray("_bulletSpawner", "_navAgent")]
 collision_layer = 2
 collision_mask = 15
 script = ExtResource("1_bxjv2")
 _bulletSpawner = NodePath("BulletSpawner")
+_navAgent = NodePath("NavigationAgent3D")
+_corpseScene = ExtResource("2_ebh2g")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1315721564]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -34,3 +39,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1460272, -0.57724506)
 script = ExtResource("2_kmuhc")
 _bulletScene = ExtResource("3_qiabt")
 metadata/_custom_type_script = "uid://c0f18fq4jm3j6"
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=317610487]
+height = 2.0

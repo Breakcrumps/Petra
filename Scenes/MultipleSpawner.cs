@@ -1,7 +1,7 @@
 using Godot;
 
 namespace Petra.Scenes;
-
+  
 internal sealed partial class MultipleSpawner : Node
 {
   [Export] private float _height = 10f;

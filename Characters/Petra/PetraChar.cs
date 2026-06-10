@@ -93,7 +93,7 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
 
   private void HandleSlide(double delta)
   {
-    if (_slideCast.IsColliding())
+    if (_slideCast.IsColliding() || !IsOnFloor())
     {
       CurrentState = PetraState.Crouching;
       return;

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Godot;
 
 namespace Petra.Utils;
@@ -6,33 +7,16 @@ internal readonly struct Breaker
 {
   private readonly Node3D _intact;
   private readonly PackedScene _brokenScene;
+  private readonly NavigationRegion3D _navRegion;
 
-  internal Breaker(Node3D intact, PackedScene brokenScene)
+  internal Breaker(Node3D intact, PackedScene brokenScene, NavigationRegion3D navRegion)
   {
     _intact = intact;
     _brokenScene = brokenScene;
-  }
-  
-  internal void Break()
-  {
-    Node3D broken = _brokenScene.Instantiate<Node3D>();
-    _intact.GetTree().CurrentScene.AddChild(broken);
-    broken.GlobalPosition = _intact.GlobalPosition;
-    broken.GlobalRotation = _intact.GlobalRotation;
-
-    foreach (Node child in broken.GetChildren())
-    {
-      if (child is not RigidBody3D shard)
-        continue;
-
-      Vector3 difVector = shard.GlobalPosition - _intact.GlobalPosition;
-      shard.ApplyCentralImpulse(difVector * .5f * (float)GD.RandRange(1.5, 4.0));
-    }
-
-    _intact.QueueFree();
+    _navRegion = navRegion;
   }
 
-  internal void Break(Vector3 hitPos, Vector3 hitImpulse)
+  internal async Task Break(Vector3 hitPos, Vector3 hitImpulse)
   {
     Node3D broken = _brokenScene.Instantiate<Node3D>();
     _intact.GetTree().CurrentScene.AddChild(broken);
@@ -57,5 +41,7 @@ internal readonly struct Breaker
     }
 
     _intact.QueueFree();
+    await _navRegion.ToSignal(_navRegion.GetTree(), SceneTree.SignalName.ProcessFrame);
+    _navRegion.BakeNavigationMesh();
   }
 }

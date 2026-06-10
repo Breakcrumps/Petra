@@ -38,7 +38,7 @@ internal sealed partial class Bullet : Node3D
 
     while (Damage > 0)
     {
-      var query = PhysicsRayQueryParameters3D.Create(from, to);
+      PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(from, to);
       query.Exclude = exclude;
       query.HitBackFaces = hitBackFaces;
       query.CollisionMask = uint.MaxValue;
@@ -53,7 +53,7 @@ internal sealed partial class Bullet : Node3D
       Rid hitRid = result["rid"].AsRid();
 
       if (collider is IBreakable breakable)
-        breakable.Breaker.Break(hitPos, -Speed * .0075f * Basis.Z);
+        _ = breakable.Breaker.Break(hitPos, -Speed * .0075f * Basis.Z);
       else
         SpawnDecal(hitPos, normal, collider);
 
