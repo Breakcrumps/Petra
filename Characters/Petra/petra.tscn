@@ -126,7 +126,7 @@ stretch = true
 [node name="PetraGunViewport" type="SubViewport" parent="CanvasLayer/SubViewportContainer" unique_id=624680960]
 transparent_bg = true
 handle_input_locally = false
-size = Vector2i(1152, 648)
+size = Vector2i(1920, 1200)
 render_target_update_mode = 4
 
 [node name="PetraGunCamera" type="Camera3D" parent="CanvasLayer/SubViewportContainer/PetraGunViewport" unique_id=468325678 node_paths=PackedStringArray("_mainCamera")]
@@ -135,9 +135,11 @@ cull_mask = 1047554
 script = ExtResource("3_u0x2d")
 _mainCamera = NodePath("../../../../PetraCamera")
 
-[node name="GunsWrapper" type="Node3D" parent="CanvasLayer/SubViewportContainer/PetraGunViewport/PetraGunCamera" unique_id=1445379131 node_paths=PackedStringArray("BulletSpawner", "_petra", "_camera", "_gunRay", "_muzzleFlash")]
+[node name="GunsWrapper" type="Node3D" parent="CanvasLayer/SubViewportContainer/PetraGunViewport/PetraGunCamera" unique_id=1445379131 node_paths=PackedStringArray("_container", "_mainCamera", "BulletSpawner", "_petra", "_camera", "_gunRay", "_muzzleFlash")]
 transform = Transform3D(0.99939084, 0, -0.034899496, 0, 1, 0, 0.034899496, 0, 0.99939084, 0.18306011, -0.35110945, -0.58030695)
 script = ExtResource("8_ya1fb")
+_container = NodePath("../../..")
+_mainCamera = NodePath("../../../../../PetraCamera")
 _gunScene1 = ExtResource("6_07x6y")
 BulletSpawner = NodePath("BulletSpawner")
 _petra = NodePath("../../../../..")

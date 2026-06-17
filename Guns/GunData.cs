@@ -50,10 +50,13 @@ internal sealed partial class GunData : Resource
   [Export] internal float AimSpeed = 20f;
   [Export] internal PosAndRot RecoilOffsetTarget = new()
   {
-    Position = new(0f, .1f, .3f), Rotation = new(Mathf.Pi / 8f, 0f, 0f)
+    Pos = new(0f, .1f, .3f), Rot = new(Mathf.Pi / 8f, 0f, 0f)
   };
   [Export] internal PosAndRot AimRecoilOffsetTarget = new()
   {
-    Position = new(0f, .05f, .1f), Rotation = new(Mathf.Pi / 100f, 0f, 0f)
+    Pos = new(0f, .05f, .1f), Rot = new(Mathf.Pi / 100f, 0f, 0f)
   };
+
+  [ExportGroup("RealisticAim")]
+  [Export] internal float DiplopiaTwinsOffset = .03f;
 }

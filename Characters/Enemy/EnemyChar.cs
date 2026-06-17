@@ -16,9 +16,7 @@ internal sealed partial class EnemyChar : CharacterBody3D, IDamageable
   private int _health = 100;
 
   public override void _PhysicsProcess(double delta)
-  {
-    MoveAndOrient(delta);
-  }
+    => MoveAndOrient(delta);
 
   private void MoveAndOrient(double delta)
   {
