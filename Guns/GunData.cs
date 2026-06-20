@@ -56,7 +56,4 @@ internal sealed partial class GunData : Resource
   {
     Pos = new(0f, .05f, .1f), Rot = new(Mathf.Pi / 100f, 0f, 0f)
   };
-
-  [ExportGroup("RealisticAim")]
-  [Export] internal float DiplopiaTwinsOffset = .03f;
 }
