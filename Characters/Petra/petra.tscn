@@ -5,14 +5,12 @@
 [ext_resource type="Script" uid="uid://c5etbjaaat57t" path="res://Characters/Petra/Components/PetraCamera.cs" id="2_xka01"]
 [ext_resource type="Script" uid="uid://420qp4km7kud" path="res://Characters/Petra/Components/PetraGunCamera.cs" id="3_u0x2d"]
 [ext_resource type="Script" uid="uid://c0f18fq4jm3j6" path="res://Characters/Petra/Components/BulletSpawner.cs" id="5_wx6ak"]
-[ext_resource type="Resource" uid="uid://oktx1sepmnm" path="res://Guns/GunTypes/Hi-Power.tres" id="6_6uxd7"]
 [ext_resource type="PackedScene" uid="uid://cnkikshw6uwnv" path="res://Guns/GunTypes/hi_pow.tscn" id="6_07x6y"]
 [ext_resource type="PackedScene" uid="uid://bl8yrxw8wui7h" path="res://Guns/smoke_particles.tscn" id="6_522tq"]
 [ext_resource type="PackedScene" uid="uid://bna12vodjoo2y" path="res://Guns/bullet.tscn" id="7_522tq"]
 [ext_resource type="PackedScene" uid="uid://dl6bu8a7c4kx2" path="res://Guns/sparks_particles.tscn" id="7_ya1fb"]
 [ext_resource type="Texture2D" uid="uid://qi6vptbyjvji" path="res://Guns/pngtree-muzzle-flash-images-vector-png-png-image_5759562.png" id="8_la8vp"]
 [ext_resource type="Script" uid="uid://0vvkd38ntjkp" path="res://Guns/GunsWrapper.cs" id="8_ya1fb"]
-[ext_resource type="Script" uid="uid://chsjn1or28wse" path="res://Guns/gun_loader.gd" id="12_20rfk"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_e5gy7"]
 
@@ -93,14 +91,10 @@ collision_mask = 4
 [node name="MuzzleFlash" type="OmniLight3D" parent="PetraCamera" unique_id=471840539]
 light_color = Color(1, 0.8618757, 0.5293186, 1)
 
-[node name="GunsWrapper" type="Node3D" parent="PetraCamera" unique_id=1445379131 node_paths=PackedStringArray("_mainGunContainer", "_rightEyeContainer", "_leftEyeContainer", "_rightEyeCamera", "_leftEyeCamera", "_mainCamera", "BulletSpawner", "_petra", "_camera", "_gunRay", "_muzzleFlash")]
+[node name="GunsWrapper" type="Node3D" parent="PetraCamera" unique_id=1445379131 node_paths=PackedStringArray("_mainGunContainer", "_mainCamera", "BulletSpawner", "_petra", "_camera", "_gunRay", "_muzzleFlash")]
 transform = Transform3D(0.99939084, 0, -0.034899496, 0, 1, 0, 0.034899496, 0, 0.99939084, 0.18306011, -0.34994566, -0.58030695)
 script = ExtResource("8_ya1fb")
 _mainGunContainer = NodePath("../../SubViewportContainer")
-_rightEyeContainer = NodePath("../../SubViewportContainer2")
-_leftEyeContainer = NodePath("../../SubViewportContainer3")
-_rightEyeCamera = NodePath("../../SubViewportContainer2/RightEye/PetraGunCamera")
-_leftEyeCamera = NodePath("../../SubViewportContainer3/LeftEye/PetraGunCamera")
 _mainCamera = NodePath("..")
 _gunScene1 = ExtResource("6_07x6y")
 BulletSpawner = NodePath("BulletSpawner")
@@ -156,49 +150,3 @@ render_target_update_mode = 4
 cull_mask = 1047554
 script = ExtResource("3_u0x2d")
 _mainCamera = NodePath("../../../PetraCamera")
-
-[node name="SubViewportContainer2" type="SubViewportContainer" parent="." unique_id=2051977217]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-stretch = true
-
-[node name="RightEye" type="SubViewport" parent="SubViewportContainer2" unique_id=980866567]
-transparent_bg = true
-size = Vector2i(1920, 1200)
-render_target_update_mode = 4
-
-[node name="PetraGunCamera" type="Camera3D" parent="SubViewportContainer2/RightEye" unique_id=1981414298 node_paths=PackedStringArray("_mainCamera")]
-cull_mask = 1047554
-script = ExtResource("3_u0x2d")
-_mainCamera = NodePath("../../../PetraCamera")
-XOffset = 0.03
-metadata/_custom_type_script = "uid://420qp4km7kud"
-
-[node name="SubViewportContainer3" type="SubViewportContainer" parent="." unique_id=692372495]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-stretch = true
-
-[node name="LeftEye" type="SubViewport" parent="SubViewportContainer3" unique_id=2017996263]
-transparent_bg = true
-size = Vector2i(1920, 1200)
-render_target_update_mode = 4
-
-[node name="PetraGunCamera" type="Camera3D" parent="SubViewportContainer3/LeftEye" unique_id=1284215592 node_paths=PackedStringArray("_mainCamera")]
-cull_mask = 1047554
-script = ExtResource("3_u0x2d")
-_mainCamera = NodePath("../../../PetraCamera")
-XOffset = -0.03
-metadata/_custom_type_script = "uid://420qp4km7kud"
-
-[node name="GunLoader" type="Node" parent="." unique_id=1383353187 node_paths=PackedStringArray("default_pivot")]
-script = ExtResource("12_20rfk")
-target_res = ExtResource("6_6uxd7")
-default_pivot = NodePath("../PetraCamera/GunsWrapper")
-metadata/_custom_type_script = "uid://chsjn1or28wse"

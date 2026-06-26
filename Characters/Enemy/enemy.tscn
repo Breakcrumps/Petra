@@ -6,13 +6,15 @@
 [ext_resource type="PackedScene" uid="uid://bna12vodjoo2y" path="res://Guns/bullet.tscn" id="3_qiabt"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_kmuhc"]
-radius = 0.49
+radius = 0.4
+height = 1.7
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qiabt"]
-radius = 0.49
+radius = 0.4
+height = 1.7
 
 [sub_resource type="BoxMesh" id="BoxMesh_ebh2g"]
-size = Vector3(0.7, 0.3, 0.2)
+size = Vector3(0.6, 0.3, 0.2)
 
 [node name="Enemy" type="CharacterBody3D" unique_id=1642376714 node_paths=PackedStringArray("_bulletSpawner", "_navAgent")]
 collision_layer = 2
@@ -23,15 +25,15 @@ _navAgent = NodePath("NavigationAgent3D")
 _corpseScene = ExtResource("2_ebh2g")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1315721564]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
 mesh = SubResource("CapsuleMesh_kmuhc")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1306702703]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
 shape = SubResource("CapsuleShape3D_qiabt")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=875970545]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5219003, -0.44949496)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3118905, -0.34623373)
 mesh = SubResource("BoxMesh_ebh2g")
 
 [node name="BulletSpawner" type="Node3D" parent="." unique_id=422515257]
@@ -41,4 +43,6 @@ _bulletScene = ExtResource("3_qiabt")
 metadata/_custom_type_script = "uid://c0f18fq4jm3j6"
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=317610487]
-height = 2.0
+avoidance_enabled = true
+use_3d_avoidance = true
+debug_path_custom_color = Color(1, 0, 1, 1)

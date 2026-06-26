@@ -7,7 +7,7 @@ height = 0.045
 radius = 0.01
 
 [node name="ShellHi-Pow" unique_id=946931811 instance=ExtResource("1_yqojd")]
-collision_layer = 16
+collision_layer = 32
 collision_mask = 14
 mass = 0.008
 

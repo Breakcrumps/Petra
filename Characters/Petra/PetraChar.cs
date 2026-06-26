@@ -159,7 +159,7 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
 
   private static PetraState HandleSlideTransitions()
   {
-    if (!Input.IsActionPressed("Up"))
+    if (Input.IsActionPressed("Down"))
       return PetraState.Crouching;
     else if (Input.IsActionJustPressed("Jump"))
       return PetraState.Idle;

@@ -16,6 +16,8 @@ internal sealed partial class Bullet : Node3D
   internal int Damage;
   internal float Speed;
 
+  private float _mass = .0075f;
+
   public override void _PhysicsProcess(double delta)
   {
     Vector3 nextPos = GlobalPosition - Basis.Z * Speed * (float)delta;
@@ -52,8 +54,13 @@ internal sealed partial class Bullet : Node3D
       Node collider = (Node)(GodotObject)result["collider"];
       Rid hitRid = result["rid"].AsRid();
 
+      Vector3 impulse = -Speed * _mass * Basis.Z;
+
+      if (collider is IPenetrable)
+        impulse *= ((IPenetrable)collider).ImpulseFromBulletCoefficient;
+
       if (collider is IBreakable breakable)
-        _ = breakable.Breaker.Break(hitPos, -Speed * .0075f * Basis.Z);
+        _ = breakable.Breaker.Break(hitPos, impulse);
       else
         SpawnDecal(hitPos, normal, collider);
 
@@ -62,7 +69,6 @@ internal sealed partial class Bullet : Node3D
 
       if (collider is RigidBody3D rigidBody)
       {
-        Vector3 impulse = -Speed * .0075f * Basis.Z;
         Vector3 hitPoint = hitPos - rigidBody.GlobalPosition;
         float distToHitPoint = hitPoint.Length();
         float impulseMult = -7f * distToHitPoint * distToHitPoint + 1f;

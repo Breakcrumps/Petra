@@ -18,3 +18,4 @@
 - [x] Shell casings.
 - [x] Fix decals. REDACTED: kinda?
 - [ ] Realistic aiming. Fix my shit.
+- [ ] Parkour.

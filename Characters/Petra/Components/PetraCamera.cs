@@ -33,8 +33,6 @@ internal sealed partial class PetraCamera : Camera3D
 
   private Vector3 _nextRot;
 
-  internal bool CanRotate = true;
-
   public override void _Ready()
   {
     Input.MouseMode = Input.MouseModeEnum.Captured;
@@ -47,9 +45,6 @@ internal sealed partial class PetraCamera : Camera3D
 
   public override void _UnhandledInput(InputEvent @event)
   {
-    if (!CanRotate)
-      return;
-
     if (@event is not InputEventMouseMotion mouseMotion)
       return;
 

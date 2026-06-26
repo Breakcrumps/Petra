@@ -1,5 +1,4 @@
 using Godot;
-using Godot.Collections;
 using Petra.Characters.Petra;
 using Petra.Characters.Petra.Components;
 
@@ -12,12 +11,6 @@ internal sealed partial class GunsWrapper : Node3D
   private FocusMode _focusMode = FocusMode.Target;
 
   [Export] private SubViewportContainer _mainGunContainer = null!;
-  [Export] private SubViewportContainer _rightEyeContainer = null!;
-  [Export] private SubViewportContainer _leftEyeContainer = null!;
-  [Export] private PetraGunCamera _rightEyeCamera = null!;
-  [Export] private PetraGunCamera _leftEyeCamera = null!;
-  private float _focusOffsetLimit;
-
   [Export] private PetraCamera _mainCamera = null!;
 
   [Export] private PackedScene? _gunScene1;
@@ -61,12 +54,6 @@ internal sealed partial class GunsWrapper : Node3D
 
   public override void _Ready()
   {
-    float absLeftEyeOffset = Mathf.Abs(_leftEyeCamera.XOffset), absRightEyeOffset = Mathf.Abs(_rightEyeCamera.XOffset);
-    _focusOffsetLimit = absLeftEyeOffset >= absRightEyeOffset ? absLeftEyeOffset : absRightEyeOffset;
-    _focusOffsetLimit += .01f; // Allow overshoots.
-
-    GD.Print(_focusOffsetLimit);
-    
     PackedScene?[] gunScenes = [_gunScene1, _gunScene2, _gunScene3, _gunScene4];
 
     for (int i = 0; i < 4; i++)
@@ -201,34 +188,7 @@ internal sealed partial class GunsWrapper : Node3D
 
     HandleReload();
 
-    _mainCamera.CanRotate = !(InAim && Input.IsActionPressed("Focus"));
-    
-    if (InAim)
-    {
-      _mainGunContainer.Modulate = _mainGunContainer.Modulate.Lerp(to: new Color(1f, 1f, 1f, 0f), weight: 20f * (float)delta);
-      float rightEyeAlpha = .4f / (_focusOffsetLimit - .013f) * _aimOffset.X + .6f, leftEyeAlpha = -rightEyeAlpha + 1.2f;
-      _rightEyeContainer.Modulate = _rightEyeContainer.Modulate.Lerp(to: new Color(1f, 1f, 1f, rightEyeAlpha), weight: 20f * (float)delta);
-      _leftEyeContainer.Modulate = _leftEyeContainer.Modulate.Lerp(to: new Color(1f, 1f, 1f, leftEyeAlpha), weight: 20f * (float)delta);
-    }
-    else
-    {
-      _mainGunContainer.Modulate = _mainGunContainer.Modulate.Lerp(to: new Color(1f, 1f, 1f, 1f), weight: 20f * (float)delta);
-      _rightEyeContainer.Modulate = _rightEyeContainer.Modulate.Lerp(to: new Color(1f, 1f, 1f, 0f), weight: 20f * (float)delta);
-      _leftEyeContainer.Modulate = _leftEyeContainer.Modulate.Lerp(to: new Color(1f, 1f, 1f, 0f), weight: 20f * (float)delta);
-      _aimOffset = _aimOffset.Lerp(to: Vector3.Zero, weight: GD.Randf() * (float)delta);
-    }
-
-    if (!_mainCamera.CanRotate)
-      HandleAimGunPositioning();
-
     _mouseRelative = Vector2.Zero;
-  }
-
-  private void HandleAimGunPositioning()
-  {
-    _aimOffset.X = Mathf.Clamp(_aimOffset.X + _mouseRelative.X * .0015f, -_focusOffsetLimit, _focusOffsetLimit);
-    _aimOffset.Y = Mathf.Clamp(_aimOffset.Y - _mouseRelative.Y * .0015f, -_focusOffsetLimit, _focusOffsetLimit);
-    GD.Print(_mouseRelative);
   }
 
   private void HandleAimPos(double delta)
@@ -268,24 +228,12 @@ internal sealed partial class GunsWrapper : Node3D
       {
         InAim = true;
         nextPos = _curGunNode!.GunData.AimPos;
-        // Vector3 camPos = _mainCamera.GlobalPosition;
-        // PhysicsDirectSpaceState3D spaceState = GetWorld3D().DirectSpaceState;
-        // PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(camPos, camPos - _mainCamera.GlobalBasis.Z * 1000f);
-        // Dictionary result = spaceState.IntersectRay(query);
-        float zeroDistance = 20f;
-        // if (result.Count > 0)
-        //   zeroDistance = camPos.DistanceTo((Vector3)result["position"]);
-        float convergenceAngle = Mathf.Atan(_aimOffset.X / zeroDistance);
-        Quaternion convergenceQuat = Quaternion.FromEuler(new Vector3(0, convergenceAngle, 0));
-        nextOrient = _curGunNode.GunData.DefaultOrient * convergenceQuat;
+        nextOrient = _curGunNode.GunData.DefaultOrient;
       }
     }
 
-    nextPos += _bobOffset.Pos + _recoilOffset.Pos + _aimOffset;
+    nextPos += _bobOffset.Pos + _recoilOffset.Pos + _aimOffset + ((InAim ? .2f : 1f) * _swayOffset.Pos);
     nextOrient *= Quaternion.FromEuler(_recoilOffset.Rot) * Quaternion.FromEuler(_jumpOffset.Rot);
-
-    if (_mainCamera.CanRotate)
-      nextPos += _swayOffset.Pos;
     
     Position = Position.Lerp(to: nextPos, weight: _curGunNode.GunData.AimSpeed * (float)delta);
     Quaternion = Quaternion.Slerp(to: nextOrient, weight: 10f * (float)delta);

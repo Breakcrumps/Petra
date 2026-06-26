@@ -15,11 +15,15 @@ internal sealed partial class EnemyChar : CharacterBody3D, IDamageable
 
   private int _health = 100;
 
-  public override void _PhysicsProcess(double delta)
-    => MoveAndOrient(delta);
+  private Vector3 _velocity;
 
-  private void MoveAndOrient(double delta)
+  public override void _PhysicsProcess(double delta)
+    => ComputeVelocityAndOrient(delta);
+
+  private void ComputeVelocityAndOrient(double delta)
   {
+    _velocity = Vector3.Zero;
+    
     CoverMarker? bestCover = GlobalInstances.CoverManager.GetBestCover(this, GlobalInstances.Petra);
 
     if (bestCover is null)
@@ -38,10 +42,9 @@ internal sealed partial class EnemyChar : CharacterBody3D, IDamageable
       return;
     }
     
-    Velocity = difVector.Normalized() * _speed;
+    _velocity = difVector.Normalized() * _speed * (float)delta;
+    GlobalPosition += _velocity;
     Quaternion = Quaternion.Slerp(Basis.LookingAt(difVector).GetRotationQuaternion(), 10f * (float)delta);
-
-    MoveAndSlide();
   }
 
   public void TakeDamage(Attack attack)
@@ -53,7 +56,7 @@ internal sealed partial class EnemyChar : CharacterBody3D, IDamageable
       RigidBody3D corpse = _corpseScene.Instantiate<RigidBody3D>();
       GetParent().AddChild(corpse);
       corpse.GlobalTransform = GlobalTransform;
-      corpse.ApplyCentralImpulse(5f * Velocity);
+      corpse.ApplyCentralImpulse(corpse.Mass * _velocity);
       QueueFree();
     }
   }
