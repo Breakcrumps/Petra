@@ -1,5 +1,4 @@
 using Godot;
-using Petra.Characters.Petra.Components;
 using Petra.Scenes;
 using Petra.Static;
 using Petra.Types;
@@ -9,7 +8,6 @@ namespace Petra.Characters.Enemy;
 internal sealed partial class EnemyChar : CharacterBody3D, IDamageable
 {
   [Export] private float _speed = 7f;
-  [Export] private BulletSpawner _bulletSpawner = null!;
   [Export] private NavigationAgent3D _navAgent = null!;
   [Export] private PackedScene _corpseScene = null!;
 

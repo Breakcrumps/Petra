@@ -22,8 +22,8 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   [Export] private float _runSpeed = 9f;
   [Export] private float _crouchSpeed = 3f;
 
-  [Export] private float _jumpVelocity = 10f;
-  [Export] private float _gravity = 30f;
+  [Export] private float _jumpVelocity = 8f;
+  [Export] private float _gravity = 25f;
 
   internal float TimeMoving;
 

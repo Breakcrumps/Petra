@@ -20,7 +20,7 @@ internal sealed partial class PetraCamera : Camera3D
   private float _defaultFov;
 
   [Export] private float _mouseSensitivity = .003f;
-  [Export] private float _angleLimit = Mathf.Pi / 3f;
+  [Export] private float _angleLimit = Mathf.Pi / 2.5f;
 
   [Export] private float _leanSpeed = 10f;
 
