@@ -9,14 +9,26 @@ internal sealed partial class EnemyChar : CharacterBody3D, IDamageable
 {
   [Export] private float _speed = 7f;
   [Export] private NavigationAgent3D _navAgent = null!;
-  [Export] private PackedScene _corpseScene = null!;
+  [Export] private PhysicalBoneSimulator3D _boneSim = null!;
+  [Export] private CollisionShape3D _aliveCollision = null!;
+  [Export] private Skeleton3D _skeleton = null!;
+  [Export] private AnimationPlayer _animPlayer = null!;
 
   private int _health = 100;
-
   private Vector3 _velocity;
 
   public override void _PhysicsProcess(double delta)
-    => ComputeVelocityAndOrient(delta);
+  {
+    if (_health <= 0)
+      return;
+    
+    ComputeVelocityAndOrient(delta);
+
+    if (_velocity == Vector3.Zero)
+      _animPlayer.Play("Idle");
+    else
+      _animPlayer.Play("Run");
+  }
 
   private void ComputeVelocityAndOrient(double delta)
   {
@@ -47,15 +59,16 @@ internal sealed partial class EnemyChar : CharacterBody3D, IDamageable
 
   public void TakeDamage(Attack attack)
   {
+    if (_health <= 0)
+      return;
+    
     _health -= attack.Damage;
 
     if (_health <= 0f)
     {
-      RigidBody3D corpse = _corpseScene.Instantiate<RigidBody3D>();
-      GetParent().AddChild(corpse);
-      corpse.GlobalTransform = GlobalTransform;
-      corpse.ApplyCentralImpulse(corpse.Mass * _velocity);
-      QueueFree();
+      _aliveCollision.Disabled = true;
+      _animPlayer.Stop();
+      _boneSim.PhysicalBonesStartSimulation();
     }
   }
 }

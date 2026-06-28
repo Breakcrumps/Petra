@@ -15,6 +15,8 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   [Export] private RayCast3D _slideCast = null!;
   [Export] internal GunsWrapper Gun = null!;
 
+  [Export] internal Marker3D TorsoPoint = null!;
+
   [Export] private int _maxHealth = 100;
   private int _health;
   

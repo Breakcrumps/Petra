@@ -10,10 +10,10 @@ internal sealed partial class PetraCamera : Camera3D
   [Export] private GunsWrapper _gun = null!;
   [Export] private ShapeCast3D _leanRaycast = null!;
 
-  [Export] private Node3D _standLeanPivot = null!;
-  [Export] private Node3D _crouchPivot = null!;
-  [Export] private Node3D _crouchLeanPivot = null!;
-  [Export] private Node3D _slidePivot = null!;
+  [Export] private Marker3D _standLeanPivot = null!;
+  [Export] private Marker3D _crouchPivot = null!;
+  [Export] private Marker3D _crouchLeanPivot = null!;
+  [Export] private Marker3D _slidePivot = null!;
   private Vector3 _defaultPos;
 
   [Export] private float _aimFov = 50f;

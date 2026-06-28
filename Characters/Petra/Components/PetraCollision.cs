@@ -5,8 +5,8 @@ namespace Petra.Characters.Petra.Components;
 internal sealed partial class PetraCollision : CollisionShape3D
 {
   [Export] private PetraChar _petra = null!;
-  [Export] private Node3D _crouchPivot = null!;
-  [Export] private Node3D _slidePivot = null!;
+  [Export] private Marker3D _crouchPivot = null!;
+  [Export] private Marker3D _slidePivot = null!;
   
   private float _initHeight;
 
