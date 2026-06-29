@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="GunData" format=3 uid="uid://oktx1sepmnm"]
+
+[ext_resource type="Script" uid="uid://jmvdrsp67nbl" path="res://Types/PosAndRot.cs" id="1_x0jyt"]
+[ext_resource type="Script" uid="uid://bgtvkw8450an2" path="res://Guns/Scripts/GunData.cs" id="3_s8dip"]
+[ext_resource type="PackedScene" uid="uid://d3ggnamj4oqsc" path="res://Guns/Hi-Pow/shell_hi_pow.tscn" id="3_xijfp"]
+
+[sub_resource type="Resource" id="Resource_xijfp"]
+script = ExtResource("1_x0jyt")
+Position = Vector3(0, 0.05, 0.1)
+Rotation = Vector3(0.03141593, 0, 0)
+
+[sub_resource type="Resource" id="Resource_s8dip"]
+script = ExtResource("1_x0jyt")
+Position = Vector3(0, 0.1, 0.3)
+Rotation = Vector3(0.3926991, 0, 0)
+
+[resource]
+script = ExtResource("3_s8dip")
+ShellScene = ExtResource("3_xijfp")
+BulletSpawnerPos = Vector3(0, 0.155, -0.538)
+RightLeanPos = Vector3(0.201, -0.34, -0.6)
+LeftLeanPos = Vector3(0.333, -0.34, -0.6)
+AimPos = Vector3(0, -0.157, -0.4)
+RightLeanAimPos = Vector3(-0.045, -0.15, -0.4)
+LeftLeanAimPos = Vector3(0.045, -0.15, -0.4)
+HeapAimPos = Vector3(0, -0.35, -0.32)
+metadata/_custom_type_script = "uid://bgtvkw8450an2"

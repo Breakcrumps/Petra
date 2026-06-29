@@ -1,6 +1,6 @@
 using Godot;
 using Petra.Characters.Petra.Components;
-using Petra.Guns;
+using Petra.Objects.Guns.Scripts;
 using Petra.Static;
 using Petra.Types;
 

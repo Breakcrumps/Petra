@@ -2,6 +2,7 @@ using Godot;
 
 namespace Petra.Characters.Enemy;
 
+[GlobalClass]
 internal abstract partial class State : Node
 {
   internal virtual void Enter() {}

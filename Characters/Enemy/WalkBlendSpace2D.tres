@@ -1,0 +1,29 @@
+[gd_resource type="AnimationNodeBlendSpace2D" format=3 uid="uid://chbi6nrxd2kcl"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xjir8"]
+animation = &"WalkForward"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_u0hnl"]
+animation = &"WalkLeft"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_pxyd1"]
+animation = &"WalkLeft"
+play_mode = 1
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_m3v1y"]
+animation = &"WalkForward"
+play_mode = 1
+
+[resource]
+blend_point_0/node = SubResource("AnimationNodeAnimation_xjir8")
+blend_point_0/pos = Vector2(0, 1)
+blend_point_0/name = &"WalkForward"
+blend_point_1/node = SubResource("AnimationNodeAnimation_u0hnl")
+blend_point_1/pos = Vector2(-1, 0)
+blend_point_1/name = &"WalkLeft"
+blend_point_2/node = SubResource("AnimationNodeAnimation_pxyd1")
+blend_point_2/pos = Vector2(1, 0)
+blend_point_2/name = &"WalkLeft 2"
+blend_point_3/node = SubResource("AnimationNodeAnimation_m3v1y")
+blend_point_3/pos = Vector2(0, -1)
+blend_point_3/name = &"WalkForward 2"

@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dpejxb1obcdno"]
+
+[ext_resource type="Texture2D" uid="uid://dxougcbvejrub" path="res://Levels/TestLevel/texture_01.png" id="1_umafu"]
+
+[resource]
+albedo_texture = ExtResource("1_umafu")
+uv1_triplanar = true
+uv1_world_triplanar = true
+texture_filter = 5

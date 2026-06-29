@@ -1,0 +1,20 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dlpwdt2fagvhc"]
+
+[ext_resource type="Texture2D" uid="uid://c2xehne0q57v2" path="res://Guns/Hi-Pow/ShellHi-Pow_Image_0.png" id="1_sooal"]
+[ext_resource type="Texture2D" uid="uid://do1ldtfxg8rb5" path="res://Guns/Hi-Pow/ShellHi-Pow_Image_1.png" id="2_b3xfu"]
+[ext_resource type="Texture2D" uid="uid://bggy7tdedir22" path="res://Guns/Hi-Pow/ShellHi-Pow_Image_2.png" id="3_u60hw"]
+
+[resource]
+resource_name = "BrowningHP"
+cull_mode = 2
+albedo_texture = ExtResource("1_sooal")
+metallic = 1.0
+metallic_texture = ExtResource("2_b3xfu")
+metallic_texture_channel = 2
+roughness_texture = ExtResource("2_b3xfu")
+roughness_texture_channel = 1
+normal_enabled = true
+normal_scale = 7.0
+normal_texture = ExtResource("3_u60hw")
+ao_enabled = true
+ao_texture = ExtResource("2_b3xfu")

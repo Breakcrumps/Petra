@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://s8kx0qq384um"]
+
+[ext_resource type="PackedScene" uid="uid://d2clbkye5cluu" path="res://Objects/Can/low_poly_soda_can.glb" id="1_jqupc"]
+[ext_resource type="Script" uid="uid://mw8yktpukpyl" path="res://Utils/BulletReactors/PenetrableRigidBody.cs" id="2_7lw62"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_7lw62"]
+height = 0.281
+radius = 0.085
+
+[node name="low_poly_soda_can" unique_id=99888575 instance=ExtResource("1_jqupc")]
+collision_layer = 16
+collision_mask = 63
+script = ExtResource("2_7lw62")
+ImpulseFromBulletCoefficient = 1.0
+
+[node name="defaultMaterial" parent="Sketchfab_model/Collada visual scene group/Cylinder_001" parent_id_path=PackedInt32Array(988757011) index="0" unique_id=83748684]
+layers = 4
+
+[node name="defaultMaterial_001" parent="Sketchfab_model/Collada visual scene group/Cylinder_001" parent_id_path=PackedInt32Array(988757011) index="1" unique_id=1218402866]
+layers = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." index="1" unique_id=1611045685]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.141, 0)
+shape = SubResource("CylinderShape3D_7lw62")

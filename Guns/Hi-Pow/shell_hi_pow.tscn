@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://d3ggnamj4oqsc"]
+
+[ext_resource type="PackedScene" uid="uid://cxoa0yxg1tfmc" path="res://Guns/Hi-Pow/ShellHi-Pow.glb" id="1_p4adn"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_kf5st"]
+height = 0.045
+radius = 0.01
+
+[node name="ShellHi-Pow" unique_id=946931811 instance=ExtResource("1_p4adn")]
+collision_layer = 32
+collision_mask = 14
+mass = 0.008
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." index="1" unique_id=997781767]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+shape = SubResource("CylinderShape3D_kf5st")

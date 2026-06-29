@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://dufjhe7hfan0i"]
+
+[ext_resource type="PackedScene" uid="uid://c7bjxg15tjfyr" path="res://Characters/Petra/petra.tscn" id="1_lrus4"]
+[ext_resource type="Environment" uid="uid://ugvkbgt0w1ar" path="res://Levels/main_env.tres" id="2_ubbiv"]
+[ext_resource type="Script" uid="uid://d3flasw4gdch6" path="res://Utils/CurrentEnv.cs" id="3_fi6k0"]
+[ext_resource type="PackedScene" uid="uid://biv6c8e8rqbyr" path="res://Levels/Room/room.tscn" id="6_3bdrj"]
+[ext_resource type="PackedScene" uid="uid://b70mus0x6uiqv" path="res://Levels/Room/Noose.glb" id="6_ubbiv"]
+[ext_resource type="Script" uid="uid://o2jk6nlu8wud" path="res://Utils/GameFlowController.cs" id="8_6yy46"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_3bdrj"]
+
+[node name="Scene" type="Node3D" unique_id=128823444]
+
+[node name="Petra" parent="." unique_id=96141022 instance=ExtResource("1_lrus4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0828495, 0, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=422967208]
+environment = ExtResource("2_ubbiv")
+script = ExtResource("3_fi6k0")
+
+[node name="GameFlowController" type="Node" parent="." unique_id=128183926]
+script = ExtResource("8_6yy46")
+metadata/_custom_type_script = "uid://o2jk6nlu8wud"
+
+[node name="Room" parent="." unique_id=306731519 instance=ExtResource("6_3bdrj")]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1160389218]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4383335, 0, 0)
+mesh = SubResource("CylinderMesh_3bdrj")
+
+[node name="Noose" parent="." unique_id=1008402379 instance=ExtResource("6_ubbiv")]
+transform = Transform3D(-8.742278e-09, -0.2, 0, 0.2, -8.742278e-09, 0, 0, 0, 0.2, -1.0766098, 2.7219627, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=54226115]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9597864, 1.7158256, -3.3766358)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1886982664]
+transform = Transform3D(-0.67925894, -0.034889884, -0.73306906, -0.2995474, 0.925059, 0.23353185, 0.6699843, 0.37821752, -0.63880557, 0, 0, 0)

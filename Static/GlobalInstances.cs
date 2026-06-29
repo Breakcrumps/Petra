@@ -1,6 +1,6 @@
 using Petra.Characters.Petra;
-using Petra.Scenes;
 using Petra.Utils;
+using Petra.Utils.Cover;
 
 namespace Petra.Static;
 

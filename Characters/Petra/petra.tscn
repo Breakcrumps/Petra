@@ -5,12 +5,12 @@
 [ext_resource type="Script" uid="uid://c5etbjaaat57t" path="res://Characters/Petra/Components/PetraCamera.cs" id="2_xka01"]
 [ext_resource type="Script" uid="uid://420qp4km7kud" path="res://Characters/Petra/Components/PetraGunCamera.cs" id="3_u0x2d"]
 [ext_resource type="Script" uid="uid://c0f18fq4jm3j6" path="res://Characters/Petra/Components/BulletSpawner.cs" id="5_wx6ak"]
-[ext_resource type="PackedScene" uid="uid://cnkikshw6uwnv" path="res://Guns/GunTypes/hi_pow.tscn" id="6_07x6y"]
-[ext_resource type="PackedScene" uid="uid://bl8yrxw8wui7h" path="res://Guns/smoke_particles.tscn" id="6_522tq"]
-[ext_resource type="PackedScene" uid="uid://bna12vodjoo2y" path="res://Guns/bullet.tscn" id="7_522tq"]
-[ext_resource type="PackedScene" uid="uid://dl6bu8a7c4kx2" path="res://Guns/sparks_particles.tscn" id="7_ya1fb"]
-[ext_resource type="Texture2D" uid="uid://qi6vptbyjvji" path="res://Guns/pngtree-muzzle-flash-images-vector-png-png-image_5759562.png" id="8_la8vp"]
-[ext_resource type="Script" uid="uid://0vvkd38ntjkp" path="res://Guns/GunsWrapper.cs" id="8_ya1fb"]
+[ext_resource type="PackedScene" uid="uid://cnkikshw6uwnv" path="res://Guns/Hi-Pow/hi_pow.tscn" id="6_07x6y"]
+[ext_resource type="PackedScene" uid="uid://bl8yrxw8wui7h" path="res://Guns/Particles/smoke_particles.tscn" id="6_522tq"]
+[ext_resource type="PackedScene" uid="uid://bna12vodjoo2y" path="res://Guns/Bullet/bullet.tscn" id="7_522tq"]
+[ext_resource type="PackedScene" uid="uid://dl6bu8a7c4kx2" path="res://Guns/Particles/sparks_particles.tscn" id="7_ya1fb"]
+[ext_resource type="Texture2D" uid="uid://qi6vptbyjvji" path="res://Guns/Particles/pngtree-muzzle-flash-images-vector-png-png-image_5759562.png" id="8_la8vp"]
+[ext_resource type="Script" uid="uid://0vvkd38ntjkp" path="res://Guns/Scripts/GunsWrapper.cs" id="8_ya1fb"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_e5gy7"]
 
