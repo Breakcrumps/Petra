@@ -4,19 +4,33 @@ using Petra.Utils.Cover;
 
 namespace Petra.Characters.Enemy;
 
+[GlobalClass]
 internal sealed partial class CoverState : State
 {
   [Export] private MovementController _movementController = null!;
   [Export] private NavigationAgent3D _navAgent = null!;
 
+  [ExportGroup("TransitableStates")]
+  [Export] private WalkToPatrolState _walkToPatrolState = null!;
+
+  private StateMachine _stateMachine = null!;
   private EnemyChar _parentChar = null!;
 
   public override void _Ready()
-    => _parentChar = GetParent().GetParent<EnemyChar>();
+  {
+    _stateMachine = GetParent<StateMachine>();
+    _parentChar = _stateMachine.GetParent<EnemyChar>();
+  }
   
   internal override void Enter()
   {
-    _movementController.ControlMode = MovementController.ControlType.TeleportDirection;
+    if (GlobalInstances.CoverManager.GetBestCover(_parentChar, GlobalInstances.Petra) is null)
+    {
+      _stateMachine.Transition(_walkToPatrolState);
+      return;
+    }
+    
+    _movementController.ControlMode = MovementController.ControlType.PositionDirection;
     _movementController.SpeedMode = MovementController.SpeedType.Run;
   }
 
@@ -25,7 +39,10 @@ internal sealed partial class CoverState : State
     CoverMarker? bestCover = GlobalInstances.CoverManager.GetBestCover(_parentChar, GlobalInstances.Petra);
 
     if (bestCover is null)
+    {
+      _stateMachine.Transition(_walkToPatrolState);
       return;
+    }
 
     _navAgent.TargetPosition = bestCover.GlobalPosition;
 
@@ -45,5 +62,9 @@ internal sealed partial class CoverState : State
     }
 
     _movementController.Direction = difVector.Normalized();
+    _parentChar.Quaternion = _parentChar.Quaternion.Slerp(
+      Basis.LookingAt((GlobalInstances.Petra.GlobalPosition - _parentChar.GlobalPosition) with { Y = 0f }).GetRotationQuaternion(),
+      10f * (float)delta
+    );
   }
 }

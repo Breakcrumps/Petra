@@ -1,9 +1,18 @@
-- [x] Guns and fire.
-- [x] Special gun modes: near wall can't shoot and aiming just pulls the gun down close ready to shoot, the same for running.
-- [x] Gun movement in jump.
+# Pending
 - [ ] Make crouching more logical to account for crouching mid-jump.
 - [ ] Far Cry shooting?
 - [ ] Destructables. REDACTED: WINDOWS BABY! Not enough tho.
+- [ ] Stamina and health.
+- [ ] Heap fire addon. Make the weapon tilt to hit the target in the distance dynamically.
+- [ ] Make fog Color(0.0, 0.153, 0.0) outdoors.
+- [ ] Realistic aiming. Fix my shit.
+- [ ] Parkour.
+# Kinda
+- [x] Fix decals.
+# Completed
+- [x] Guns and fire.
+- [x] Special gun modes: near wall can't shoot and aiming just pulls the gun down close ready to shoot, the same for running.
+- [x] Gun movement in jump.
 - [x] Jump buffer.
 - [x] Slide.
 - [x] Bullet holes.
@@ -11,11 +20,5 @@
 - [x] Conditional wall-piercing.
 - [x] Shooting delay.
 - [x] FOV change when aiming.
-- [ ] Stamina and health.
-- [ ] Heap fire addon. Make the weapon tilt to hit the target in the distance dynamically.
-- [ ] Make fog Color(0.0, 0.153, 0.0) outdoors.
 - [x] Mags and reloads.
 - [x] Shell casings.
-- [x] Fix decals. REDACTED: kinda?
-- [ ] Realistic aiming. Fix my shit.
-- [ ] Parkour.

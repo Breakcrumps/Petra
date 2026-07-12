@@ -6,23 +6,23 @@ namespace Petra.Characters.Enemy;
 internal sealed partial class StateMachine : Node
 {
   [Export] private State _initState = null!;
-  private State _curState = null!;
+  internal State CurState = null!;
 
   public override void _Ready()
   {
-    _curState = _initState;
-    _curState.Enter();
+    CurState = _initState;
+    CurState.Enter();
   }
 
   public override void _Process(double delta)
-    => _curState.Process(delta);
+    => CurState.Process(delta);
   public override void _PhysicsProcess(double delta)
-    => _curState.PhysicsProcess(delta);
+    => CurState.PhysicsProcess(delta);
 
   internal void Transition(State newState)
   {
-    _curState.Exit();
-    _curState = newState;
+    CurState.Exit();
+    CurState = newState;
     newState.Enter();
   }
 }

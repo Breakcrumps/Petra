@@ -1,14 +1,12 @@
 [gd_scene format=3 uid="uid://cgosgldx2dpwx"]
 
 [ext_resource type="Material" uid="uid://dpejxb1obcdno" path="res://Levels/TestLevel/test.tres" id="1_r5l72"]
+[ext_resource type="Environment" uid="uid://ugvkbgt0w1ar" path="res://Levels/main_env.tres" id="2_3pk1f"]
 [ext_resource type="PackedScene" uid="uid://c7bjxg15tjfyr" path="res://Characters/Petra/petra.tscn" id="2_50ct6"]
-[ext_resource type="Environment" uid="uid://ugvkbgt0w1ar" path="res://Levels/main_env.tres" id="3_ak5v8"]
 [ext_resource type="Script" uid="uid://d3flasw4gdch6" path="res://Utils/CurrentEnv.cs" id="4_x033f"]
 [ext_resource type="Script" uid="uid://o2jk6nlu8wud" path="res://Utils/GameFlowController.cs" id="5_rdbpf"]
 [ext_resource type="Material" uid="uid://ecsfgfu6x8jm" path="res://Levels/TestLevel/test_obj.tres" id="6_x033f"]
-[ext_resource type="Script" uid="uid://c3b1s4yuuojil" path="res://Utils/MultipleSpawner.cs" id="7_oho3u"]
 [ext_resource type="PackedScene" uid="uid://cjkek7w6ogkjv" path="res://Objects/Glass/glass.tscn" id="9_d3awe"]
-[ext_resource type="PackedScene" uid="uid://s8kx0qq384um" path="res://Objects/Can/can.tscn" id="9_yglu3"]
 [ext_resource type="PackedScene" uid="uid://dm7t077licaos" path="res://Characters/Enemy/enemy.tscn" id="10_yglu3"]
 [ext_resource type="Script" uid="uid://s7qfprjwohhw" path="res://Utils/Cover/CoverMarker.cs" id="11_bwjpn"]
 [ext_resource type="Script" uid="uid://4cf42b4lcbi2" path="res://Utils/Cover/CoverManager.cs" id="12_ibmi3"]
@@ -60,7 +58,7 @@ point_count = 5
 [node name="Petra" parent="." unique_id=96141022 instance=ExtResource("2_50ct6")]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1967732712]
-environment = ExtResource("3_ak5v8")
+environment = ExtResource("2_3pk1f")
 script = ExtResource("4_x033f")
 
 [node name="GameFlowController" type="Node" parent="." unique_id=1575913716]
@@ -174,12 +172,6 @@ metadata/_custom_type_script = "uid://s7qfprjwohhw"
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -5.5109115, -2.3841858e-07, -3.6862452)
 script = ExtResource("11_bwjpn")
 metadata/_custom_type_script = "uid://s7qfprjwohhw"
-
-[node name="MultipleSpawner" type="Node" parent="." unique_id=2090844941 node_paths=PackedStringArray("_parent")]
-script = ExtResource("7_oho3u")
-_spawnedScene = ExtResource("9_yglu3")
-_parent = NodePath("..")
-metadata/_custom_type_script = "uid://c3b1s4yuuojil"
 
 [node name="Enemy" parent="." unique_id=2044125987 node_paths=PackedStringArray("CurPathFollow") instance=ExtResource("10_yglu3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.6277122)
