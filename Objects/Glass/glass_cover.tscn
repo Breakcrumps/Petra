@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://calv4i7ej314h"]
+
+[ext_resource type="PackedScene" uid="uid://cjkek7w6ogkjv" path="res://Objects/Glass/glass.tscn" id="1_vst26"]
+[ext_resource type="Script" uid="uid://s7qfprjwohhw" path="res://Utils/Cover/CoverMarker.cs" id="2_od1j4"]
+
+[node name="Glass" unique_id=359522317 instance=ExtResource("1_vst26")]
+
+[node name="CoverMarker" type="Marker3D" parent="." index="2" unique_id=151220808]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0.5174229, 0, 0)
+script = ExtResource("2_od1j4")
+metadata/_custom_type_script = "uid://s7qfprjwohhw"
+
+[node name="CoverMarker2" type="Marker3D" parent="." index="3" unique_id=1746516417]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -0.45846558, 0, 0)
+script = ExtResource("2_od1j4")
+metadata/_custom_type_script = "uid://s7qfprjwohhw"

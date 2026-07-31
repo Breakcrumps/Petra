@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://qyimwvwxsswo"]
+
+[ext_resource type="Material" uid="uid://ecsfgfu6x8jm" path="res://Levels/TestLevel/test_obj.tres" id="1_rgdpg"]
+[ext_resource type="Script" uid="uid://s7qfprjwohhw" path="res://Utils/Cover/CoverMarker.cs" id="2_hmrj1"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rdbpf"]
+material = ExtResource("1_rgdpg")
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_oho3u"]
+
+[node name="Obstacle" type="StaticBody3D" unique_id=1523173909]
+collision_layer = 4
+collision_mask = 7
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=945939870]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+layers = 4
+mesh = SubResource("CylinderMesh_rdbpf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1934972858]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_oho3u")
+
+[node name="CoverMarker" type="Marker3D" parent="." unique_id=614817519]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0.7590445, 0, 0)
+script = ExtResource("2_hmrj1")
+metadata/_custom_type_script = "uid://s7qfprjwohhw"
+
+[node name="CoverMarker2" type="Marker3D" parent="." unique_id=1208498873]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -0.759, 0, 0)
+script = ExtResource("2_hmrj1")
+metadata/_custom_type_script = "uid://s7qfprjwohhw"
+
+[node name="CoverMarker3" type="Marker3D" parent="." unique_id=1132341517]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0.759)
+script = ExtResource("2_hmrj1")
+metadata/_custom_type_script = "uid://s7qfprjwohhw"
+
+[node name="CoverMarker4" type="Marker3D" parent="." unique_id=1248430758]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.759)
+script = ExtResource("2_hmrj1")
+metadata/_custom_type_script = "uid://s7qfprjwohhw"

@@ -8,14 +8,19 @@ namespace Petra.Characters.Petra;
 
 internal sealed partial class PetraChar : CharacterBody3D, IDamageable
 {
-  internal enum PetraState { Idle, Running, Crouching, Sliding }
+  internal enum PetraState { Idle, Running, Crouching, Sliding, Climbing }
   internal PetraState CurrentState;
 
   [Export] private PetraCamera _camera = null!;
   [Export] private RayCast3D _slideCast = null!;
+  [Export] private RayCast3D _hipsClimbCast = null!;
+  [Export] private RayCast3D _feetClimbCast = null!;
   [Export] internal GunsWrapper Gun = null!;
 
-  [Export] internal Marker3D TorsoPoint = null!;
+  internal Marker3D TorsoPoint = null!;
+  [Export] private Marker3D _standingTorsoPoint = null!;
+  [Export] private Marker3D _crouchingTorsoPoint = null!;
+  [Export] internal Marker3D HeadPoint = null!;
 
   [Export] private int _maxHealth = 100;
   private int _health;
@@ -23,6 +28,7 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   [Export] private float _walkSpeed = 5f;
   [Export] private float _runSpeed = 9f;
   [Export] private float _crouchSpeed = 3f;
+  [Export] private float _climbDuration = .2f;
 
   [Export] private float _jumpVelocity = 8f;
   [Export] private float _gravity = 25f;
@@ -36,6 +42,7 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   [Export] private float _slideSpeed = 7f;
   private Vector3 _slideDirection;
   private float _slideTimer;
+  private bool _climbedThisJump;
 
   public override void _EnterTree()
     => GlobalInstances.Petra = this;
@@ -45,29 +52,74 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   
   public override void _PhysicsProcess(double delta)
   {
-    CurrentState = GetState();
+    if (CurrentState == PetraState.Climbing)
+      return;
 
-    if (CurrentState != PetraState.Sliding)
-      HandleMovement(delta);
+    if (IsOnFloor())
+      _climbedThisJump = false;
+    
+    _feetClimbCast.TargetPosition = -_camera.Basis.Z with { Y = 0f };
+    _hipsClimbCast.TargetPosition = -_camera.Basis.Z with { Y = 0f };
+
+    _feetClimbCast.ForceRaycastUpdate();
+    _hipsClimbCast.ForceRaycastUpdate();
+    
+    if (
+      !_climbedThisJump && !IsOnFloor()
+      && !_hipsClimbCast.IsColliding() && _feetClimbCast.IsColliding()
+      && Velocity.Y > -5f && Velocity.Y < 5f
+      && (Velocity with { Y = 0f }).Normalized().Dot(-GlobalBasis.Z) > Mathf.Sqrt2 / 2f
+      && Input.IsActionPressed("Up")
+    )
+      EnterClimbingState();
     else
+      CurrentState = GetState();
+
+    if (CurrentState == PetraState.Crouching)
+      TorsoPoint = _crouchingTorsoPoint;
+    else
+      TorsoPoint = _standingTorsoPoint;
+
+    if (CurrentState == PetraState.Sliding)
       HandleSlide(delta);
+    else
+      HandleMovement(delta);
   }
 
   private void HandleMovement(double delta)
   {
-    float speed = CurrentState switch
+    Vector2 curFloorVelocity = new(Velocity.X, -Velocity.Z);
+    
+    float speed = Mathf.Lerp(curFloorVelocity.Length(), CurrentState switch
     {
       PetraState.Idle => _walkSpeed,
       PetraState.Running => _runSpeed,
       PetraState.Crouching => _crouchSpeed,
       _ => _walkSpeed
-    };
+    }, 8f * (float)delta);
 
-    Vector2 floorVelocity = Input.GetVector(
-      negativeX: "Left", positiveX: "Right",
-      negativeY: "Down", positiveY: "Up"
-    ) * speed;
-    floorVelocity = floorVelocity.Rotated(_camera.Rotation.Y);
+    Vector2 floorVelocity;
+
+    if (IsOnFloor())
+    {
+      floorVelocity = Input.GetVector(
+        negativeX: "Left", positiveX: "Right",
+        negativeY: "Down", positiveY: "Up"
+      ) * speed;
+      floorVelocity = floorVelocity.Rotated(_camera.Rotation.Y);
+    }
+    else
+    {
+      floorVelocity = curFloorVelocity.Lerp(Vector2.Zero, .7f * (float)delta);
+      Vector2 inputOffset = Input.GetVector(
+        negativeX: "Left", positiveX: "Right",
+        negativeY: "Down", positiveY: "Up"
+      ) * .1f;
+      inputOffset = inputOffset.Rotated(_camera.Rotation.Y);
+      if (inputOffset.Dot(curFloorVelocity) / (inputOffset.Length() * curFloorVelocity.Length()) > Mathf.Sqrt2 / 2f)
+        inputOffset *= .1f;
+      floorVelocity += inputOffset;
+    }
 
     float yVelocity = Velocity.Y;
     if (!IsOnFloor())
@@ -91,6 +143,35 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
       TimeMoving += (float)delta;
     else
       TimeMoving = 0f;
+  }
+
+  private void EnterClimbingState()
+  {
+    _climbedThisJump = true;
+    CurrentState = PetraState.Climbing;
+    Velocity = Vector3.Zero;
+    Vector3 startPos = GlobalPosition;
+    Vector3 midPos = startPos with { Y = startPos.Y + .5f };
+    Vector3 targetPos = _feetClimbCast.GetCollisionPoint();
+    Vector3 lastPos = startPos, velocity = Vector3.Zero;
+    targetPos.Y += .5f;
+    Tween tween = (
+      CreateTween().SetTrans(Tween.TransitionType.Quad)
+      .SetEase(Tween.EaseType.In)
+      .SetProcessMode(Tween.TweenProcessMode.Physics)
+    );
+    tween.TweenMethod(Callable.From<float>(t => 
+    {
+      float u = 1 - t;
+      Vector3 newPos = u * u * startPos + 2f * u * t * midPos + t * t * targetPos;
+      velocity = (newPos - lastPos) * Engine.PhysicsTicksPerSecond;
+      GlobalPosition = lastPos = newPos;
+    }), 0f, 1f, _climbDuration);
+    tween.TweenCallback(Callable.From(() =>
+    {
+      CurrentState = PetraState.Idle;
+      Velocity = velocity;
+    }));
   }
 
   private void HandleSlide(double delta)

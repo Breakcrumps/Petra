@@ -13,4 +13,7 @@ internal sealed partial class CoverMarker : Marker3D
   
   public override void _Ready()
     => GlobalInstances.CoverManager.CoverMarkers.Add(this);
+
+  public override void _ExitTree()
+    => GlobalInstances.CoverManager.CoverMarkers.Remove(this);
 }

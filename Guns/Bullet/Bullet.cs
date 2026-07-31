@@ -56,12 +56,12 @@ internal sealed partial class Bullet : Node3D
 
       Vector3 impulse = -Speed * _mass * Basis.Z;
 
-      if (collider is IPenetrable)
-        impulse *= ((IPenetrable)collider).ImpulseFromBulletCoefficient;
+      if (collider is IPenetrable penetrable1)
+        impulse *= penetrable1.ImpulseFromBulletCoefficient;
 
       if (collider is IBreakable breakable)
         _ = breakable.Breaker.Break(hitPos, impulse);
-      else
+      else if (collider is not CharacterBody3D)
         SpawnDecal(hitPos, normal, collider);
 
       if (collider is IDamageable damageable)

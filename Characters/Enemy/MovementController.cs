@@ -48,14 +48,7 @@ internal sealed partial class MovementController : Node
         goto case ControlType.Position;
     }
 
-    if (moveDir == Vector3.Zero)
-    {
-      GroundMoveDirLocal = Vector2.Zero;
-    }
-    else
-    {
-      moveDir = _char.GlobalBasis.Inverse() * moveDir;
-      GroundMoveDirLocal = new Vector2(moveDir.X, -moveDir.Z).Normalized();
-    }
+    moveDir = _char.GlobalBasis.Inverse() * moveDir;
+    GroundMoveDirLocal = new Vector2(moveDir.X, -moveDir.Z).Normalized();
   }
 }

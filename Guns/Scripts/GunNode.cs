@@ -2,7 +2,7 @@ using Godot;
 
 namespace Petra.Objects.Guns.Scripts;
 
-internal sealed partial class GunNode : Node3D
+internal partial class GunNode : Node3D
 {
   [Export] private PackedScene _shellScene = null!;
   [Export] private Node3D _shellEjectPivot = null!;

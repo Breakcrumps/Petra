@@ -13,6 +13,9 @@ internal sealed partial class EnemyChar : CharacterBody3D, IDamageable
   [Export] private PhysicalBoneSimulator3D _boneSim = null!;
   [Export] private CollisionShape3D _aliveCollision = null!;
   [Export] private StateMachine _stateMachine = null!;
+  [Export] private AnimationPlayer _animPlayer = null!;
+  [Export] private MovementController _movementController = null!;
+  [Export] private ShootController _shootController = null!;
 
   private int _health = 100;
 
@@ -31,6 +34,10 @@ internal sealed partial class EnemyChar : CharacterBody3D, IDamageable
       _aliveCollision.Disabled = true;
       _boneSim.PhysicalBonesStartSimulation();
       _stateMachine.CurState.Exit();
+      _stateMachine.ProcessMode = ProcessModeEnum.Disabled;
+      _animPlayer.ProcessMode = ProcessModeEnum.Disabled;
+      _movementController.ProcessMode = ProcessModeEnum.Disabled;
+      _shootController.ProcessMode = ProcessModeEnum.Disabled;
     }
   }
 }

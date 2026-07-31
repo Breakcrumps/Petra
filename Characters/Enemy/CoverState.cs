@@ -8,6 +8,7 @@ namespace Petra.Characters.Enemy;
 internal sealed partial class CoverState : State
 {
   [Export] private MovementController _movementController = null!;
+  [Export] private ShootController _shootController = null!;
   [Export] private NavigationAgent3D _navAgent = null!;
 
   [ExportGroup("TransitableStates")]
@@ -32,7 +33,11 @@ internal sealed partial class CoverState : State
     
     _movementController.ControlMode = MovementController.ControlType.PositionDirection;
     _movementController.SpeedMode = MovementController.SpeedType.Run;
+    _shootController.Activate();
   }
+
+  internal override void Exit()
+    => _shootController.Deactivate();
 
   internal override void PhysicsProcess(double delta)
   {
@@ -55,9 +60,10 @@ internal sealed partial class CoverState : State
     {
       _movementController.Direction = Vector3.Zero;
       _parentChar.Quaternion =_parentChar.Quaternion.Slerp(
-        Basis.LookingAt(_parentChar.GlobalPosition - bestCover.Basis.Z).GetRotationQuaternion(),
+        Basis.LookingAt(bestCover.GlobalBasis.Z).GetRotationQuaternion(),
         10f * (float)delta
       );
+      bestCover.Occupant = _parentChar;
       return;
     }
 

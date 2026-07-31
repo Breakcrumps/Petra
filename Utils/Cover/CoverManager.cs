@@ -25,7 +25,7 @@ internal sealed partial class CoverManager : Node
 
     foreach (CoverMarker marker in CoverMarkers)
     {
-      if (marker.Occupant is not null)
+      if (marker.Occupant is not null && marker.Occupant != agent)
         continue;
 
       float score = ScoreCoverMarker(marker, agent, target);

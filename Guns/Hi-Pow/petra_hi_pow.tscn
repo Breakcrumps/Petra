@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://c4pq8iwep3b04"]
+
+[ext_resource type="PackedScene" uid="uid://c5k6v5hyqa325" path="res://Guns/Hi-Pow/Hi-Pow.glb" id="1_1kyyx"]
+[ext_resource type="PackedScene" uid="uid://d3ggnamj4oqsc" path="res://Guns/Hi-Pow/shell_hi_pow.tscn" id="2_4a7fc"]
+[ext_resource type="Script" uid="uid://cdk3nniaytotx" path="res://Guns/Scripts/PetraGunNode.cs" id="2_e2myi"]
+[ext_resource type="Resource" uid="uid://oktx1sepmnm" path="res://Guns/Hi-Pow/hi-power.tres" id="3_e2myi"]
+[ext_resource type="Resource" uid="uid://ck6pu3tt711hf" path="res://Guns/Hi-Pow/petra_hi-pow.tres" id="3_eanaa"]
+
+[node name="Hi-Pow" unique_id=1715231856 node_paths=PackedStringArray("_shellEjectPivot", "AnimPlayer") instance=ExtResource("1_1kyyx")]
+script = ExtResource("2_e2myi")
+PetraGunData = ExtResource("3_eanaa")
+_shellScene = ExtResource("2_4a7fc")
+_shellEjectPivot = NodePath("ShellDir")
+GunData = ExtResource("3_e2myi")
+AnimPlayer = NodePath("AnimationPlayer")
+
+[node name="Skeleton3D" parent="Armature" parent_id_path=PackedInt32Array(788178209) index="0" unique_id=1858724303]
+bones/0/position = Vector3(5.364511e-18, -0.07285614, 0.006153816)
+bones/0/rotation = Quaternion(-0.11892264, 1.1836332e-07, -1.4176681e-08, 0.99290353)
+bones/1/rotation = Quaternion(0.7714919, -2.2753684e-07, -9.19689e-08, 0.6362393)
+bones/2/position = Vector3(-9.629156e-09, 0.1992876, 0.0403876)
+bones/3/position = Vector3(-1.9501185e-11, -0.0010078953, 8.1793405e-05)
+bones/4/rotation = Quaternion(0.744761, -1.936229e-13, 1.7756467e-07, 0.66733134)

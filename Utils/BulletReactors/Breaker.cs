@@ -30,18 +30,22 @@ internal readonly struct Breaker
 
       Vector3 difVector = shard.GlobalPosition - hitPos;
       Vector3 radialImpulse = difVector.Normalized() * (float)GD.RandRange(.5, 1.0);
-      Vector3 forwardImpulse = hitImpulse * (float)GD.RandRange(0.5, 1.0) / (1f + difVector.Length());
+      Vector3 forwardImpulse = hitImpulse * (float)GD.RandRange(.5, 1.0) / (1f + difVector.Length());
       shard.ApplyCentralImpulse(radialImpulse + forwardImpulse);
 
       shard.AngularVelocity = new Vector3(
-        GD.RandRange(-10, 10),
-        GD.RandRange(-10, 10),
-        GD.RandRange(-10, 10)
+        (float)GD.RandRange(-10.0, 10.0),
+        (float)GD.RandRange(-10.0, 10.0),
+        (float)GD.RandRange(-10.0, 10.0)
       );
     }
 
     _intact.QueueFree();
-    await _navRegion.ToSignal(_navRegion.GetTree(), SceneTree.SignalName.ProcessFrame);
+
+    SceneTree tree = _navRegion.GetTree();
+    await _navRegion.ToSignal(tree, SceneTree.SignalName.ProcessFrame);
+    while (_navRegion.IsBaking())
+      await _navRegion.ToSignal(tree, SceneTree.SignalName.ProcessFrame);
     _navRegion.BakeNavigationMesh();
   }
 }
