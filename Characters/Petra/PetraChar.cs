@@ -14,7 +14,8 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   [Export] private PetraCamera _camera = null!;
   [Export] private RayCast3D _slideCast = null!;
   [Export] private RayCast3D _hipsClimbCast = null!;
-  [Export] private RayCast3D _feetClimbCast = null!;
+  [Export] private RayCast3D _chestClimbCast = null!;
+  [Export] private RayCast3D _climbTargetRaycast = null!;
   [Export] internal GunsWrapper Gun = null!;
 
   internal Marker3D TorsoPoint = null!;
@@ -42,38 +43,47 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   [Export] private float _slideSpeed = 7f;
   private Vector3 _slideDirection;
   private float _slideTimer;
-  private bool _climbedThisJump;
+
+  internal PetraState LastState;
 
   public override void _EnterTree()
     => GlobalInstances.Petra = this;
 
   public override void _Ready()
-    => _health = _maxHealth;
+  {
+    _health = _maxHealth;
+    _climbTargetRaycast.Enabled = false;
+  }
   
   public override void _PhysicsProcess(double delta)
   {
     if (CurrentState == PetraState.Climbing)
       return;
-
-    if (IsOnFloor())
-      _climbedThisJump = false;
     
-    _feetClimbCast.TargetPosition = -_camera.Basis.Z with { Y = 0f };
+    _chestClimbCast.TargetPosition = -_camera.Basis.Z with { Y = 0f };
     _hipsClimbCast.TargetPosition = -_camera.Basis.Z with { Y = 0f };
 
-    _feetClimbCast.ForceRaycastUpdate();
+    if (CurrentState == PetraState.Running)
+    {
+      _chestClimbCast.TargetPosition *= 1.5f;
+      _hipsClimbCast.TargetPosition *= 1.5f;
+    }
+
+    _chestClimbCast.ForceRaycastUpdate();
     _hipsClimbCast.ForceRaycastUpdate();
+    _chestClimbCast.ForceUpdateTransform();
+    _hipsClimbCast.ForceUpdateTransform();
     
     if (
-      !_climbedThisJump && !IsOnFloor()
-      && !_hipsClimbCast.IsColliding() && _feetClimbCast.IsColliding()
-      && Velocity.Y > -5f && Velocity.Y < 5f
-      && (Velocity with { Y = 0f }).Normalized().Dot(-GlobalBasis.Z) > Mathf.Sqrt2 / 2f
-      && Input.IsActionPressed("Up")
+      _hipsClimbCast.IsColliding() && !_chestClimbCast.IsColliding()
+      && Input.IsActionPressed("Up") && Input.IsActionJustPressed("Jump")
     )
-      EnterClimbingState();
-    else
-      CurrentState = GetState();
+    {
+      TryEnterClimbingState();
+      return;
+    }
+    
+    CurrentState = GetState();
 
     if (CurrentState == PetraState.Crouching)
       TorsoPoint = _crouchingTorsoPoint;
@@ -145,34 +155,116 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
       TimeMoving = 0f;
   }
 
-  private void EnterClimbingState()
+  private void TryEnterClimbingState()
   {
-    _climbedThisJump = true;
+    Vector3 raycastSrc = _hipsClimbCast.GetCollisionPoint() - (_camera.Basis.Z with { Y = 0f }).Normalized() * .2f;
+    raycastSrc.Y += _chestClimbCast.Position.Y;
+
+    _climbTargetRaycast.Enabled = true;
+    _climbTargetRaycast.GlobalPosition = raycastSrc;
+    _climbTargetRaycast.ForceRaycastUpdate();
+
+    if (!_climbTargetRaycast.IsColliding())
+      return;
+
+    Vector3 targetPos = _climbTargetRaycast.GetCollisionPoint();
+    _climbTargetRaycast.Enabled = false;
+
+    float deltaY = targetPos.Y - GlobalPosition.Y;
+
+    if (deltaY <= .05f)
+      return;
+    
+    float runMult = CurrentState is PetraState.Running ? .8f : 1f;
+    float deltaYMult = Mathf.Clamp(deltaY, .5f, 1.5f);
+    float climbDuration = _climbDuration * deltaYMult * runMult;
+
+    LastState = CurrentState;
     CurrentState = PetraState.Climbing;
-    Velocity = Vector3.Zero;
-    Vector3 startPos = GlobalPosition;
-    Vector3 midPos = startPos with { Y = startPos.Y + .5f };
-    Vector3 targetPos = _feetClimbCast.GetCollisionPoint();
-    Vector3 lastPos = startPos, velocity = Vector3.Zero;
-    targetPos.Y += .5f;
+
     Tween tween = (
-      CreateTween().SetTrans(Tween.TransitionType.Quad)
-      .SetEase(Tween.EaseType.In)
+      CreateTween()
+      .SetTrans(climbDuration < .12f ? Tween.TransitionType.Linear : Tween.TransitionType.Quad)
+      .SetEase(climbDuration < .2f ? Tween.EaseType.Out : Tween.EaseType.InOut)
       .SetProcessMode(Tween.TweenProcessMode.Physics)
     );
-    tween.TweenMethod(Callable.From<float>(t => 
-    {
-      float u = 1 - t;
-      Vector3 newPos = u * u * startPos + 2f * u * t * midPos + t * t * targetPos;
-      velocity = (newPos - lastPos) * Engine.PhysicsTicksPerSecond;
-      GlobalPosition = lastPos = newPos;
-    }), 0f, 1f, _climbDuration);
-    tween.TweenCallback(Callable.From(() =>
-    {
-      CurrentState = PetraState.Idle;
-      Velocity = velocity;
-    }));
+    if (IsOnFloor())
+      tween.TweenProperty(this, "global_position:y", GlobalPosition.Y - .05f * runMult, .03f * runMult * deltaYMult).SetEase(Tween.EaseType.In);
+    tween.TweenInterval(.03f * runMult);
+    tween.TweenProperty(this, "global_position", targetPos, climbDuration);
+    tween.Parallel().TweenProperty(_camera.GunCamera, "global_position", targetPos + _camera.Position, climbDuration);
+    tween.TweenCallback(Callable.From(() => CurrentState = LastState));
   }
+
+  // private void EnterClimbingState()
+  // {
+  //   Vector3 raycastSrc = _hipsClimbCast.GetCollisionPoint() - (_camera.Basis.Z with { Y = 0f }).Normalized() * .5f;
+  //   raycastSrc.Y += _chestClimbCast.Position.Y;
+
+  //   _climbTargetRaycast.Enabled = true;
+  //   _climbTargetRaycast.GlobalPosition = raycastSrc;
+  //   _climbTargetRaycast.ForceRaycastUpdate();
+
+  //   Vector3 targetPos = _climbTargetRaycast.GetCollisionPoint();
+  //   _climbTargetRaycast.Enabled = false;
+
+  //   LastState = CurrentState;
+  //   CurrentState = PetraState.Climbing;
+
+  //   Tween tween = CreateTween();
+
+  //   Vector3 difVector = targetPos - GlobalPosition;
+  //   float dist = difVector.Length();
+  //   Vector3 flatDif = new(difVector.X, 0f, difVector.Z);
+  //   float heightDif = targetPos.Y - GlobalPosition.Y;
+  //   float duration = (flatDif.Length() + heightDif * 2f) / 10f;
+
+  //   float exitMomentumFactor = Mathf.Lerp(1f, .1f, Mathf.InverseLerp(.5f, 2f, heightDif));
+
+  //   Vector3 v1 = Velocity * .5f;
+  //   v1.Y += heightDif;
+  //   Vector3 v2 = Velocity * exitMomentumFactor;
+  //   Vector3 p1 = GlobalPosition;
+
+  //   GD.Print($"p1: {p1},\nv1: {v1},\np2: {targetPos},\nv2: {v2}");
+
+  //   tween.TweenMethod(Callable.From<float>((t) =>
+  //   {
+  //     GlobalPosition = (
+  //       (2 * t * t * t - 3 * t * t + 1) * p1
+  //       + (t * t * t - 2 * t * t + t) * v1
+  //       + (-2f * t * t * t + 3 * t * t) * targetPos
+  //       + (t * t * t - t * t) * v2
+  //     );
+  //   }), 0f, 1f, duration);
+  //   // _camera.Climb(duration, heightDif);
+  //   tween.TweenCallback(Callable.From(() => CurrentState = LastState));
+  // }
+
+  // private void EnterClimbingState()
+  // {
+  //   Vector3 raycastSrc = _hipsClimbCast.GetCollisionPoint() - (_camera.Basis.Z with { Y = 0f }).Normalized() * .5f;
+  //   raycastSrc.Y += _chestClimbCast.Position.Y;
+  //   _climbTargetRaycast.Enabled = true;
+  //   _climbTargetRaycast.GlobalPosition = raycastSrc;
+  //   _climbTargetRaycast.ForceRaycastUpdate();
+  //   Vector3 targetPos = _climbTargetRaycast.GetCollisionPoint();
+  //   _climbTargetRaycast.Enabled = false;
+  //   float deltaY = targetPos.Y - GlobalPosition.Y;
+  //   float duration = _climbDuration * deltaY;
+  //   LastState = CurrentState;
+  //   if (CurrentState is PetraState.Running)
+  //     duration *= .5f;
+  //   CurrentState = PetraState.Climbing;
+  //   Tween tween = (
+  //     CreateTween().SetTrans(Tween.TransitionType.Sine)
+  //     .SetEase(Tween.EaseType.In)
+  //     .SetProcessMode(Tween.TweenProcessMode.Physics)
+  //   );
+  //   tween.TweenProperty(this, "global_position", targetPos, duration);
+  //   _camera.Climb(duration, deltaY);
+  //   tween.TweenCallback(Callable.From(() => CurrentState = LastState));
+  // }
 
   private void HandleSlide(double delta)
   {

@@ -33,7 +33,6 @@ internal sealed partial class CoverState : State
     
     _movementController.ControlMode = MovementController.ControlType.PositionDirection;
     _movementController.SpeedMode = MovementController.SpeedType.Run;
-    _shootController.Activate();
   }
 
   internal override void Exit()
@@ -64,6 +63,7 @@ internal sealed partial class CoverState : State
         10f * (float)delta
       );
       bestCover.Occupant = _parentChar;
+      _shootController.Activate();
       return;
     }
 
@@ -72,5 +72,6 @@ internal sealed partial class CoverState : State
       Basis.LookingAt((GlobalInstances.Petra.GlobalPosition - _parentChar.GlobalPosition) with { Y = 0f }).GetRotationQuaternion(),
       10f * (float)delta
     );
+    _shootController.Deactivate();
   }
 }

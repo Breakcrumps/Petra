@@ -154,9 +154,6 @@ internal sealed partial class GunsWrapper : Node3D
 
   public override void _PhysicsProcess(double delta)
   {
-    if (Input.IsActionJustPressed("SlowDownTime"))
-      Engine.TimeScale = Engine.TimeScale == 1f ? .1f : 1f;
-    
     if (Input.IsActionJustPressed("Weapon1"))
       TryLoadData(idx: 0);
     else if (Input.IsActionJustPressed("Weapon2"))
@@ -169,7 +166,7 @@ internal sealed partial class GunsWrapper : Node3D
     if (_curGunNode is null)
       return;
     
-    if (_petra.CurrentState == PetraChar.PetraState.Sliding)
+    if (_petra.CurrentState is PetraChar.PetraState.Sliding)
     {
       Position = Position.Lerp(to: _curGunNode.PetraGunData.SlidePos, weight: 10f * (float)delta);
       return;
@@ -291,7 +288,10 @@ internal sealed partial class GunsWrapper : Node3D
     }
     else
     {
-      if (_petra.CurrentState == PetraChar.PetraState.Running)
+      if (
+        _petra.CurrentState is PetraChar.PetraState.Running
+        || _petra.CurrentState is PetraChar.PetraState.Climbing && _petra.LastState == PetraChar.PetraState.Running
+      )
       {
         nextPos = Input.IsActionPressed("Down") ? _curGunNode.PetraGunData.BackRunPos : _curGunNode.PetraGunData.RunPos;
         nextOrient = Input.IsActionPressed("Down") ? _curGunNode.PetraGunData.BackRunOrient: _curGunNode.PetraGunData.RunOrient;

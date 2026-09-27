@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://dknpccl414s0n" path="res://Characters/Petra/PetraChar.cs" id="1_dcfmr"]
 [ext_resource type="Script" uid="uid://oik5vd440u75" path="res://Characters/Petra/Components/PetraCollision.cs" id="2_07x6y"]
 [ext_resource type="Script" uid="uid://c5etbjaaat57t" path="res://Characters/Petra/Components/PetraCamera.cs" id="2_xka01"]
-[ext_resource type="Script" uid="uid://420qp4km7kud" path="res://Characters/Petra/Components/PetraGunCamera.cs" id="3_u0x2d"]
 [ext_resource type="PackedScene" uid="uid://c4pq8iwep3b04" path="res://Guns/Hi-Pow/petra_hi_pow.tscn" id="5_6be6t"]
 [ext_resource type="Script" uid="uid://c0f18fq4jm3j6" path="res://Characters/Petra/Components/BulletSpawner.cs" id="5_wx6ak"]
 [ext_resource type="PackedScene" uid="uid://bl8yrxw8wui7h" path="res://Guns/Particles/smoke_particles.tscn" id="6_522tq"]
@@ -17,13 +16,14 @@
 [sub_resource type="SphereShape3D" id="SphereShape3D_vmorc"]
 radius = 0.1
 
-[node name="Petra" type="CharacterBody3D" unique_id=96141022 node_paths=PackedStringArray("_camera", "_slideCast", "_hipsClimbCast", "_feetClimbCast", "Gun", "_standingTorsoPoint", "_crouchingTorsoPoint", "HeadPoint")]
+[node name="Petra" type="CharacterBody3D" unique_id=96141022 node_paths=PackedStringArray("_camera", "_slideCast", "_hipsClimbCast", "_chestClimbCast", "_climbTargetRaycast", "Gun", "_standingTorsoPoint", "_crouchingTorsoPoint", "HeadPoint")]
 collision_mask = 14
 script = ExtResource("1_dcfmr")
 _camera = NodePath("PetraCamera")
 _slideCast = NodePath("SlideCast")
 _hipsClimbCast = NodePath("HipsClimbCast")
-_feetClimbCast = NodePath("FeetClimbCast")
+_chestClimbCast = NodePath("ChestClimbCast")
+_climbTargetRaycast = NodePath("ClimbTargetRaycast")
 Gun = NodePath("PetraCamera/GunsWrapper")
 _standingTorsoPoint = NodePath("TorsoPoint")
 _crouchingTorsoPoint = NodePath("TorsoCrouchPoint")
@@ -37,18 +37,19 @@ _petra = NodePath("..")
 _crouchPivot = NodePath("../Crouch")
 _slidePivot = NodePath("../Slide")
 
-[node name="PetraCamera" type="Camera3D" parent="." unique_id=418983480 node_paths=PackedStringArray("_petra", "_gun", "_leanRaycast", "_standLeanPivot", "_crouchPivot", "_crouchLeanPivot", "_slidePivot")]
+[node name="PetraCamera" type="Camera3D" parent="." unique_id=418983480 node_paths=PackedStringArray("_petra", "GunCamera", "_gun", "_leanRaycast", "_standLeanPivot", "_crouchPivot", "_crouchLeanPivot", "_slidePivot", "_climbMarker")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6091348, 0)
 cull_mask = 1048573
 script = ExtResource("2_xka01")
 _petra = NodePath("..")
+GunCamera = NodePath("../SubViewportContainer/PetraGunViewport/PetraGunCamera")
 _gun = NodePath("GunsWrapper")
 _leanRaycast = NodePath("../LeanCast")
 _standLeanPivot = NodePath("../Lean")
 _crouchPivot = NodePath("../Crouch")
 _crouchLeanPivot = NodePath("../CrouchLean")
 _slidePivot = NodePath("../Slide")
-_mouseSensitivity = 0.005
+_climbMarker = NodePath("../Climb")
 
 [node name="GunLeanRight" type="Marker3D" parent="PetraCamera" unique_id=294417068]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.200896, -0.34000003, -0.75)
@@ -138,6 +139,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 [node name="Slide" type="Marker3D" parent="." unique_id=310099077]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2762096, 0)
 
+[node name="Climb" type="Marker3D" parent="." unique_id=2101530499]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.532489, -0.11247146)
+
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1101281320]
 anchors_preset = 15
 anchor_right = 1.0
@@ -149,13 +153,11 @@ stretch = true
 [node name="PetraGunViewport" type="SubViewport" parent="SubViewportContainer" unique_id=624680960]
 transparent_bg = true
 handle_input_locally = false
-size = Vector2i(1280, 800)
+size = Vector2i(320, 240)
 render_target_update_mode = 4
 
-[node name="PetraGunCamera" type="Camera3D" parent="SubViewportContainer/PetraGunViewport" unique_id=468325678 node_paths=PackedStringArray("_mainCamera")]
+[node name="PetraGunCamera" type="Camera3D" parent="SubViewportContainer/PetraGunViewport" unique_id=528037907]
 cull_mask = 1047554
-script = ExtResource("3_u0x2d")
-_mainCamera = NodePath("../../../PetraCamera")
 
 [node name="TorsoPoint" type="Marker3D" parent="." unique_id=1603321248]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.144793, 0)
@@ -163,12 +165,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.144793, 0)
 [node name="TorsoCrouchPoint" type="Marker3D" parent="." unique_id=278452790]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6878116, 0)
 
-[node name="FeetClimbCast" type="RayCast3D" parent="." unique_id=1817976573]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13948643, 0)
+[node name="ChestClimbCast" type="RayCast3D" parent="." unique_id=1817976573]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5145134, 0)
 target_position = Vector3(0, 0, -0.5)
 collision_mask = 4
 
 [node name="HipsClimbCast" type="RayCast3D" parent="." unique_id=1576196579]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65410113, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.27467334, 0)
 target_position = Vector3(0, 0, -0.5)
+collision_mask = 4
+
+[node name="ClimbTargetRaycast" type="RayCast3D" parent="." unique_id=829937492]
+target_position = Vector3(0, -3, 0)
 collision_mask = 4

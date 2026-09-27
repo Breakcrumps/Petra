@@ -1,0 +1,87 @@
+[gd_scene format=3 uid="uid://dhtwr26ypr1kk"]
+
+[ext_resource type="Script" uid="uid://cs3m427mpulok" path="res://Levels/MainMenu/MainMenu.cs" id="1_jixtp"]
+[ext_resource type="PackedScene" uid="uid://bcffo6xbuvyay" path="res://Levels/MainMenu/girl_walk_body.glb" id="2_7g58x"]
+[ext_resource type="PackedScene" uid="uid://cpnsf3rrgoo30" path="res://Levels/MainMenu/dumpster_free_game_asset_agustin_honnun.glb" id="3_7g58x"]
+[ext_resource type="PackedScene" uid="uid://cuhah4vq4h50t" path="res://Levels/MainMenu/lowpoly_cardboard_box.glb" id="4_q7u2s"]
+[ext_resource type="PackedScene" uid="uid://cfdi0nawb16uu" path="res://Levels/MainMenu/worn_and_flattened_cardboard.glb" id="5_p4dqk"]
+[ext_resource type="PackedScene" uid="uid://burbw520ivj3o" path="res://Levels/MainMenu/cardboard_armor_rig__dandys_world_unoffical.glb" id="6_4syi3"]
+[ext_resource type="PackedScene" uid="uid://to58a06o3bh1" path="res://Levels/MainMenu/animal_company_-_metal_rod.glb" id="7_4syi3"]
+[ext_resource type="Texture2D" uid="uid://f6odicypw0ky" path="res://Levels/MainMenu/Road012A_1K-JPG_Color.jpg" id="8_exb2m"]
+[ext_resource type="Texture2D" uid="uid://c6hkti3capcmn" path="res://Levels/MainMenu/Road012A_1K-JPG_NormalDX.jpg" id="9_nuf5y"]
+[ext_resource type="Texture2D" uid="uid://bonhx31sj3if0" path="res://Levels/MainMenu/Road012A_1K-JPG_Roughness.jpg" id="10_n4r03"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ulcgi"]
+sky_top_color = Color(0.4342689, 0.85571015, 0.9001173, 1)
+sky_horizon_color = Color(0.930273, 0.4198781, 0.9076459, 1)
+
+[sub_resource type="Sky" id="Sky_nxogm"]
+sky_material = SubResource("ProceduralSkyMaterial_ulcgi")
+
+[sub_resource type="Environment" id="Environment_exb2m"]
+background_mode = 1
+background_energy_multiplier = 0.1
+sky = SubResource("Sky_nxogm")
+tonemap_mode = 3
+tonemap_exposure = 1.1
+ssr_enabled = true
+ssao_enabled = true
+ssao_intensity = 1.5
+sdfgi_enabled = true
+sdfgi_read_sky_light = false
+glow_enabled = true
+glow_normalized = true
+glow_bloom = 0.2
+fog_enabled = true
+fog_light_color = Color(0.1764706, 0.1764706, 0.1764706, 1)
+fog_light_energy = 0.5
+volumetric_fog_density = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jxjmh"]
+albedo_texture = ExtResource("8_exb2m")
+roughness_texture = ExtResource("10_n4r03")
+normal_enabled = true
+normal_texture = ExtResource("9_nuf5y")
+uv1_triplanar = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_e2tg4"]
+material = SubResource("StandardMaterial3D_jxjmh")
+size = Vector2(100, 100)
+
+[node name="MainMenu" type="Node3D" unique_id=2129731790]
+script = ExtResource("1_jixtp")
+
+[node name="Girl" parent="." unique_id=333379128 instance=ExtResource("2_7g58x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17988205, 0, 0.048321128)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=870115216]
+transform = Transform3D(0.90841573, 0, -0.41806796, 0, 1, 0, 0.41806796, 0, 0.90841573, 0, 3.4110098, 6.528464)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1258972757]
+environment = SubResource("Environment_exb2m")
+
+[node name="Sketchfab_Scene" parent="." unique_id=600593243 instance=ExtResource("3_7g58x")]
+transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 2.5635605, 0, 0.7203758)
+
+[node name="Sketchfab_Scene2" parent="." unique_id=2054818032 instance=ExtResource("4_q7u2s")]
+transform = Transform3D(0.29777724, 0, -0.18392584, 0, 0.35, 0, 0.18392584, 0, 0.29777724, 1.0792361, 0, -0.29179704)
+
+[node name="Sketchfab_Scene4" parent="." unique_id=1571130761 instance=ExtResource("4_q7u2s")]
+transform = Transform3D(0.28635478, 0, -0.27928647, 0, 0.4, 0, 0.27928647, 0, 0.28635478, -1.3002682, 0, 0.0013656616)
+
+[node name="Sketchfab_Scene3" parent="." unique_id=1999697062 instance=ExtResource("5_p4dqk")]
+transform = Transform3D(2.223075, 0.03437952, 0.5888597, 0.045271527, 2.2793727, -0.30398723, -0.5881225, 0.30541086, 2.202461, 0.41884756, 2.3269026, 0.6226058)
+
+[node name="cardboard_armor_rig__dandys_world_unoffical" parent="." unique_id=891637939 instance=ExtResource("6_4syi3")]
+transform = Transform3D(0.5885557, 0, 0.9293021, 0, 1.1000001, 0, -0.9293021, 0, 0.5885557, -0.25884074, 0, 0.15094346)
+
+[node name="Sketchfab_Scene5" parent="." unique_id=714662710 instance=ExtResource("7_4syi3")]
+transform = Transform3D(0.7, 0, 0, 0, 2, 0, 0, 0, 0.7, -0.64924204, 1.3659778, 0.66762334)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1899158945]
+mesh = SubResource("PlaneMesh_e2tg4")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=370302357]
+transform = Transform3D(1, 0, 0, 0, 0.9764649, 0.21567626, 0, -0.21567626, 0.9764649, 0, 0, 0)
+light_energy = 0.5
+sky_mode = 1

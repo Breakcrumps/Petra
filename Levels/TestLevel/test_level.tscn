@@ -2,17 +2,17 @@
 
 [ext_resource type="Material" uid="uid://dpejxb1obcdno" path="res://Levels/TestLevel/test.tres" id="1_r5l72"]
 [ext_resource type="PackedScene" uid="uid://c7bjxg15tjfyr" path="res://Characters/Petra/petra.tscn" id="2_50ct6"]
+[ext_resource type="Environment" uid="uid://ugvkbgt0w1ar" path="res://Levels/main_env.tres" id="2_o0fu1"]
 [ext_resource type="Script" uid="uid://d3flasw4gdch6" path="res://Utils/CurrentEnv.cs" id="4_x033f"]
 [ext_resource type="Script" uid="uid://o2jk6nlu8wud" path="res://Utils/GameFlowController.cs" id="5_rdbpf"]
 [ext_resource type="PackedScene" uid="uid://qyimwvwxsswo" path="res://Levels/TestLevel/cylinder_cover.tscn" id="6_o0fu1"]
 [ext_resource type="Material" uid="uid://ecsfgfu6x8jm" path="res://Levels/TestLevel/test_obj.tres" id="6_x033f"]
-[ext_resource type="PackedScene" uid="uid://cjkek7w6ogkjv" path="res://Objects/Glass/glass.tscn" id="9_d3awe"]
 [ext_resource type="PackedScene" uid="uid://dm7t077licaos" path="res://Characters/Enemy/enemy.tscn" id="10_yglu3"]
 [ext_resource type="Script" uid="uid://s7qfprjwohhw" path="res://Utils/Cover/CoverMarker.cs" id="11_bwjpn"]
 [ext_resource type="Script" uid="uid://c3b1s4yuuojil" path="res://Utils/MultipleSpawner.cs" id="11_w00vb"]
 [ext_resource type="Script" uid="uid://4cf42b4lcbi2" path="res://Utils/Cover/CoverManager.cs" id="12_ibmi3"]
-
-[sub_resource type="Environment" id="Environment_kouv0"]
+[ext_resource type="Script" uid="uid://brjtytw6vmk65" path="res://Levels/TestLevel/SlowDownTime.cs" id="13_o0fu1"]
+[ext_resource type="PackedScene" uid="uid://calv4i7ej314h" path="res://Objects/Glass/glass_cover.tscn" id="14_ldbyx"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_yglu3"]
 vertices = PackedVector3Array(-9.25, 0.5, -0.75, -6.25, 0.5, -2.5, -6.25, 0.5, -3.25, -10, 0.5, -0.5, -4.75, 0.5, -4.75, -4, 0.5, -4.75, -3.5, 0.5, -49.5, -49.5, 0.5, -49.5, -49.5, 0.5, 0.75, -10, 0.5, 0.75, -3.5, 0.5, -4.5, -3.5, 0.5, -3.5, -3.25, 0.5, -3.5, -1, 0.5, -4.25, 0, 0.5, -5.75, 0, 0.5, -49.5, -1, 0.5, -5.5, 1, 0.5, -5.5, 1.5, 0.5, -2.75, 49.5, 0.5, -2.25, 49.5, 0.5, -49.5, -3, 0.5, -1.75, -5, 0.5, -2, -8.75, 0.5, 2.25, -9.25, 0.5, 2.5, -6.25, 0.5, 4.5, -6, 0.5, 4, -2.25, 0.5, 0.5, -0.75, 0.5, 0.25, -1, 0.5, -2, -6, 0.5, -2, -8.75, 0.5, -0.5, -5, 0.5, 4, -3.5, 0.5, 6, -2, 0.5, 5.5, 1.25, 0.5, -2.25, 2.75, 0.5, 0.25, 3, 0.5, 3, 49.5, 0.5, 3, -10, 0.5, 2.25, -5.25, 0.5, 6.5, -49.5, 0.5, 49.5, -4.5, 0.5, 49.5, -4.5, 0.5, 6.75, -1.25, 1.25, 1.25, -1.25, 1.25, 4.5, 2, 1.25, 4.5, 2, 1.25, 1.25, 3, 0.5, 5.25, 0.75, 0.5, 5.5, 0.75, 0.5, 49.5, 49.5, 0.5, 49.5, -3.75, 0.5, 6.75)
@@ -30,6 +30,13 @@ size = Vector3(100, 1, 100)
 material = ExtResource("6_x033f")
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_oho3u"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_41ogg"]
+material = ExtResource("6_x033f")
+height = 1.5
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_41ogg"]
+height = 1.5
 
 [sub_resource type="SphereMesh" id="SphereMesh_x033f"]
 material = ExtResource("6_x033f")
@@ -61,7 +68,7 @@ point_count = 5
 [node name="Petra" parent="." unique_id=96141022 instance=ExtResource("2_50ct6")]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1967732712]
-environment = SubResource("Environment_kouv0")
+environment = ExtResource("2_o0fu1")
 script = ExtResource("4_x033f")
 
 [node name="GameFlowController" type="Node" parent="." unique_id=1575913716]
@@ -103,6 +110,18 @@ mesh = SubResource("CylinderMesh_rdbpf")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Obstacle2" unique_id=1797674198]
 shape = SubResource("CylinderShape3D_oho3u")
 
+[node name="Obstacle6" type="StaticBody3D" parent="NavigationRegion3D" unique_id=1903581360]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.294, 0.75, -6.336)
+collision_layer = 4
+collision_mask = 7
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/Obstacle6" unique_id=41581022]
+layers = 4
+mesh = SubResource("CylinderMesh_41ogg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Obstacle6" unique_id=1451970208]
+shape = SubResource("CylinderShape3D_41ogg")
+
 [node name="Obstacle3" type="StaticBody3D" parent="NavigationRegion3D" unique_id=333196052]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.98813784, 0.49999976, -3.1134899)
 collision_layer = 4
@@ -127,15 +146,6 @@ mesh = SubResource("BoxMesh_oho3u")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Obstacle4" unique_id=581242466]
 shape = SubResource("BoxShape3D_d3awe")
 
-[node name="Glass" parent="NavigationRegion3D" unique_id=359522317 instance=ExtResource("9_d3awe")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.39572, 0, 0.7982589)
-
-[node name="Glass2" parent="NavigationRegion3D" unique_id=1895393334 instance=ExtResource("9_d3awe")]
-transform = Transform3D(0.7852953, 0, 0.6191214, 0, 1, 0, -0.6191214, 0, 0.7852953, -4.9021072, 0, 5.3936787)
-
-[node name="Glass3" parent="NavigationRegion3D" unique_id=105961669 instance=ExtResource("9_d3awe")]
-transform = Transform3D(0.70703274, 0, -0.70718074, 0, 1, 0, 0.70718074, 0, 0.70703274, -4.9021072, 0, -3.3246925)
-
 [node name="Obstacle5" type="StaticBody3D" parent="NavigationRegion3D" unique_id=1805055577]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.441, 0.4, 2.912)
 collision_layer = 4
@@ -147,6 +157,15 @@ mesh = SubResource("BoxMesh_d3awe")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Obstacle5" unique_id=1735282644]
 shape = SubResource("BoxShape3D_oho3u")
+
+[node name="Glass" parent="NavigationRegion3D" unique_id=1849189972 instance=ExtResource("14_ldbyx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.39572, 0, 0.7982589)
+
+[node name="Glass2" parent="NavigationRegion3D" unique_id=359522317 instance=ExtResource("14_ldbyx")]
+transform = Transform3D(0.7852953, 0, 0.6191214, 0, 1, 0, -0.6191214, 0, 0.7852953, -4.9021072, 0, 5.3936787)
+
+[node name="Glass3" parent="NavigationRegion3D" unique_id=285160664 instance=ExtResource("14_ldbyx")]
+transform = Transform3D(0.70703274, 0, -0.7071807, 0, 1, 0, 0.7071807, 0, 0.70703274, -4.9021072, 0, -3.3246925)
 
 [node name="CoverManager" type="Node" parent="." unique_id=283847294]
 script = ExtResource("12_ibmi3")
@@ -186,3 +205,6 @@ _parent = NodePath("../NavigationRegion3D")
 _spawnedScene = ExtResource("6_o0fu1")
 _navRegion = NodePath("../NavigationRegion3D")
 metadata/_custom_type_script = "uid://c3b1s4yuuojil"
+
+[node name="SlowDownTime" type="Node" parent="." unique_id=1810494869]
+script = ExtResource("13_o0fu1")

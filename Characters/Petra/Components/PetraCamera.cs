@@ -7,6 +7,7 @@ namespace Petra.Characters.Petra.Components;
 internal sealed partial class PetraCamera : Camera3D
 {
   [Export] private PetraChar _petra = null!;
+  [Export] internal Camera3D GunCamera = null!;
   [Export] private GunsWrapper _gun = null!;
   [Export] private ShapeCast3D _leanRaycast = null!;
 
@@ -14,6 +15,8 @@ internal sealed partial class PetraCamera : Camera3D
   [Export] private Marker3D _crouchPivot = null!;
   [Export] private Marker3D _crouchLeanPivot = null!;
   [Export] private Marker3D _slidePivot = null!;
+  [Export] private Marker3D _climbMarker = null!;
+
   private Vector3 _defaultPos;
 
   [Export] private float _aimFov = 50f;
@@ -41,6 +44,7 @@ internal sealed partial class PetraCamera : Camera3D
     BobFreq = WalkBobFreq;
     _defaultFov = Fov;
     _nextRot = Rotation;
+    _leanRaycast.Enabled = false;
   }
 
   public override void _UnhandledInput(InputEvent @event)
@@ -56,6 +60,9 @@ internal sealed partial class PetraCamera : Camera3D
   public override void _PhysicsProcess(double delta)
   {
     Rotation = _nextRot;
+
+    if (_petra.CurrentState is PetraChar.PetraState.Climbing)
+      return;
 
     switch (_petra.CurrentState)
     {
@@ -78,6 +85,8 @@ internal sealed partial class PetraCamera : Camera3D
     Position = Position.Lerp(_posWithoutBob + _bobOffset, 10f * (float)delta);
 
     Fov = Mathf.Lerp(from: Fov, to: _gun.InAim ? _aimFov : _defaultFov, weight: 15f * (float)delta);
+    GunCamera.GlobalPosition = GlobalPosition;
+    GunCamera.Rotation = Rotation;
   }
 
   private void HandleLeanPos(Vector3 defaultPos, Vector3 leanPos)
@@ -94,10 +103,12 @@ internal sealed partial class PetraCamera : Camera3D
       float initY = leanPos.Y;
       leanPos.X *= leanDir;
       leanPos = leanPos.Rotated(Vector3.Up, Rotation.Y);
+      _leanRaycast.Enabled = true;
       _leanRaycast.TargetPosition = leanPos - _leanRaycast.Position;
       _leanRaycast.ForceShapecastUpdate();
       if (_leanRaycast.IsColliding())
         leanPos = (_leanRaycast.GetCollisionPoint(0) - GlobalPosition) * .95f;
+      _leanRaycast.Enabled = false;
       _posWithoutBob = leanPos with { Y = initY };
     }
     else
@@ -105,4 +116,24 @@ internal sealed partial class PetraCamera : Camera3D
       _posWithoutBob = defaultPos;
     }
   }
+
+  // internal void Climb(float duration, float deltaY)
+  // {
+  //   _climbing = true;
+  //   Tween tween = (
+  //     CreateTween().SetTrans(Tween.TransitionType.Linear)
+  //     .SetEase(Tween.EaseType.In)
+  //     .SetProcessMode(Tween.TweenProcessMode.Idle)
+  //   );
+  //   tween.TweenMethod(Callable.From<float>(t =>
+  //   {
+  //     float u = 1 - t;
+  //     Position = (u * u + t * t) * _defaultPos + 2f * u * t * _climbMarker.Position;
+  //     if (deltaY < 1f)
+  //       Position += .2f * u * t * Basis.X;
+  //     GunCamera.GlobalPosition = GlobalPosition;
+  //     GunCamera.Rotation = Rotation;
+  //   }), 0f, 1f, duration);
+  //   tween.TweenCallback(Callable.From(() => _climbing = false));
+  // }
 }
