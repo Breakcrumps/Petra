@@ -46,6 +46,8 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
 
   internal PetraState LastState;
 
+  internal bool HighClimb;
+
   public override void _EnterTree()
     => GlobalInstances.Petra = this;
 
@@ -74,14 +76,14 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
     _chestClimbCast.ForceUpdateTransform();
     _hipsClimbCast.ForceUpdateTransform();
     
-    if (
-      _hipsClimbCast.IsColliding() && !_chestClimbCast.IsColliding()
-      && Input.IsActionPressed("Up") && Input.IsActionJustPressed("Jump")
-    )
-    {
-      TryEnterClimbingState();
-      return;
-    }
+    // if (
+    //   _hipsClimbCast.IsColliding() && !_chestClimbCast.IsColliding()
+    //   && Input.IsActionPressed("Up") && Input.IsActionJustPressed("Jump")
+    // )
+    // {
+    //   TryEnterClimbingState();
+    //   return;
+    // }
     
     CurrentState = GetState();
 
@@ -182,14 +184,13 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
     LastState = CurrentState;
     CurrentState = PetraState.Climbing;
 
-    Tween tween = (
-      CreateTween()
+    Tween tween = CreateTween()
       .SetTrans(climbDuration < .12f ? Tween.TransitionType.Linear : Tween.TransitionType.Quad)
       .SetEase(climbDuration < .2f ? Tween.EaseType.Out : Tween.EaseType.InOut)
-      .SetProcessMode(Tween.TweenProcessMode.Physics)
-    );
+      .SetProcessMode(Tween.TweenProcessMode.Physics);
     if (IsOnFloor())
-      tween.TweenProperty(this, "global_position:y", GlobalPosition.Y - .05f * runMult, .03f * runMult * deltaYMult).SetEase(Tween.EaseType.In);
+      tween.TweenProperty(this, "global_position:y", GlobalPosition.Y - .05f * runMult, .03f * runMult * deltaYMult)
+        .SetEase(Tween.EaseType.In);
     tween.TweenInterval(.03f * runMult);
     tween.TweenProperty(this, "global_position", targetPos, climbDuration);
     tween.Parallel().TweenProperty(_camera.GunCamera, "global_position", targetPos + _camera.Position, climbDuration);

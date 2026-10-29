@@ -61,22 +61,27 @@ internal sealed partial class PetraCamera : Camera3D
   {
     Rotation = _nextRot;
 
-    if (_petra.CurrentState is PetraChar.PetraState.Climbing)
-      return;
-
     switch (_petra.CurrentState)
     {
       case PetraChar.PetraState.Sliding:
         Position = Position.Lerp(to: _slidePivot.Position, weight: 10f * (float)delta);
-        return;
+        break;
       case PetraChar.PetraState.Crouching:
         HandleLeanPos(_crouchPivot.Position, _crouchLeanPivot.Position);
+        ApplyFrame(delta);
         break;
       default:
         HandleLeanPos(_defaultPos, _standLeanPivot.Position);
+        ApplyFrame(delta);
         break;
     }
 
+    GunCamera.GlobalPosition = GlobalPosition;
+    GunCamera.Rotation = Rotation;
+  }
+
+  private void ApplyFrame(double delta)
+  {
     if (_petra.TimeMoving != 0f)
       _bobOffset.Y = _bobAmp * Mathf.Abs(Mathf.Sin(BobFreq * _petra.TimeMoving));
     else
@@ -85,8 +90,6 @@ internal sealed partial class PetraCamera : Camera3D
     Position = Position.Lerp(_posWithoutBob + _bobOffset, 10f * (float)delta);
 
     Fov = Mathf.Lerp(from: Fov, to: _gun.InAim ? _aimFov : _defaultFov, weight: 15f * (float)delta);
-    GunCamera.GlobalPosition = GlobalPosition;
-    GunCamera.Rotation = Rotation;
   }
 
   private void HandleLeanPos(Vector3 defaultPos, Vector3 leanPos)
