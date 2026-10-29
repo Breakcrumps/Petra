@@ -8,7 +8,7 @@
 render_priority = 0
 shader = ExtResource("1_1levq")
 shader_parameter/color = Color(0.82499784, 0.49294734, 5.7756904e-07, 1)
-shader_parameter/glow_intensity = 100.0
+shader_parameter/glow_intensity = 101.4350047706625
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_o6n4r"]
 material = SubResource("ShaderMaterial_1levq")

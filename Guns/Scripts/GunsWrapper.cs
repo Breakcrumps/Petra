@@ -288,10 +288,7 @@ internal sealed partial class GunsWrapper : Node3D
     }
     else
     {
-      if (
-        _petra.CurrentState is PetraChar.PetraState.Running
-        || _petra.CurrentState is PetraChar.PetraState.Climbing && _petra.LastState == PetraChar.PetraState.Running
-      )
+      if (_petra.CurrentState is PetraChar.PetraState.Running)
       {
         nextPos = Input.IsActionPressed("Down") ? _curGunNode.PetraGunData.BackRunPos : _curGunNode.PetraGunData.RunPos;
         nextOrient = Input.IsActionPressed("Down") ? _curGunNode.PetraGunData.BackRunOrient: _curGunNode.PetraGunData.RunOrient;

@@ -12,9 +12,10 @@ collision_layer = 4
 collision_mask = 15
 script = ExtResource("2_hsm0q")
 DamageReduction = 5
+ImpulseFromBulletCoefficient = 1.0
 BrokenScene = ExtResource("3_06lgc")
 
-[node name="Cube" parent="." index="0" unique_id=19970835]
+[node name="Cube" parent="." index="0" unique_id=1963623357]
 transform = Transform3D(0.5, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5463015, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." index="1" unique_id=616451653]

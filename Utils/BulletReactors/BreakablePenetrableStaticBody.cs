@@ -5,7 +5,7 @@ namespace Petra.Utils.BulletReactors;
 internal sealed partial class BreakablePenetrableStaticBody : StaticBody3D, IPenetrable, IBreakable
 {
   [Export] public int DamageReduction { get; private set; } = 10;
-  [Export] public float ImpulseFromBulletCoefficient { get; private set; } = .1f;
+  [Export] public float ImpulseFromBulletCoefficient { get; private set; } = .5f;
   [Export] public PackedScene BrokenScene { get; private set; } = null!;
 
   private Breaker _breaker;
