@@ -7,13 +7,12 @@
 [ext_resource type="Script" uid="uid://o2jk6nlu8wud" path="res://Utils/GameFlowController.cs" id="5_rdbpf"]
 [ext_resource type="PackedScene" uid="uid://qyimwvwxsswo" path="res://Levels/TestLevel/cylinder_cover.tscn" id="6_o0fu1"]
 [ext_resource type="Material" uid="uid://ecsfgfu6x8jm" path="res://Levels/TestLevel/test_obj.tres" id="6_x033f"]
-[ext_resource type="PackedScene" uid="uid://dm7t077licaos" path="res://Characters/Enemy/enemy.tscn" id="10_yglu3"]
 [ext_resource type="Script" uid="uid://s7qfprjwohhw" path="res://Utils/Cover/CoverMarker.cs" id="11_bwjpn"]
 [ext_resource type="Script" uid="uid://c3b1s4yuuojil" path="res://Utils/MultipleSpawner.cs" id="11_w00vb"]
 [ext_resource type="Script" uid="uid://4cf42b4lcbi2" path="res://Utils/Cover/CoverManager.cs" id="12_ibmi3"]
 [ext_resource type="Script" uid="uid://brjtytw6vmk65" path="res://Levels/TestLevel/SlowDownTime.cs" id="13_o0fu1"]
 [ext_resource type="PackedScene" uid="uid://calv4i7ej314h" path="res://Objects/Glass/glass_cover.tscn" id="14_ldbyx"]
-[ext_resource type="PackedScene" uid="uid://c7k4wvig4ycac" path="res://Characters/NewEnemy/new_enemy.tscn" id="14_xqj8x"]
+[ext_resource type="PackedScene" uid="uid://bnj036l1r04vd" path="res://Characters/NewEnemy/new_enemy.tscn" id="14_xqj8x"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_yglu3"]
 vertices = PackedVector3Array(-9.25, 0.5, -0.75, -6.25, 0.5, -2.5, -6.25, 0.5, -3.25, -10, 0.5, -0.5, -4.75, 0.5, -4.75, -4, 0.5, -4.75, -3.5, 0.5, -49.5, -49.5, 0.5, -49.5, -49.5, 0.5, 0.75, -10, 0.5, 0.75, -3.5, 0.5, -4.5, -3.5, 0.5, -3.5, -3.25, 0.5, -3.5, -1, 0.5, -4.25, 0, 0.5, -5.75, 0, 0.5, -49.5, -1, 0.5, -5.5, 1, 0.5, -5.5, 1.5, 0.5, -2.75, 49.5, 0.5, -2.25, 49.5, 0.5, -49.5, -3, 0.5, -1.75, -5, 0.5, -2, -8.75, 0.5, 2.25, -9.25, 0.5, 2.5, -6.25, 0.5, 4.5, -6, 0.5, 4, -2.25, 0.5, 0.5, -0.75, 0.5, 0.25, -1, 0.5, -2, -6, 0.5, -2, -8.75, 0.5, -0.5, -5, 0.5, 4, -3.5, 0.5, 6, -2, 0.5, 5.5, 1.25, 0.5, -2.25, 2.75, 0.5, 0.25, 3, 0.5, 3, 49.5, 0.5, 3, -10, 0.5, 2.25, -5.25, 0.5, 6.5, -49.5, 0.5, 49.5, -4.5, 0.5, 49.5, -4.5, 0.5, 6.75, -1.25, 1.25, 1.25, -1.25, 1.25, 4.5, 2, 1.25, 4.5, 2, 1.25, 1.25, 3, 0.5, 5.25, 0.75, 0.5, 5.5, 0.75, 0.5, 49.5, 49.5, 0.5, 49.5, -3.75, 0.5, 6.75)
@@ -75,27 +74,6 @@ script = ExtResource("4_x033f")
 [node name="GameFlowController" type="Node" parent="." unique_id=1575913716]
 script = ExtResource("5_rdbpf")
 metadata/_custom_type_script = "uid://o2jk6nlu8wud"
-
-[node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=605868658]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 3.2268581, 2.364945, 0)
-layers = 3
-light_color = Color(1, 0.79998916, 0.48225218, 1)
-light_energy = 6.0
-spot_range = 10.0
-
-[node name="SpotLight3D2" type="SpotLight3D" parent="." unique_id=1119792258]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 3.2268581, 2.364945, -4.939691)
-layers = 3
-light_color = Color(1, 0.79998916, 0.48225218, 1)
-light_energy = 6.0
-spot_range = 10.0
-
-[node name="SpotLight3D3" type="SpotLight3D" parent="." unique_id=1990714325]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -1.4818499, 2.364945, -0.50035334)
-layers = 3
-light_color = Color(1, 0.79998916, 0.48225218, 1)
-light_energy = 6.0
-spot_range = 10.0
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=820312]
 navigation_mesh = SubResource("NavigationMesh_yglu3")
@@ -202,10 +180,6 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -5.5
 script = ExtResource("11_bwjpn")
 metadata/_custom_type_script = "uid://s7qfprjwohhw"
 
-[node name="Enemy" parent="." unique_id=2044125987 node_paths=PackedStringArray("CurPathFollow") instance=ExtResource("10_yglu3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.6277122)
-CurPathFollow = NodePath("../Path3D/PathFollow3D")
-
 [node name="Path3D" type="Path3D" parent="." unique_id=1203678896]
 curve = SubResource("Curve3D_ibmi3")
 
@@ -226,3 +200,16 @@ metadata/_custom_type_script = "uid://c3b1s4yuuojil"
 script = ExtResource("13_o0fu1")
 
 [node name="NewEnemy" parent="." unique_id=401029380 instance=ExtResource("14_xqj8x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.255183, 0, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1031034644]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.4203305, 7.0271177, 3.227025)
+layers = 3
+light_energy = 10.0
+omni_range = 4096.0
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="." unique_id=227126361]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.8183246, 7.0271177, 3.227025)
+layers = 3
+light_energy = 10.0
+omni_range = 4096.0

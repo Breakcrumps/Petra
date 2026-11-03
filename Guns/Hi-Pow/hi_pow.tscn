@@ -7,16 +7,23 @@
 [ext_resource type="Script" uid="uid://c0f18fq4jm3j6" path="res://Characters/Petra/Components/BulletSpawner.cs" id="5_b1vth"]
 [ext_resource type="PackedScene" uid="uid://bna12vodjoo2y" path="res://Guns/Bullet/bullet.tscn" id="6_wt0kx"]
 
-[node name="Hi-Pow" unique_id=1715231856 node_paths=PackedStringArray("_bulletSpawner", "_shellEjectPivot", "AnimPlayer") instance=ExtResource("1_uqkn2")]
+[node name="Hi-Pow" unique_id=1715231856 node_paths=PackedStringArray("_bulletSpawner", "_holdPos", "_shellEjectPivot", "AnimPlayer") instance=ExtResource("1_uqkn2")]
 script = ExtResource("2_c6mgk")
 _bulletSpawner = NodePath("BulletSpawner")
+_holdPos = NodePath("HoldPos")
 _shellScene = ExtResource("2_e3tj4")
 _shellEjectPivot = NodePath("ShellDir")
 GunData = ExtResource("3_eaetv")
 AnimPlayer = NodePath("AnimationPlayer")
 
+[node name="Armature" parent="." index="0" unique_id=788178209]
+transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 0, 0, 0)
+
 [node name="BulletSpawner" type="Node3D" parent="." index="3" unique_id=1325192820]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13028944, -0.31229693)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.117, -0.281)
 script = ExtResource("5_b1vth")
 _bulletScene = ExtResource("6_wt0kx")
 metadata/_custom_type_script = "uid://c0f18fq4jm3j6"
+
+[node name="HoldPos" type="Marker3D" parent="." index="4" unique_id=1083572479]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.03, 0.033, -0.029)
