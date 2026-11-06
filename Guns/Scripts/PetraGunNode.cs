@@ -7,8 +7,13 @@ internal sealed partial class PetraGunNode : GunNode
 {
   [Export] internal PetraGunData PetraGunData = null!;
 
+  [Export] internal bool MeleeDamaging;
+
   public override void _Ready()
-    => ConfigureMeshLayers(this);
+  {
+    ConfigureMeshLayers(this);
+    MeleeDamaging = false;
+  }
 
   private static void ConfigureMeshLayers(Node node)
   {

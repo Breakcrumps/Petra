@@ -22,6 +22,7 @@ internal sealed partial class GunsWrapper : Node3D
   private PetraGunNode? _curGunNode;
 
   [Export] private BulletSpawner _bulletSpawner = null!;
+  [Export] private CollisionShape3D _meleeCollision = null!;
   private float _delayTimer;
 
   [Export] private PetraChar _petra = null!;
@@ -175,6 +176,12 @@ internal sealed partial class GunsWrapper : Node3D
     _camera.BobFreq = _petra.CurrentState == PetraChar.PetraState.Running ? _camera.RunBobFreq : _camera.WalkBobFreq;
     
     HandleFire(delta);
+    if (HandleMelee())
+    {
+      Position = _curGunNode.PetraGunData.DefaultPos;
+      Quaternion = _curGunNode.PetraGunData.DefaultOrient;
+      return;
+    }
     UpdateSwayOffsets(delta);
     UpdateBobOffsets(delta);
     UpdateJumpOffsets(delta);
@@ -401,19 +408,39 @@ internal sealed partial class GunsWrapper : Node3D
       HandleRecoil(delta);
   }
 
+  /// <returns>true if need to clear transform and return.</returns>
+  private bool HandleMelee()
+  {
+    if (_curGunNode!.AnimPlayer.CurrentAnimation == "Melee")
+    {
+      _meleeCollision.Disabled = !_curGunNode.MeleeDamaging;
+      return true;
+    }
+    else if (Input.IsActionJustPressed("Melee"))
+    {
+      _curGunNode.AnimPlayer.Play(_curGunNode.CartridgesChambered != 0 ? "Melee" : "MeleeLast");
+      return true;
+    }
+    else
+    {
+      _meleeCollision.Disabled = true;
+      return false;
+    }
+  }
+
   private void Fire()
   {
     _bulletSpawner.Fire();
+    _curGunNode!.CartridgesChambered--;
 
-    if (_curGunNode!.CartridgesInMag == 0)
+    if (_curGunNode.CartridgesInMag == 0)
     {
       _curGunNode.AnimPlayer.Play("ShootLast");
-      _curGunNode.CartridgesChambered = 0;
     }
     else
     {
       _curGunNode.AnimPlayer.Play("Shoot");
-      _curGunNode.CartridgesInMag--;
+      _curGunNode.Chamber();
     }
 
     _recoilOffset.Pos = Input.IsActionPressed("Aim") ? _curGunNode.PetraGunData!.AimRecoilOffsetTarget.Pos : _curGunNode.PetraGunData!.RecoilOffsetTarget.Pos;

@@ -6,7 +6,12 @@
 - [ ] Heap fire addon. Make the weapon tilt to hit the target in the distance dynamically.
 - [ ] Make fog Color(0.0, 0.153, 0.0) outdoors.
 - [ ] Realistic aiming. Fix my shit.
-- [ ] Parkour.
+- [ ] Combat stance for NPC.
+- [ ] Proper yaw calculation for shooting NPC.
+- [ ] Inaccuracy in shooting and aiming down sight.
+- [ ] Movement for NPC.
+# Rejected
+- [-] Parkour.
 # Kinda
 - [x] Fix decals.
 # Completed

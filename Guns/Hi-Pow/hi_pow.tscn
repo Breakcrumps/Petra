@@ -4,26 +4,43 @@
 [ext_resource type="Script" uid="uid://df325ve27ey2b" path="res://Guns/Scripts/EnemyGunNode.cs" id="2_c6mgk"]
 [ext_resource type="PackedScene" uid="uid://d3ggnamj4oqsc" path="res://Guns/Hi-Pow/shell_hi_pow.tscn" id="2_e3tj4"]
 [ext_resource type="Resource" uid="uid://oktx1sepmnm" path="res://Guns/Hi-Pow/hi-power.tres" id="3_eaetv"]
+[ext_resource type="PackedScene" uid="uid://bl8yrxw8wui7h" path="res://Guns/Particles/smoke_particles.tscn" id="3_w2l2d"]
+[ext_resource type="PackedScene" uid="uid://dl6bu8a7c4kx2" path="res://Guns/Particles/sparks_particles.tscn" id="4_skvaq"]
 [ext_resource type="Script" uid="uid://c0f18fq4jm3j6" path="res://Characters/Petra/Components/BulletSpawner.cs" id="5_b1vth"]
+[ext_resource type="Texture2D" uid="uid://qi6vptbyjvji" path="res://Guns/Particles/pngtree-muzzle-flash-images-vector-png-png-image_5759562.png" id="5_sdeuw"]
 [ext_resource type="PackedScene" uid="uid://bna12vodjoo2y" path="res://Guns/Bullet/bullet.tscn" id="6_wt0kx"]
 
 [node name="Hi-Pow" unique_id=1715231856 node_paths=PackedStringArray("_bulletSpawner", "_holdPos", "_shellEjectPivot", "AnimPlayer") instance=ExtResource("1_uqkn2")]
 script = ExtResource("2_c6mgk")
 _bulletSpawner = NodePath("BulletSpawner")
 _holdPos = NodePath("HoldPos")
+_smokeScene = ExtResource("3_w2l2d")
+_sparksScene = ExtResource("4_skvaq")
+_muzzleFlashImage = ExtResource("5_sdeuw")
 _shellScene = ExtResource("2_e3tj4")
 _shellEjectPivot = NodePath("ShellDir")
 GunData = ExtResource("3_eaetv")
 AnimPlayer = NodePath("AnimationPlayer")
 
-[node name="Armature" parent="." index="0" unique_id=788178209]
-transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 0, 0, 0)
+[node name="Armature" parent="." index="0" unique_id=1940532504]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0, 0)
+
+[node name="Skeleton3D" parent="Armature" index="0" unique_id=350439762]
+bones/0/position = Vector3(5.364511e-18, -0.07285614, 0.006153816)
+bones/0/rotation = Quaternion(-0.11892264, 1.1836332e-07, -1.4176681e-08, 0.99290353)
+bones/1/rotation = Quaternion(0.271535, -3.4419122e-07, -3.2369478e-08, 0.96242857)
+bones/2/position = Vector3(9.1755945e-09, 0.2184562, -0.03848524)
+bones/3/position = Vector3(-1.9501185e-11, -0.0010078953, 8.1793405e-05)
+bones/4/rotation = Quaternion(0.78589344, -1.9154833e-13, 1.873714e-07, 0.61836195)
+
+[node name="ShellDir" parent="." index="1" unique_id=1500480643]
+transform = Transform3D(0.92928153, -0.36937225, 0, 0.36937225, 0.92928153, 0, 0, 0, 1, 0.006, 0.104, -0.034)
 
 [node name="BulletSpawner" type="Node3D" parent="." index="3" unique_id=1325192820]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.117, -0.281)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.104, -0.25)
 script = ExtResource("5_b1vth")
 _bulletScene = ExtResource("6_wt0kx")
 metadata/_custom_type_script = "uid://c0f18fq4jm3j6"
 
 [node name="HoldPos" type="Marker3D" parent="." index="4" unique_id=1083572479]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.03, 0.033, -0.029)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.027, 0.029, -0.026)
