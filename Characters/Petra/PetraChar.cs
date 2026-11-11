@@ -48,6 +48,13 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
 
   internal bool HighClimb;
 
+  internal Vector3[] LastTorsoPos = new Vector3[10];
+  internal Vector3[] LastHeadPos = new Vector3[10];
+
+  private CollisionShape3D _collision = null!;
+  private float _initCollisionY;
+  private float _initCollisionHeight;
+
   public override void _EnterTree()
     => GlobalInstances.Petra = this;
 
@@ -55,10 +62,13 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   {
     _health = _maxHealth;
     _climbTargetRaycast.Enabled = false;
+    _collision = GetNode<CollisionShape3D>("CollisionShape3D");
+    _initCollisionY = _collision.Position.Y;
+    _initCollisionHeight = ((CapsuleShape3D)_collision.Shape).Height;
   }
   
   public override void _PhysicsProcess(double delta)
-  {
+  {    
     _chestClimbCast.TargetPosition = -_camera.Basis.Z with { Y = 0f };
     _hipsClimbCast.TargetPosition = -_camera.Basis.Z with { Y = 0f };
 
@@ -67,6 +77,33 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
       _chestClimbCast.TargetPosition *= 1.5f;
       _hipsClimbCast.TargetPosition *= 1.5f;
     }
+
+    float targetColliderHeight, targetColliderY;
+    if (CurrentState == PetraState.Crouching)
+    {
+      if (IsOnFloor())
+      {
+        targetColliderHeight = _initCollisionHeight / 2f;
+        targetColliderY = _initCollisionY / 2f;
+      }
+      else
+      {
+        targetColliderHeight = _initCollisionHeight / 2f;
+        targetColliderY = 3f * _initCollisionY / 2f;
+      }
+    }
+    else if (CurrentState == PetraState.Sliding)
+    {
+      targetColliderHeight = _initCollisionHeight / 2f;
+      targetColliderY = _initCollisionY / 2f;
+    }
+    else
+    {
+      targetColliderHeight = _initCollisionHeight;
+      targetColliderY = _initCollisionY;
+    }
+    ((CapsuleShape3D)_collision.Shape).Height = Mathf.Lerp(((CapsuleShape3D)_collision.Shape).Height, targetColliderHeight, 10f * (float)delta);
+    _collision.Position = _collision.Position.Lerp(_collision.Position with { Y = targetColliderY }, 10f * (float)delta);
 
     _chestClimbCast.ForceRaycastUpdate();
     _hipsClimbCast.ForceRaycastUpdate();
@@ -84,6 +121,18 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
       HandleSlide(delta);
     else
       HandleMovement(delta);
+
+    for (int i = 0; i < LastTorsoPos.Length - 1; i++)
+    {
+      LastTorsoPos[i] = LastTorsoPos[i + 1];
+    }
+    LastTorsoPos[^1] = TorsoPoint.GlobalPosition;
+
+    for (int i = 0; i < LastHeadPos.Length - 1; i++)
+    {
+      LastHeadPos[i] = LastHeadPos[i + 1];
+    }
+    LastHeadPos[^1] = _camera.GlobalPosition;
   }
 
   private void HandleMovement(double delta)

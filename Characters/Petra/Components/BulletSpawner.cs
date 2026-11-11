@@ -28,12 +28,16 @@ internal sealed partial class BulletSpawner : Node3D
     bullet.CheckCollisions(backTarget, GlobalPosition, excludedBody: Shooter, hitBackFaces: true);
   }
 
-  internal void Fire(Vector3 target)
+  internal void Fire(Vector3 target, int shotsInARow)
   {
     Bullet bullet = _bulletScene.Instantiate<Bullet>();
     GetTree().CurrentScene.AddChild(bullet);
     bullet.GlobalPosition = GlobalPosition;
     bullet.GlobalTransform = bullet.GlobalTransform.LookingAt(target);
+    float len = (float)GD.Randfn(0, double.Pi / (24.0 * (shotsInARow + 1)));
+    float angle = GD.Randf() * Mathf.Pi;
+    bullet.Rotate(Vector3.Right, Mathf.Sin(angle) * len);
+    bullet.Rotate(Vector3.Up, Mathf.Cos(angle) * len);
     bullet.Speed = BulletSpeed;
     bullet.Damage = Damage;
 

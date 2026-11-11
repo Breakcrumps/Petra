@@ -21,10 +21,10 @@ _torsoTarget = NodePath("TorsoTarget")
 _skeleton = NodePath("Armature/Skeleton3D")
 _gun = NodePath("Hi-Pow")
 
-[node name="Armature" parent="." index="0" unique_id=819548432]
+[node name="Armature" parent="." index="0" unique_id=1327692125]
 transform = Transform3D(-0.01, -8.7422775e-10, 3.821371e-17, 0, -4.3711387e-10, -0.01, 8.7422775e-10, -0.01, 4.3711387e-10, 0, 0, 0)
 
-[node name="Skeleton3D" parent="Armature" index="0" unique_id=236133158]
+[node name="Skeleton3D" parent="Armature" index="0" unique_id=1086443321]
 bones/0/position = Vector3(6.3943316e-06, 1.5542562, -104.27047)
 bones/1/rotation = Quaternion(-0.08015569, -7.167354e-08, 4.8303406e-07, 0.99678236)
 bones/2/rotation = Quaternion(-4.0978193e-08, 1.4063747e-13, -7.2158945e-13, 1)
@@ -134,7 +134,7 @@ bone_idx = 32
 [node name="Marker3D" type="Marker3D" parent="Armature/Skeleton3D/BoneAttachment3D" index="0" unique_id=2026544718]
 transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
 
-[node name="AnimationPlayer" parent="." index="1" unique_id=1663255823 node_paths=PackedStringArray("_gun")]
+[node name="AnimationPlayer" parent="." index="1" unique_id=1490623711 node_paths=PackedStringArray("_gun")]
 script = ExtResource("3_mrahi")
 _gun = NodePath("../Hi-Pow")
 
@@ -153,6 +153,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.0000002, 0, 0, 0)
 _handMarker = NodePath("../Armature/Skeleton3D/BoneAttachment3D/Marker3D")
 _defaultMarker = NodePath("../GunTransform")
 _muzzleFlash = NodePath("../OmniLight3D")
+_shotsInARow = 0
 
 [node name="GunTransform" type="Marker3D" parent="." index="6" unique_id=115532842]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.19334549, 0.9792782, 0.074955106)

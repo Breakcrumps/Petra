@@ -67,7 +67,7 @@ internal sealed partial class PetraCamera : Camera3D
         Position = Position.Lerp(to: _slidePivot.Position, weight: 10f * (float)delta);
         break;
       case PetraChar.PetraState.Crouching:
-        HandleLeanPos(_crouchPivot.Position, _crouchLeanPivot.Position);
+        HandleLeanPos(_petra.IsOnFloor() ? _crouchPivot.Position : _defaultPos, _petra.IsOnFloor() ? _crouchLeanPivot.Position : _standLeanPivot.Position);
         ApplyFrame(delta);
         break;
       default:
@@ -88,7 +88,6 @@ internal sealed partial class PetraCamera : Camera3D
       _bobOffset = _bobOffset.Lerp(to: Vector3.Zero, weight: 10f * (float)delta);
 
     Position = Position.Lerp(_posWithoutBob + _bobOffset, 10f * (float)delta);
-
     Fov = Mathf.Lerp(from: Fov, to: _gun.InAim ? _aimFov : _defaultFov, weight: 15f * (float)delta);
   }
 

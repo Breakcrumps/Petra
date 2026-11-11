@@ -23,6 +23,7 @@ internal sealed partial class GunsWrapper : Node3D
 
   [Export] private BulletSpawner _bulletSpawner = null!;
   [Export] private CollisionShape3D _meleeCollision = null!;
+  [Export] private GunAudioPlayer _shotSoundPlayer = null!;
   private float _delayTimer;
 
   [Export] private PetraChar _petra = null!;
@@ -442,6 +443,8 @@ internal sealed partial class GunsWrapper : Node3D
       _curGunNode.AnimPlayer.Play("Shoot");
       _curGunNode.Chamber();
     }
+
+    _shotSoundPlayer.Play(_curGunNode.CartridgesInMag, _curGunNode.GunData.CartridgesInMag);
 
     _recoilOffset.Pos = Input.IsActionPressed("Aim") ? _curGunNode.PetraGunData!.AimRecoilOffsetTarget.Pos : _curGunNode.PetraGunData!.RecoilOffsetTarget.Pos;
     _recoilOffset.Rot = Input.IsActionPressed("Aim") ? _curGunNode.PetraGunData.AimRecoilOffsetTarget.Rot : _curGunNode.PetraGunData.RecoilOffsetTarget.Rot;

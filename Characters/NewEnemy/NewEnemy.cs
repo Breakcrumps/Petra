@@ -35,7 +35,7 @@ internal sealed partial class NewEnemy : CharacterBody3D, IDamageable
         Attention((float)delta);
         break;
       case LookAtMode.HeadAndBody:
-        FullAttention((float)delta);
+        FullAttention();
         break;
       case LookAtMode.Aim:
         Aim((float)delta);
@@ -45,7 +45,6 @@ internal sealed partial class NewEnemy : CharacterBody3D, IDamageable
 
   private void Aim(float deltaF)
   {
-    Transform3D spineBoneTransform = _skeleton.GetBoneGlobalPose(_skeleton.FindBone(_torsoLA.BoneName));
     _torsoTarget.GlobalPosition = GlobalInstances.Petra.HeadPoint.GlobalPosition;
     // _torsoTarget.GlobalPosition = GlobalInstances.Petra.HeadPoint.GlobalPosition;
     _neckTarget.GlobalPosition = GlobalInstances.Petra.HeadPoint.GlobalPosition;
@@ -74,7 +73,7 @@ internal sealed partial class NewEnemy : CharacterBody3D, IDamageable
     }
   }
 
-  private void FullAttention(float deltaF)
+  private void FullAttention()
   {
     Transform3D spineBoneTransform = _skeleton.GetBoneGlobalPose(_skeleton.FindBone(_torsoLA.BoneName));
     Vector3 bonePos = (_skeleton.GlobalTransform * spineBoneTransform).Origin;

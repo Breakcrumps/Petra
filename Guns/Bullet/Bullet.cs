@@ -9,6 +9,8 @@ namespace Petra.Objects.Guns.Bullet;
 [GlobalClass]
 internal sealed partial class Bullet : Node3D
 {
+  [Export] private MeshInstance3D _mesh1 = null!;
+  [Export] private MeshInstance3D _mesh2 = null!;
   [Export] private PackedScene _decalScene = null!;
   [Export] private float _secsToLive = 3f;
   private float _secsLived;
@@ -18,11 +20,19 @@ internal sealed partial class Bullet : Node3D
 
   private float _mass = .0075f;
 
+  public override void _Ready()
+  {
+    _mesh1.Layers = _mesh2.Layers = 0;
+  }
+
   public override void _PhysicsProcess(double delta)
   {
     Vector3 nextPos = GlobalPosition - Basis.Z * Speed * (float)delta;
     CheckCollisions(GlobalPosition, nextPos);
     GlobalPosition = nextPos;
+
+    if (_secsLived != 0f)
+      _mesh1.Layers = _mesh2.Layers = 1;
     
     _secsLived += (float)delta;
 

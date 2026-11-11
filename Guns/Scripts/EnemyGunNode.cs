@@ -16,6 +16,9 @@ internal sealed partial class EnemyGunNode : GunNode
   [Export] private PackedScene _sparksScene = null!;
   [Export] private Texture2D _muzzleFlashImage = null!;
   [Export] private OmniLight3D _muzzleFlash = null!;
+  [Export] private GunAudioPlayer _shotSoundPlayer = null!;
+
+  [Export] private int _shotsInARow;
 
   private GpuParticles3D _smoke = null!;
   private DelayedParticles _sparks = null!;
@@ -49,7 +52,8 @@ internal sealed partial class EnemyGunNode : GunNode
 
   internal void Fire()
   {
-    _bulletSpawner.Fire(GlobalInstances.Petra.HeadPoint.GlobalPosition);
+    _bulletSpawner.Fire(GlobalInstances.Petra.LastHeadPos[0], _shotsInARow);
+    _shotsInARow++;
     _smoke.GlobalPosition = _bulletSpawner.GlobalPosition;
     _smoke.Transform = _smoke.Transform.LookingAt(_smoke.GlobalPosition - _bulletSpawner.GlobalBasis.Z);
     _smoke.Restart();
@@ -73,6 +77,7 @@ internal sealed partial class EnemyGunNode : GunNode
       CartridgesChambered = 0;
       AnimPlayer.Play("ShootLast");
     }
+    _shotSoundPlayer.Play(CartridgesInMag, GunData.CartridgesInMag);
   }
 
   public override void _PhysicsProcess(double delta)
