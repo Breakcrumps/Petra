@@ -10,16 +10,18 @@
 [ext_resource type="Texture2D" uid="uid://qi6vptbyjvji" path="res://Guns/Particles/pngtree-muzzle-flash-images-vector-png-png-image_5759562.png" id="5_sdeuw"]
 [ext_resource type="PackedScene" uid="uid://bna12vodjoo2y" path="res://Guns/Bullet/bullet.tscn" id="6_wt0kx"]
 [ext_resource type="AudioStream" uid="uid://btmiiyc33muig" path="res://Guns/shot_sound.mp3" id="10_skvaq"]
-[ext_resource type="Script" uid="uid://bu7m5ctb68vw2" path="res://Guns/GunAudioPlayer.cs" id="11_sdeuw"]
+[ext_resource type="Script" uid="uid://bu7m5ctb68vw2" path="res://Guns/GunshotPlayer.cs" id="11_sdeuw"]
 
-[node name="Hi-Pow" unique_id=1715231856 node_paths=PackedStringArray("_bulletSpawner", "_holdPos", "_shotSoundPlayer", "_shellEjectPivot", "AnimPlayer") instance=ExtResource("1_uqkn2")]
+[node name="Hi-Pow" unique_id=1715231856 node_paths=PackedStringArray("_bulletSpawner", "_holdPos", "_muzzleFlash", "_shotSoundPlayer", "_shellEjectPivot", "AnimPlayer") instance=ExtResource("1_uqkn2")]
 script = ExtResource("2_c6mgk")
 _bulletSpawner = NodePath("BulletSpawner")
 _holdPos = NodePath("HoldPos")
 _smokeScene = ExtResource("3_w2l2d")
 _sparksScene = ExtResource("4_skvaq")
 _muzzleFlashImage = ExtResource("5_sdeuw")
-_shotSoundPlayer = NodePath("BulletSpawner/AudioStreamPlayer3D")
+_muzzleFlash = NodePath("BulletSpawner/OmniLight3D")
+_shotSoundPlayer = NodePath("BulletSpawner/ShotPlayer")
+_shotsInARow = 0
 _shellScene = ExtResource("2_e3tj4")
 _shellEjectPivot = NodePath("ShellDir")
 GunData = ExtResource("3_eaetv")
@@ -45,10 +47,11 @@ script = ExtResource("5_b1vth")
 _bulletScene = ExtResource("6_wt0kx")
 metadata/_custom_type_script = "uid://c0f18fq4jm3j6"
 
-[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="BulletSpawner" index="0" unique_id=1059367878]
+[node name="ShotPlayer" type="AudioStreamPlayer3D" parent="BulletSpawner" index="0" unique_id=1059367878]
 stream = ExtResource("10_skvaq")
 script = ExtResource("11_sdeuw")
-_maxPitch = 1.5
+
+[node name="OmniLight3D" type="OmniLight3D" parent="BulletSpawner" index="1" unique_id=322529205]
 
 [node name="HoldPos" type="Marker3D" parent="." index="4" unique_id=1083572479]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.027, 0.029, -0.026)

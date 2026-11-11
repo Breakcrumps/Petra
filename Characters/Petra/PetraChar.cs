@@ -83,19 +83,19 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
     {
       if (IsOnFloor())
       {
-        targetColliderHeight = _initCollisionHeight / 2f;
-        targetColliderY = _initCollisionY / 2f;
+        targetColliderHeight = 2f * _initCollisionHeight / 3f;
+        targetColliderY = 2f * _initCollisionY / 3f;
       }
       else
       {
-        targetColliderHeight = _initCollisionHeight / 2f;
-        targetColliderY = 3f * _initCollisionY / 2f;
+        targetColliderHeight = 2f * _initCollisionHeight / 3f;
+        targetColliderY = 4f * _initCollisionY / 3f;
       }
     }
     else if (CurrentState == PetraState.Sliding)
     {
-      targetColliderHeight = _initCollisionHeight / 2f;
-      targetColliderY = _initCollisionY / 2f;
+      targetColliderHeight = 2f * _initCollisionHeight / 3f;
+      targetColliderY = 2f * _initCollisionY / 3f;
     }
     else
     {
@@ -250,7 +250,7 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
 
   private void HandleCrouchTransitions()
   {
-    if (Input.IsActionPressed("Run") && Velocity != Vector3.Zero)
+    if (Input.IsActionPressed("Run") && Velocity != Vector3.Zero && IsOnFloor())
       CurrentState = PetraState.Running;
     else if (Input.IsActionJustPressed("Crouch"))
       CurrentState = PetraState.Idle;
@@ -263,7 +263,7 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
     {
       if (Input.IsActionPressed("Up") && IsOnFloor() && Velocity != Vector3.Zero)
         InitSlide();
-      if (Velocity == Vector3.Zero)
+      if (Velocity == Vector3.Zero || !IsOnFloor())
         CurrentState = PetraState.Crouching;
     }
     if (!Input.IsActionPressed("Run") || Velocity == Vector3.Zero)

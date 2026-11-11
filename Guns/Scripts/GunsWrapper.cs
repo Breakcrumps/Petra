@@ -23,7 +23,8 @@ internal sealed partial class GunsWrapper : Node3D
 
   [Export] private BulletSpawner _bulletSpawner = null!;
   [Export] private CollisionShape3D _meleeCollision = null!;
-  [Export] private GunAudioPlayer _shotSoundPlayer = null!;
+  [Export] private GunshotPlayer _shotSoundPlayer = null!;
+  [Export] private AudioStreamPlayer3D _slideForwardSoundPlayer = null!;
   private float _delayTimer;
 
   [Export] private PetraChar _petra = null!;
@@ -68,6 +69,7 @@ internal sealed partial class GunsWrapper : Node3D
         _gunNodes[i] = gunScenes[i]!.Instantiate<PetraGunNode>();
         _gunNodes[i]!.Chamber();
         _gunNodes[i]!.RefillAmmo();
+        _gunNodes[i]!.SlideForwardAudioPlayer = _slideForwardSoundPlayer;
       }
     }
 

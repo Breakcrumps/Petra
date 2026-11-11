@@ -16,9 +16,9 @@ GunData = ExtResource("3_e2myi")
 AnimPlayer = NodePath("AnimationPlayer")
 
 [node name="Skeleton3D" parent="Armature" parent_id_path=PackedInt32Array(1940532504) index="0" unique_id=350439762]
-bones/0/position = Vector3(5.364511e-18, -0.07285614, 0.006153816)
+bones/0/position = Vector3(5.248668e-18, -0.07284718, 0.005935465)
 bones/0/rotation = Quaternion(-0.11892264, 1.1836332e-07, -1.4176681e-08, 0.99290353)
 bones/1/rotation = Quaternion(0.7714919, -2.2753684e-07, -9.19689e-08, 0.6362393)
-bones/2/position = Vector3(-9.629156e-09, 0.1992876, 0.0403876)
-bones/3/position = Vector3(-1.9501185e-11, -0.0010078953, 8.1793405e-05)
-bones/4/rotation = Quaternion(0.744761, -1.936229e-13, 1.7756467e-07, 0.66733134)
+bones/2/position = Vector3(-9.461257e-09, 0.19945873, 0.039683387)
+bones/3/position = Vector3(-5.1508936e-11, -0.0010078956, 8.179279e-05)
+bones/4/rotation = Quaternion(0.75082767, -1.945111e-13, 1.7901108e-07, 0.6604983)

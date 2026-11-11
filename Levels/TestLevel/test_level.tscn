@@ -213,3 +213,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.8183246, 7.0271177, 3.22702
 layers = 3
 light_energy = 10.0
 omni_range = 4096.0
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=50083542]
+process_mode = 4
+transform = Transform3D(0.0990071, 0, 0.9950867, 0, 1, 0, -0.9950867, 0, 0.0990071, 1.3404655, 0.76757145, 0)

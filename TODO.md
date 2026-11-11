@@ -4,6 +4,8 @@
 - [ ] Heap fire addon. Make the weapon tilt to hit the target in the distance dynamically.
 - [ ] Make fog Color(0.0, 0.153, 0.0) outdoors.
 - [ ] Movement for NPC.
+- [ ] Ragdoll for NPC.
+- [ ] Shoot while running.
 # Rejected
 - [-] Proper yaw calculation for shooting NPC. (Too hard - just rotated the bullet to hit the player)
 - [-] Parkour.

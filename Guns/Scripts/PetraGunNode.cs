@@ -6,6 +6,7 @@ namespace Petra.Guns.Scripts;
 internal sealed partial class PetraGunNode : GunNode
 {
   [Export] internal PetraGunData PetraGunData = null!;
+  internal AudioStreamPlayer3D SlideForwardAudioPlayer = null!;
 
   [Export] internal bool MeleeDamaging;
 
@@ -25,4 +26,7 @@ internal sealed partial class PetraGunNode : GunNode
       ConfigureMeshLayers(child);
     }
   }
+
+  private void AudioSlideForward()
+    => SlideForwardAudioPlayer.Play();
 }

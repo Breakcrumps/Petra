@@ -1,6 +1,6 @@
 using Godot;
 
-internal sealed partial class GunAudioPlayer : AudioStreamPlayer3D
+internal sealed partial class GunshotPlayer : AudioStreamPlayer3D
 {
   [Export] private float _lowAmmoThreshold = .4f;
   [Export] private float _maxPitch = 1.5f;

@@ -16,7 +16,8 @@ internal sealed partial class EnemyGunNode : GunNode
   [Export] private PackedScene _sparksScene = null!;
   [Export] private Texture2D _muzzleFlashImage = null!;
   [Export] private OmniLight3D _muzzleFlash = null!;
-  [Export] private GunAudioPlayer _shotSoundPlayer = null!;
+  [Export] private GunshotPlayer _shotSoundPlayer = null!;
+  [Export] private AudioStreamPlayer3D _slideForwardAudioPlayer = null!;
 
   [Export] private int _shotsInARow;
 
@@ -101,4 +102,7 @@ internal sealed partial class EnemyGunNode : GunNode
       _muzzleFlash.LightEnergy = 0f;
     }
   }
+
+  private void AudioSlideForward()
+    => _slideForwardAudioPlayer.Play();
 }

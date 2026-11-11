@@ -10,8 +10,9 @@
 [ext_resource type="Texture2D" uid="uid://qi6vptbyjvji" path="res://Guns/Particles/pngtree-muzzle-flash-images-vector-png-png-image_5759562.png" id="8_la8vp"]
 [ext_resource type="Script" uid="uid://0vvkd38ntjkp" path="res://Guns/Scripts/GunsWrapper.cs" id="8_ya1fb"]
 [ext_resource type="Script" uid="uid://ctifyobh4ssd2" path="res://Characters/Petra/MeleeArea.cs" id="11_6be6t"]
-[ext_resource type="Script" uid="uid://bu7m5ctb68vw2" path="res://Guns/GunAudioPlayer.cs" id="12_07x6y"]
+[ext_resource type="Script" uid="uid://bu7m5ctb68vw2" path="res://Guns/GunshotPlayer.cs" id="12_07x6y"]
 [ext_resource type="AudioStream" uid="uid://btmiiyc33muig" path="res://Guns/shot_sound.mp3" id="12_20rfk"]
+[ext_resource type="AudioStream" uid="uid://df13o2w85sl5" path="res://Guns/melbeebelbee-gun-slide-forward-384508.mp3" id="12_jqklc"]
 [ext_resource type="Script" uid="uid://dgxdy58uy11go" path="res://Utils/FollowCollider.cs" id="13_07x6y"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_e5gy7"]
@@ -103,7 +104,7 @@ collision_mask = 4
 [node name="MuzzleFlash" type="OmniLight3D" parent="PetraCamera" unique_id=471840539]
 light_color = Color(1, 0.8618757, 0.5293186, 1)
 
-[node name="GunsWrapper" type="Node3D" parent="PetraCamera" unique_id=1445379131 node_paths=PackedStringArray("_mainGunContainer", "_mainCamera", "_bulletSpawner", "_meleeCollision", "_shotSoundPlayer", "_petra", "_camera", "_gunRay", "_muzzleFlash")]
+[node name="GunsWrapper" type="Node3D" parent="PetraCamera" unique_id=1445379131 node_paths=PackedStringArray("_mainGunContainer", "_mainCamera", "_bulletSpawner", "_meleeCollision", "_shotSoundPlayer", "_slideForwardSoundPlayer", "_petra", "_camera", "_gunRay", "_muzzleFlash")]
 transform = Transform3D(0.99939084, 0, -0.034899496, 0, 1, 0, 0.034899496, 0, 0.99939084, 0.18306011, -0.34994566, -0.58030695)
 script = ExtResource("8_ya1fb")
 _mainGunContainer = NodePath("../../SubViewportContainer")
@@ -112,6 +113,7 @@ _gunScene1 = ExtResource("5_6be6t")
 _bulletSpawner = NodePath("BulletSpawner")
 _meleeCollision = NodePath("../MeleeArea/CollisionShape3D")
 _shotSoundPlayer = NodePath("BulletSpawner/ShotSoundPlayer")
+_slideForwardSoundPlayer = NodePath("BulletSpawner/SlidePlayer")
 _petra = NodePath("../..")
 _camera = NodePath("..")
 _gunRay = NodePath("../GunRaycast")
@@ -130,6 +132,9 @@ transform = Transform3D(0.99939084, 0, 0.034899496, 0, 1, 0, -0.034899496, 0, 0.
 stream = ExtResource("12_20rfk")
 max_polyphony = 32
 script = ExtResource("12_07x6y")
+
+[node name="SlidePlayer" type="AudioStreamPlayer3D" parent="PetraCamera/GunsWrapper/BulletSpawner" unique_id=1217091383]
+stream = ExtResource("12_jqklc")
 
 [node name="HeadPoint" type="Marker3D" parent="PetraCamera" unique_id=343799344]
 
