@@ -2,15 +2,16 @@
 - [ ] Destructables. REDACTED: WINDOWS BABY! Not enough tho.
 - [ ] Stamina and health.
 - [ ] Heap fire addon. Make the weapon tilt to hit the target in the distance dynamically.
-- [ ] Make fog Color(0.0, 0.153, 0.0) outdoors.
 - [ ] Movement for NPC.
 - [ ] Ragdoll for NPC.
-- [ ] Shoot while running.
+- [ ] The grapple hook.
+- [ ] Get animations in order.
 # Rejected
 - [-] Proper yaw calculation for shooting NPC. (Too hard - just rotated the bullet to hit the player)
 - [-] Parkour.
 - [-] Realistic aiming. Fix my shit.
 - [-] Far Cry shooting?
+- [-] Make fog Color(0.0, 0.153, 0.0) outdoors.
 # Kinda
 - [x] Fix decals.
 - [x] Randomize shot loudness. (Made pitch depend on rounds left in mag)
@@ -31,3 +32,5 @@
 - [x] Shell casings.
 - [x] Inaccuracy in shooting and aiming down sight.
 - [x] Make crouching more logical to account for crouching mid-jump.
+- [x] Shoot while running.
+- [x] Shoot while sliding.

@@ -72,7 +72,7 @@ internal sealed partial class Bullet : Node3D
       if (collider is IBreakable breakable)
         _ = breakable.Breaker.Break(hitPos, impulse);
       else if (collider is not CharacterBody3D)
-        SpawnDecal(hitPos, normal, collider);
+        SpawnDecal(hitPos, _decalScene, normal, collider);
 
       if (collider is IDamageable damageable)
         damageable.TakeDamage(new Attack(damage: Damage));
@@ -112,7 +112,7 @@ internal sealed partial class Bullet : Node3D
           {
             Vector3 exitPosition = exitResult["position"].AsVector3();
             Vector3 exitNormal = exitResult["normal"].AsVector3();
-            SpawnDecal(exitPosition, exitNormal, collider);
+            SpawnDecal(exitPosition, _decalScene, exitNormal, collider);
             break; 
           }
           
@@ -120,7 +120,7 @@ internal sealed partial class Bullet : Node3D
         }
 
         exclude.Add(hitRid);
-        from = hitPos - Basis.Z * 0.01f;
+        from = hitPos - Basis.Z * .01f;
       }
       else
       {
@@ -130,15 +130,15 @@ internal sealed partial class Bullet : Node3D
     }
   }
 
-  private void SpawnDecal(Vector3 hitPosition, Vector3 normal, Node collider)
+  private static void SpawnDecal(Vector3 hitPosition, PackedScene decalScene, Vector3 normal, Node collider)
   {
-    Decal bulletHole = _decalScene.Instantiate<Decal>();
+    Decal bulletHole = decalScene.Instantiate<Decal>();
     collider.AddChild(bulletHole);
 
     bulletHole.CullMask = collider is VisualInstance3D visual ? visual.Layers : 4;
     
     bulletHole.GlobalPosition = hitPosition;
-    Vector3 upVector = Mathf.Abs(normal.Dot(Vector3.Up)) > 0.99f 
+    Vector3 upVector = Mathf.Abs(normal.Dot(Vector3.Up)) > .99f 
       ? Vector3.Forward 
       : Vector3.Up;
     bulletHole.LookAt(hitPosition + normal, upVector);

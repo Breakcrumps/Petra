@@ -45,6 +45,7 @@ internal sealed partial class NewEnemy : CharacterBody3D, IDamageable
 
   private void Aim(float deltaF)
   {
+    // Quaternion = Quaternion.Slerp(Basis.LookingAt((GlobalInstances.Petra.GlobalPosition - GlobalPosition) with { Y = 0f }).GetRotationQuaternion(), 1f * deltaF);
     _torsoTarget.GlobalPosition = GlobalInstances.Petra.HeadPoint.GlobalPosition;
     // _torsoTarget.GlobalPosition = GlobalInstances.Petra.HeadPoint.GlobalPosition;
     _neckTarget.GlobalPosition = GlobalInstances.Petra.HeadPoint.GlobalPosition;

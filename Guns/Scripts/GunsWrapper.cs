@@ -1,3 +1,4 @@
+using System.Reflection.Metadata;
 using Godot;
 using Petra.Characters.Petra;
 using Petra.Characters.Petra.Components;
@@ -55,6 +56,11 @@ internal sealed partial class GunsWrapper : Node3D
 
   internal bool InAim;
   private bool _inReload;
+
+  [Export] private float _runNeutralGunPosTime = .5f;
+  private float _runNeutralGunPosTimer;
+  [Export] private float _runShootDelay = .25f;
+  private float _runShootDelayTimer = -1f;
 
   public override void _Ready()
   {
@@ -169,10 +175,15 @@ internal sealed partial class GunsWrapper : Node3D
 
     if (_curGunNode is null)
       return;
+
+    _runNeutralGunPosTimer = Mathf.Max(_runNeutralGunPosTimer - (float)delta, 0f);
+    if (_runShootDelayTimer > 0f)
+      _runShootDelayTimer = Mathf.Max(_runShootDelayTimer - (float)delta, 0f);
     
-    if (_petra.CurrentState is PetraChar.PetraState.Sliding)
+    if (_petra.CurrentState is PetraChar.PetraState.Sliding && _runNeutralGunPosTimer == 0f && !Input.IsActionPressed("Aim"))
     {
       Position = Position.Lerp(to: _curGunNode.PetraGunData.SlidePos, weight: 10f * (float)delta);
+      HandleFire((float)delta);
       return;
     }
     
@@ -298,7 +309,7 @@ internal sealed partial class GunsWrapper : Node3D
     }
     else
     {
-      if (_petra.CurrentState is PetraChar.PetraState.Running)
+      if (_petra.CurrentState is PetraChar.PetraState.Running && _runNeutralGunPosTimer == 0f)
       {
         nextPos = Input.IsActionPressed("Down") ? _curGunNode.PetraGunData.BackRunPos : _curGunNode.PetraGunData.RunPos;
         nextOrient = Input.IsActionPressed("Down") ? _curGunNode.PetraGunData.BackRunOrient: _curGunNode.PetraGunData.RunOrient;
@@ -395,20 +406,44 @@ internal sealed partial class GunsWrapper : Node3D
     if (Input.IsActionPressed("Heap") && !Input.IsActionPressed("Aim") || _curGunNode!.CartridgesChambered == 0)
     {
       HandleRecoil(delta);
+      _runShootDelayTimer = -1f;
+      return;
+    }
+
+    if (_runShootDelayTimer == 0f)
+    {
+      Fire();
+      _runShootDelayTimer = -1f;
       return;
     }
     
     if (
       Input.IsActionJustPressed("Fire")
-      && (Input.IsActionPressed("Aim")
+      && (
+        Input.IsActionPressed("Aim")
         || !_gunRay.IsColliding()
-        && _petra.CurrentState != PetraChar.PetraState.Running
       )
       && _delayTimer == 0f
     )
-      Fire();
+    {
+      if (
+        _petra.CurrentState is PetraChar.PetraState.Running or PetraChar.PetraState.Sliding
+        && !Input.IsActionPressed("Aim")
+      )
+      {
+        if (_runShootDelayTimer < 0f && _runNeutralGunPosTimer == 0f)
+          _runShootDelayTimer = _runShootDelay;
+        else
+          Fire();
+        _runNeutralGunPosTimer = _runNeutralGunPosTime;
+      }
+      else
+        Fire();
+    }
     else
+    {
       HandleRecoil(delta);
+    }
   }
 
   /// <returns>true if need to clear transform and return.</returns>
