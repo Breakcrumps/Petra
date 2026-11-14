@@ -95,7 +95,7 @@ internal sealed partial class NewEnemy : CharacterBody3D, IDamageable
   private void Attention(float deltaF)
   {
     Vector3 difVector = GlobalInstances.Petra.GlobalPosition - GlobalPosition;
-    if (difVector.Dot(-GlobalBasis.Z) < 0f)
+    if (difVector.Dot(-GlobalBasis.Z) < 0f || difVector.LengthSquared() > 25f)
     {
       _neckLA.Influence = Mathf.Lerp(_neckLA.Influence, 0f, 5f * deltaF);
       return;

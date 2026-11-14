@@ -161,7 +161,6 @@ internal sealed partial class EnemyGunNode : GunNode
 
       if (straightness < .4f)
       {
-        GD.Print("Predicting wiggle");
         _linearConfidence = Mathf.Max(_linearConfidence - .2f, 0f);
         _polarConfidence  = Mathf.Max(_polarConfidence - .2f, 0f);
         Vector3 center = (point1 + point2) * .5f;
@@ -178,7 +177,7 @@ internal sealed partial class EnemyGunNode : GunNode
 
       // --- 1. LINEAR MODEL ---
       Vector3 linearVel = (reactPos - olderPos) / ReactionTime;
-      if ((linearVel - _lastLinearVel).LengthSquared() <= 4f)
+      if ((linearVel - _lastLinearVel).LengthSquared() <= 8f)
         _linearConfidence = Mathf.Min(_linearConfidence + .35f, 1f);
       else
         _linearConfidence = Mathf.Max(_linearConfidence - .5f, 0f);
@@ -198,7 +197,7 @@ internal sealed partial class EnemyGunNode : GunNode
       float radialVel = (distReact - distOlder) / ReactionTime;
       float verticalVel = (relReact.Y - relOlder.Y) / ReactionTime;
 
-      if (Mathf.Abs(angularVel - _lastAngularVel) <= .6f)
+      if (Mathf.Abs(angularVel - _lastAngularVel) <= .5f)
         _polarConfidence = Mathf.Min(_polarConfidence + .35f, 1f);
       else
         _polarConfidence = Mathf.Max(_polarConfidence - .5f, 0f);
@@ -211,23 +210,15 @@ internal sealed partial class EnemyGunNode : GunNode
       Vector3 polarPred = origin + (predFlatDir * predDist) + new Vector3(0f, relReact.Y + verticalVel * leadTime, 0f);
 
       // --- 3. BEST FIT ---      
-      Vector3 bestPred;
-      float bestConfidence;
+      float total = _polarConfidence + _linearConfidence;
+      float linearWeight = total > 1e-5f ? _linearConfidence / total : .5f;
 
-      if (_polarConfidence > _linearConfidence)
-      {
-        GD.Print("Predicting polar");
-        bestPred = polarPred;
-        bestConfidence = _polarConfidence;
-      }
-      else
-      {
-        GD.Print("Predicting linear");
-        bestPred = linearPred;
-        bestConfidence = _linearConfidence;
-      }
+      Vector3 blendedPred = polarPred.Lerp(linearPred, linearWeight);
 
-      _bulletSpawner.Fire(reactPos.Lerp(bestPred, bestConfidence), _shotsInARow);
+      float blendedConfidence = Mathf.Lerp(_polarConfidence, _linearConfidence, linearWeight);
+      float aimStrength = Mathf.Max(blendedConfidence, 0.65f);
+
+      _bulletSpawner.Fire(reactPos.Lerp(blendedPred, aimStrength), _shotsInARow);
     }
   }
 
