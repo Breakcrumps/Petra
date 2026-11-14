@@ -1,9 +1,10 @@
 using System;
 using Godot;
-using Petra.Characters;
 using Petra.Guns.Scripts;
 using Petra.Static;
 using Petra.Types;
+
+namespace Petra.Characters.NewEnemy;
 
 internal sealed partial class NewEnemy : CharacterBody3D, IDamageable
 {
@@ -21,6 +22,7 @@ internal sealed partial class NewEnemy : CharacterBody3D, IDamageable
   [Export] private Marker3D _torsoTarget = null!;
   [Export] private Skeleton3D _skeleton = null!;
   [Export] private EnemyGunNode _gun = null!;
+  [Export] private AlertArea _alertArea = null!;
 
   private bool _dead;
 
@@ -53,9 +55,7 @@ internal sealed partial class NewEnemy : CharacterBody3D, IDamageable
 
   private void Aim(float deltaF)
   {
-    // Quaternion = Quaternion.Slerp(Basis.LookingAt((GlobalInstances.Petra.GlobalPosition - GlobalPosition) with { Y = 0f }).GetRotationQuaternion(), 1f * deltaF);
     _torsoTarget.GlobalPosition = GlobalInstances.Petra.HeadPoint.GlobalPosition;
-    // _torsoTarget.GlobalPosition = GlobalInstances.Petra.HeadPoint.GlobalPosition;
     _neckTarget.GlobalPosition = GlobalInstances.Petra.HeadPoint.GlobalPosition;
 
     if (
@@ -109,7 +109,7 @@ internal sealed partial class NewEnemy : CharacterBody3D, IDamageable
     if (_dead)
       return;
     _health -= attack.Damage;
-    if (_lookAtMode == LookAtMode.Aim)
+    if (_lookAtMode is LookAtMode.Aim)
     {
       if (_health <= 0f)
       {
@@ -124,5 +124,17 @@ internal sealed partial class NewEnemy : CharacterBody3D, IDamageable
     _gun.AnimPlayer.Play("Cock");
     _lookAtMode = LookAtMode.Aim;
     _torsoLA.Active = true;
+    _alertArea.Alert();
+  }
+
+  internal void Alert()
+  {
+    if (_dead || _lookAtMode is LookAtMode.Aim)
+      return;
+    _animPlayer.Play("Draw");
+    _gun.AnimPlayer.Play("Cock");
+    _lookAtMode = LookAtMode.Aim;
+    _torsoLA.Active = true;
+    _alertArea.Alert();
   }
 }
