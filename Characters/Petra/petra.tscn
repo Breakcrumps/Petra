@@ -14,6 +14,8 @@
 [ext_resource type="AudioStream" uid="uid://btmiiyc33muig" path="res://Guns/shot_sound.mp3" id="12_20rfk"]
 [ext_resource type="AudioStream" uid="uid://df13o2w85sl5" path="res://Guns/melbeebelbee-gun-slide-forward-384508.mp3" id="12_jqklc"]
 [ext_resource type="Script" uid="uid://dgxdy58uy11go" path="res://Utils/FollowCollider.cs" id="13_07x6y"]
+[ext_resource type="AudioStream" uid="uid://bra1bpbqs5cmc" path="res://Characters/Petra/female-grunt-painful-hit-gfx-sounds-girl-pain-hit-grunt-1-0m00s.mp3" id="15_2om4c"]
+[ext_resource type="AudioStream" uid="uid://cp8esyu6036oe" path="res://Characters/Petra/grunt-long-female-smartsound-fx-1-00-00.mp3" id="15_hbwno"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_e5gy7"]
 radius = 0.3
@@ -21,13 +23,21 @@ radius = 0.3
 [sub_resource type="BoxShape3D" id="BoxShape3D_e2tg4"]
 size = Vector3(1, 1.6074219, 1)
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_x1akc"]
+streams_count = 3
+stream_0/stream = ExtResource("15_2om4c")
+stream_0/weight = 0.05
+stream_1/weight = 0.9
+stream_2/stream = ExtResource("15_hbwno")
+stream_2/weight = 0.05
+
 [sub_resource type="SphereShape3D" id="SphereShape3D_vmorc"]
 radius = 0.1
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_jqklc"]
 radius = 0.2
 
-[node name="Petra" type="CharacterBody3D" unique_id=96141022 node_paths=PackedStringArray("_camera", "_slideCast", "_hipsClimbCast", "_chestClimbCast", "_climbTargetRaycast", "Gun", "_standingTorsoPoint", "_crouchingTorsoPoint", "HeadPoint")]
+[node name="Petra" type="CharacterBody3D" unique_id=96141022 node_paths=PackedStringArray("_camera", "_slideCast", "_hipsClimbCast", "_chestClimbCast", "_climbTargetRaycast", "Gun", "_gruntPlayer", "_standingTorsoPoint", "_crouchingTorsoPoint", "HeadPoint")]
 collision_mask = 14
 script = ExtResource("1_dcfmr")
 _camera = NodePath("PetraCamera")
@@ -36,6 +46,7 @@ _hipsClimbCast = NodePath("HipsClimbCast")
 _chestClimbCast = NodePath("ChestClimbCast")
 _climbTargetRaycast = NodePath("ClimbTargetRaycast")
 Gun = NodePath("PetraCamera/GunsWrapper")
+_gruntPlayer = NodePath("PetraCamera/GruntPlayer")
 _standingTorsoPoint = NodePath("TorsoPoint")
 _crouchingTorsoPoint = NodePath("TorsoCrouchPoint")
 HeadPoint = NodePath("PetraCamera/HeadPoint")
@@ -148,6 +159,11 @@ script = ExtResource("11_6be6t")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.30371094, 0)
 shape = SubResource("BoxShape3D_e2tg4")
 
+[node name="GruntPlayer" type="AudioStreamPlayer3D" parent="PetraCamera" unique_id=2136924334]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.0716696, 0)
+stream = SubResource("AudioStreamRandomizer_x1akc")
+volume_db = 3.0
+
 [node name="LeanCast" type="ShapeCast3D" parent="." unique_id=1090508407]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.609, 0)
 shape = SubResource("SphereShape3D_vmorc")
@@ -182,7 +198,7 @@ stretch = true
 [node name="PetraGunViewport" type="SubViewport" parent="SubViewportContainer" unique_id=624680960]
 transparent_bg = true
 handle_input_locally = false
-size = Vector2i(1920, 1200)
+size = Vector2i(1152, 648)
 render_target_update_mode = 4
 
 [node name="PetraGunCamera" type="Camera3D" parent="SubViewportContainer/PetraGunViewport" unique_id=528037907]

@@ -10,6 +10,10 @@ internal sealed partial class NewEnemy : CharacterBody3D, IDamageable
   private enum LookAtMode { HeadOnly, HeadAndBody, Aim }
   private LookAtMode _lookAtMode;
   
+  [Export] private int _maxHealth = 100;
+  private int _health;
+  [Export] private float _reactionTime = .2f;
+  
   [Export] private AnimationPlayer _animPlayer = null!;
   [Export] private LookAtModifier3D _torsoLA = null!;
   [Export] private LookAtModifier3D _neckLA = null!;
@@ -18,6 +22,8 @@ internal sealed partial class NewEnemy : CharacterBody3D, IDamageable
   [Export] private Skeleton3D _skeleton = null!;
   [Export] private EnemyGunNode _gun = null!;
 
+  private bool _dead;
+
   public override void _Ready()
   {
     _animPlayer.Play("Idle");
@@ -25,6 +31,8 @@ internal sealed partial class NewEnemy : CharacterBody3D, IDamageable
     _torsoLA.Influence = 0f;
     _neckLA.Active = true;
     _neckLA.Influence = 0f;
+    _gun.ReactionTime = _reactionTime;
+    _health = _maxHealth;
   }
 
   public override void _PhysicsProcess(double delta)
@@ -96,10 +104,22 @@ internal sealed partial class NewEnemy : CharacterBody3D, IDamageable
     _neckTarget.GlobalPosition = GlobalInstances.Petra.HeadPoint.GlobalPosition;
   }
 
-  public void TakeDamage(Attack _)
+  public void TakeDamage(Attack attack)
   {
-    if (_lookAtMode == LookAtMode.Aim)
+    if (_dead)
       return;
+    _health -= attack.Damage;
+    if (_lookAtMode == LookAtMode.Aim)
+    {
+      if (_health <= 0f)
+      {
+        _animPlayer.Play("Idle");
+        _torsoLA.Active = false;
+        _lookAtMode = LookAtMode.HeadOnly;
+        _dead = true;
+      }
+      return;
+    }
     _animPlayer.Play("Draw");
     _gun.AnimPlayer.Play("Cock");
     _lookAtMode = LookAtMode.Aim;

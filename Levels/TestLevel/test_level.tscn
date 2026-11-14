@@ -8,7 +8,6 @@
 [ext_resource type="PackedScene" uid="uid://qyimwvwxsswo" path="res://Levels/TestLevel/cylinder_cover.tscn" id="6_o0fu1"]
 [ext_resource type="Material" uid="uid://ecsfgfu6x8jm" path="res://Levels/TestLevel/test_obj.tres" id="6_x033f"]
 [ext_resource type="Script" uid="uid://s7qfprjwohhw" path="res://Utils/Cover/CoverMarker.cs" id="11_bwjpn"]
-[ext_resource type="Script" uid="uid://c3b1s4yuuojil" path="res://Utils/MultipleSpawner.cs" id="11_w00vb"]
 [ext_resource type="Script" uid="uid://4cf42b4lcbi2" path="res://Utils/Cover/CoverManager.cs" id="12_ibmi3"]
 [ext_resource type="Script" uid="uid://brjtytw6vmk65" path="res://Levels/TestLevel/SlowDownTime.cs" id="13_o0fu1"]
 [ext_resource type="PackedScene" uid="uid://calv4i7ej314h" path="res://Objects/Glass/glass_cover.tscn" id="14_ldbyx"]
@@ -72,6 +71,7 @@ environment = ExtResource("2_o0fu1")
 script = ExtResource("4_x033f")
 
 [node name="GameFlowController" type="Node" parent="." unique_id=1575913716]
+process_mode = 3
 script = ExtResource("5_rdbpf")
 metadata/_custom_type_script = "uid://o2jk6nlu8wud"
 
@@ -186,16 +186,6 @@ curve = SubResource("Curve3D_ibmi3")
 [node name="PathFollow3D" type="PathFollow3D" parent="Path3D" unique_id=1836038594]
 transform = Transform3D(-0.9103781, 0, -0.4137771, 0, 1, 0, 0.4137771, 0, -0.9103781, 1.1433198, 0, -5.8636556)
 
-[node name="MultipleSpawner" type="Node" parent="." unique_id=1927368872 node_paths=PackedStringArray("_parent", "_navRegion")]
-script = ExtResource("11_w00vb")
-_skipCentre = true
-_height = 0.0
-_step = 10.0
-_parent = NodePath("../NavigationRegion3D")
-_spawnedScene = ExtResource("6_o0fu1")
-_navRegion = NodePath("../NavigationRegion3D")
-metadata/_custom_type_script = "uid://c3b1s4yuuojil"
-
 [node name="SlowDownTime" type="Node" parent="." unique_id=1810494869]
 script = ExtResource("13_o0fu1")
 
@@ -213,7 +203,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.8183246, 7.0271177, 3.22702
 layers = 3
 light_energy = 10.0
 omni_range = 4096.0
-
-[node name="Camera3D" type="Camera3D" parent="." unique_id=50083542]
-process_mode = 4
-transform = Transform3D(0.0990071, 0, 0.9950867, 0, 1, 0, -0.9950867, 0, 0.0990071, 1.3404655, 0.76757145, 0)

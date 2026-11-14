@@ -17,6 +17,7 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   [Export] private RayCast3D _chestClimbCast = null!;
   [Export] private RayCast3D _climbTargetRaycast = null!;
   [Export] internal GunsWrapper Gun = null!;
+  [Export] private AudioStreamPlayer3D _gruntPlayer = null!;
 
   internal Marker3D TorsoPoint = null!;
   [Export] private Marker3D _standingTorsoPoint = null!;
@@ -48,8 +49,8 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
 
   internal bool HighClimb;
 
-  internal Vector3[] LastTorsoPos = new Vector3[10];
-  internal Vector3[] LastHeadPos = new Vector3[10];
+  internal Vector3[] LastTorsoPos = new Vector3[120];
+  internal Vector3[] LastHeadPos = new Vector3[120];
 
   private CollisionShape3D _collision = null!;
   private float _initCollisionY;
@@ -290,8 +291,16 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   public void TakeDamage(Attack attack)
   {
     _health -= attack.Damage;
+    GD.Print("You got hit!");
+    if (!_gruntPlayer.Playing)
+      _gruntPlayer.Play();
 
     if (_health <= 0f)
-      GD.Print("You Died!");
+    {
+      GD.Print("You died!");
+      GetTree().Paused = true;
+      Input.MouseMode = Input.MouseModeEnum.Visible;
+      _health = 100;
+    }
   }
 }

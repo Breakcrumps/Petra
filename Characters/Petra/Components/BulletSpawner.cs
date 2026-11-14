@@ -34,8 +34,8 @@ internal sealed partial class BulletSpawner : Node3D
     GetTree().CurrentScene.AddChild(bullet);
     bullet.GlobalPosition = GlobalPosition;
     bullet.GlobalTransform = bullet.GlobalTransform.LookingAt(target);
-    float len = (float)GD.Randfn(0, double.Pi / (24.0 * (shotsInARow + 1)));
-    float angle = GD.Randf() * Mathf.Pi;
+    float len = RandomExp(0f, Mathf.Pi / (24f * (shotsInARow + 1)));
+    float angle = GD.Randf() * Mathf.Tau;
     bullet.Rotate(Vector3.Right, Mathf.Sin(angle) * len);
     bullet.Rotate(Vector3.Up, Mathf.Cos(angle) * len);
     bullet.Speed = BulletSpeed;
@@ -46,5 +46,8 @@ internal sealed partial class BulletSpawner : Node3D
 
     Vector3 backTarget = GlobalPosition + 1.5f * bullet.GlobalBasis.Z;
     bullet.CheckCollisions(backTarget, GlobalPosition, excludedBody: Shooter, hitBackFaces: true);
+
+    static float RandomExp(float mean, float divergeance)
+      => mean - divergeance * Mathf.Log(1f - GD.Randf());
   }
 }

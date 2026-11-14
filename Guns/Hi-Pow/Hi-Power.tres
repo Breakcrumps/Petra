@@ -4,4 +4,5 @@
 
 [resource]
 script = ExtResource("3_s8dip")
+Damage = 12
 metadata/_custom_type_script = "uid://bgtvkw8450an2"
