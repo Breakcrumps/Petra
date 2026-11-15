@@ -65,7 +65,8 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
 
   [Export] private float _healStartTime = 1f;
   private float _healTimer;
-  [Export] private float _secPerHP = .5f;
+  [Export] private float _maxSecPerHeal = .5f, _minSecPerHeal = .05f;
+  private float _timeHealing, _maxTimeHealing = 1.3f;
 
   [Export] private float _staminaHealStartTime = 1f;
   private float _staminaTimer;
@@ -89,10 +90,11 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   public override void _PhysicsProcess(double delta)
   {
     _healTimer = Mathf.Max(_healTimer - (float)delta, 0f);
+    _timeHealing = Mathf.Min(_timeHealing + (float)delta, _maxTimeHealing);
     if (Health < _maxHealth && _healTimer == 0f)
     {
+      _healTimer = Mathf.Lerp(_maxSecPerHeal, _minSecPerHeal, _timeHealing / _maxTimeHealing);
       SetHealth(Mathf.Min(Health + 1, _maxHealth));
-      _healTimer = _secPerHP;
     }
 
     _staminaTimer = Mathf.Max(_staminaTimer - (float)delta, 0f);
@@ -330,6 +332,7 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
     if (!_gruntPlayer.Playing)
       _gruntPlayer.Play();
     _healTimer = _healStartTime;
+    _timeHealing = -_healStartTime;
     if (Health <= 0)
     {
       GD.Print("You died!");
