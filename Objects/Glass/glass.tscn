@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://dcs8cxa1dfsr5" path="res://Objects/Glass/Glass.glb" id="1_pyhl2"]
 [ext_resource type="Script" uid="uid://dy4tf4d8fvdlo" path="res://Utils/BulletReactors/BreakablePenetrableStaticBody.cs" id="2_hsm0q"]
 [ext_resource type="PackedScene" uid="uid://b7rebux5eb34e" path="res://Objects/Glass/GlassShards.glb" id="3_06lgc"]
+[ext_resource type="AudioStream" uid="uid://be2nmjx4jkck3" path="res://Objects/Glass/dragon-studio-glass-breaking-511313.mp3" id="4_uo1ie"]
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_x0sly"]
 data = PackedVector3Array(-0.0641, -1.5461, 1, -0.0641, 1.5461, -1, -0.0641, 1.5461, 1, -0.0641, -1.5461, 1, -0.0641, -1.5461, -1, -0.0641, 1.5461, -1, -0.0641, -1.5461, -1, 0.0641, 1.5461, -1, -0.0641, 1.5461, -1, -0.0641, -1.5461, -1, 0.0641, -1.5461, -1, 0.0641, 1.5461, -1, 0.0641, -1.5461, -1, 0.0641, 1.5461, 1, 0.0641, 1.5461, -1, 0.0641, -1.5461, -1, 0.0641, -1.5461, 1, 0.0641, 1.5461, 1, 0.0641, -1.5461, 1, -0.0641, 1.5461, 1, 0.0641, 1.5461, 1, 0.0641, -1.5461, 1, -0.0641, -1.5461, 1, -0.0641, 1.5461, 1, -0.0641, -1.5461, -1, 0.0641, -1.5461, 1, 0.0641, -1.5461, -1, -0.0641, -1.5461, -1, -0.0641, -1.5461, 1, 0.0641, -1.5461, 1, 0.0641, 1.5461, -1, -0.0641, 1.5461, 1, -0.0641, 1.5461, -1, 0.0641, 1.5461, -1, 0.0641, 1.5461, 1, -0.0641, 1.5461, 1)
@@ -21,3 +22,6 @@ transform = Transform3D(0.5, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5463015, 0)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." index="1" unique_id=616451653]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5463015, 0)
 shape = SubResource("ConcavePolygonShape3D_x0sly")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." index="2" unique_id=712690515]
+stream = ExtResource("4_uo1ie")
