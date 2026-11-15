@@ -155,6 +155,21 @@ shape = SubResource("BoxShape3D_oho3u")
 [node name="Glass" parent="NavigationRegion3D" unique_id=359522317 instance=ExtResource("8_41ogg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.795953, 0, 0)
 
+[node name="Glass4" parent="NavigationRegion3D" unique_id=1350066188 instance=ExtResource("8_41ogg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.111363, 0, 0)
+
+[node name="Glass5" parent="NavigationRegion3D" unique_id=419122914 instance=ExtResource("8_41ogg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.317761, 0, 0)
+
+[node name="Glass6" parent="NavigationRegion3D" unique_id=970460440 instance=ExtResource("8_41ogg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.12289, 0, 0)
+
+[node name="Glass7" parent="NavigationRegion3D" unique_id=385921889 instance=ExtResource("8_41ogg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.438301, 0, 0)
+
+[node name="Glass8" parent="NavigationRegion3D" unique_id=1367290059 instance=ExtResource("8_41ogg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.644699, 0, 0)
+
 [node name="Glass2" parent="NavigationRegion3D" unique_id=1913281203 instance=ExtResource("8_41ogg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4062757, 0, -4.0452933)
 

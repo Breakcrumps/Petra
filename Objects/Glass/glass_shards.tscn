@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://bmvatuasnk6rw"]
+
+[ext_resource type="PackedScene" uid="uid://b7rebux5eb34e" path="res://Objects/Glass/GlassShards.glb" id="1_vsmvc"]
+[ext_resource type="Script" uid="uid://dwvqrnv666sj3" path="res://Utils/BulletReactors/Broken.cs" id="2_qqgx1"]
+[ext_resource type="AudioStream" uid="uid://be2nmjx4jkck3" path="res://Objects/Glass/dragon-studio-glass-breaking-511313.mp3" id="3_j2r2w"]
+
+[node name="GlassShards" unique_id=25859681 node_paths=PackedStringArray("AudioPlayer") instance=ExtResource("1_vsmvc")]
+script = ExtResource("2_qqgx1")
+AudioPlayer = NodePath("AudioStreamPlayer3D")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." index="35" unique_id=1395272742]
+stream = ExtResource("3_j2r2w")

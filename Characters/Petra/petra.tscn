@@ -167,6 +167,13 @@ shape = SubResource("BoxShape3D_e2tg4")
 stream = SubResource("AudioStreamRandomizer_x1akc")
 volume_db = 3.0
 
+[node name="NegativeHealth" type="AudioStreamPlayer3D" parent="PetraCamera" unique_id=1391808697 node_paths=PackedStringArray("_petra")]
+transform = Transform3D(1, 0, -1.2492163e-08, 0, 1, 0, 1.2492163e-08, 0, 1, 0, -1.6091348, 0)
+stream = ExtResource("17_k0nmb")
+parameters/looping = true
+script = ExtResource("18_0fien")
+_petra = NodePath("../..")
+
 [node name="LeanCast" type="ShapeCast3D" parent="." unique_id=1090508407]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.609, 0)
 shape = SubResource("SphereShape3D_vmorc")
@@ -228,11 +235,6 @@ shape = SubResource("SphereShape3D_jqklc")
 script = ExtResource("13_07x6y")
 _followedNode = NodePath("../PetraCamera")
 metadata/_custom_type_script = "uid://dgxdy58uy11go"
-
-[node name="NegativeHealth" type="AudioStreamPlayer3D" parent="." unique_id=1391808697]
-stream = ExtResource("17_k0nmb")
-parameters/looping = true
-script = ExtResource("18_0fien")
 
 [node name="DropToGround" type="RayCast3D" parent="." unique_id=1736049796]
 target_position = Vector3(0, -20, 0)

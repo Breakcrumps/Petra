@@ -66,11 +66,8 @@ internal sealed partial class Bullet : Node3D
 
       Vector3 impulse = -Speed * _mass * Basis.Z;
 
-      if (collider is IPenetrable penetrable1)
-        impulse *= penetrable1.ImpulseFromBulletCoefficient;
-
       if (collider is IBreakable breakable)
-        _ = breakable.Breaker.Break(hitPos, impulse);
+        _ = breakable.GetBreaker().Break(hitPos, impulse);
       else if (collider is not CharacterBody3D)
         SpawnDecal(hitPos, _decalScene, normal, collider);
 
@@ -87,9 +84,10 @@ internal sealed partial class Bullet : Node3D
 
       if (collider is IPenetrable penetrable)
       {
-        Damage -= penetrable.DamageReduction;
+        Speed *= penetrable.GetImpulseFromBulletCoefficient();
+        Damage -= penetrable.GetDamageReduction();
 
-        if (Damage <= 0)
+        if (Damage <= 0 || Speed <= .1f)
         {
           QueueFree();
           return;
@@ -99,7 +97,7 @@ internal sealed partial class Bullet : Node3D
   
         while (true)
         {
-          var exitQuery = PhysicsRayQueryParameters3D.Create(to, hitPos);
+          PhysicsRayQueryParameters3D exitQuery = PhysicsRayQueryParameters3D.Create(to, hitPos);
           exitQuery.Exclude = exitExclude;
           Dictionary exitResult = spaceState.IntersectRay(exitQuery);
 
@@ -122,7 +120,11 @@ internal sealed partial class Bullet : Node3D
         exclude.Add(hitRid);
         from = hitPos - Basis.Z * .01f;
       }
-      else
+      
+      if (collider is PhysicsBody3D physicsBody && physicsBody.CollisionLayer == 16)
+        continue;
+
+      if (collider is not (IPenetrable or IBreakable))
       {
         QueueFree();
         return;

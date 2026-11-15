@@ -13,7 +13,7 @@ dest_files=["res://.godot/imported/GlassShards.glb-fb4952c965ca654f75d9822c66ed5
 
 [params]
 
-nodes/root_type=""
+nodes/root_type="res://Utils/BulletReactors/Broken.cs"
 nodes/root_name=""
 nodes/root_script=null
 mesh_library/use_node_names_as_mesh_names=false

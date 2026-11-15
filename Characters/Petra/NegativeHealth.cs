@@ -4,12 +4,11 @@ namespace Petra.Characters.Petra;
 
 internal sealed partial class NegativeHealth : AudioStreamPlayer3D
 {
-  private PetraChar _petra = null!;
+  [Export] private PetraChar _petra = null!;
   private Tween? _fadeTween;
 
   public override void _Ready()
   {
-    _petra = GetParent<PetraChar>();
     _petra.AdrenalineDeath += PlayPainSound;
     _petra.AdrenalineDeathAverted += ScheduleStop;
     _petra.Fallen += ScheduleStop;

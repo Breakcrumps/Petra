@@ -5,11 +5,11 @@ namespace Petra.Utils.BulletReactors;
 
 internal readonly struct Breaker
 {
-  private readonly Node3D _intact;
+  private readonly IBreakable _intact;
   private readonly PackedScene _brokenScene;
   private readonly NavigationRegion3D _navRegion;
 
-  internal Breaker(Node3D intact, PackedScene brokenScene, NavigationRegion3D navRegion)
+  internal Breaker(IBreakable intact, PackedScene brokenScene, NavigationRegion3D navRegion)
   {
     _intact = intact;
     _brokenScene = brokenScene;
@@ -18,7 +18,7 @@ internal readonly struct Breaker
 
   internal async Task Break(Vector3 hitPos, Vector3 hitImpulse)
   {
-    Node3D broken = _brokenScene.Instantiate<Node3D>();
+    Broken broken = _brokenScene.Instantiate<Broken>();
     _intact.GetTree().CurrentScene.AddChild(broken);
     broken.GlobalPosition = _intact.GlobalPosition;
     broken.GlobalRotation = _intact.GlobalRotation;
@@ -41,6 +41,7 @@ internal readonly struct Breaker
     }
 
     _intact.QueueFree();
+    broken.AudioPlayer.Play();
 
     SceneTree tree = _navRegion.GetTree();
     await _navRegion.ToSignal(tree, SceneTree.SignalName.ProcessFrame);

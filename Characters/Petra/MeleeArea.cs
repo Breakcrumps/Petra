@@ -18,7 +18,7 @@ internal sealed partial class MeleeArea : Area3D
       if (node is IDamageable damageable)
         damageable.TakeDamage(new Attack(_meleeDamage));
       if (node is IBreakable breakable)
-        _ = breakable.Breaker.Break(_collisionShape.GlobalPosition, -_collisionShape.GlobalBasis.Z);
+        _ = breakable.GetBreaker().Break(_collisionShape.GlobalPosition, -_collisionShape.GlobalBasis.Z);
     };
   }
 }
