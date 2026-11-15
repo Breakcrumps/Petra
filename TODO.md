@@ -7,6 +7,8 @@
 - [ ] The grapple hook.
 - [ ] Get animations in order.
 - [ ] NPCs lose balance when melee-d.
+- [ ] Adrenaline modifier: base tier: health regenerates in battle (speed and limit upon which it can heal are upgradable)
+and last tier give ability to withstand having negative health for ~5 seconds (accompanied by a pained sound effect)
 # Rejected
 - [-] Proper yaw calculation for shooting NPC. (Too hard - just rotated the bullet to hit the player)
 - [-] Parkour.

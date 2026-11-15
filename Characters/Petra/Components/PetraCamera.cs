@@ -36,6 +36,56 @@ internal sealed partial class PetraCamera : Camera3D
 
   private Vector3 _nextRot;
 
+  internal void Die()
+  {
+    _petra.GlobalBasis = Basis.LookingAt(-GlobalBasis.Z with { Y = 0f });
+    Rotation = Vector3.Zero;
+    SetProcessInput(false);
+
+    float fallSide = GD.Randf() > .5f ? 1f : -1f;
+    float kneelHeight = Position.Y * .3f;
+
+    Tween fovTween = CreateTween();
+    fovTween.TweenProperty(this, "fov", Fov - 5f, 2.2)
+      .SetTrans(Tween.TransitionType.Linear)
+      .SetEase(Tween.EaseType.In);
+
+    Tween tween = CreateTween();
+    tween.SetParallel(true);
+
+    tween.TweenProperty(this, "position:y", kneelHeight, .4)
+      .SetTrans(Tween.TransitionType.Quad)
+      .SetEase(Tween.EaseType.In);
+
+    tween.TweenProperty(this, "rotation_degrees:x", -25f, .4)
+      .SetTrans(Tween.TransitionType.Quad)
+      .SetEase(Tween.EaseType.In);
+
+    tween.TweenProperty(this, "rotation_degrees:z", 12f * fallSide, .4)
+      .SetTrans(Tween.TransitionType.Sine)
+      .SetEase(Tween.EaseType.InOut);
+
+    tween.TweenInterval(.2);
+
+    tween.Chain().TweenProperty(this, "position:y", kneelHeight + .08f, .9)
+      .SetTrans(Tween.TransitionType.Linear);
+    tween.TweenProperty(this, "rotation_degrees:z", 10f * fallSide, .9);
+
+    tween.Chain().TweenProperty(this, "position:y", .1f, .7)
+      .SetTrans(Tween.TransitionType.Bounce)
+      .SetEase(Tween.EaseType.Out);
+
+    tween.TweenProperty(this, "rotation_degrees:z", 80f * fallSide, .55)
+      .SetTrans(Tween.TransitionType.Cubic)
+      .SetEase(Tween.EaseType.In);
+
+    tween.TweenProperty(this, "rotation_degrees:x", 5f, .55)
+      .SetTrans(Tween.TransitionType.Quad)
+      .SetEase(Tween.EaseType.In);
+
+    tween.Chain().TweenCallback(Callable.From(() => _petra.Fallen?.Invoke()));
+  }
+
   public override void _Ready()
   {
     Input.MouseMode = Input.MouseModeEnum.Captured;
@@ -59,6 +109,9 @@ internal sealed partial class PetraCamera : Camera3D
 
   public override void _PhysicsProcess(double delta)
   {
+    if (_petra.CurrentState is PetraChar.PetraState.Dead)
+      return;
+    
     Rotation = _nextRot;
 
     switch (_petra.CurrentState)
@@ -118,24 +171,4 @@ internal sealed partial class PetraCamera : Camera3D
       _posWithoutBob = defaultPos;
     }
   }
-
-  // internal void Climb(float duration, float deltaY)
-  // {
-  //   _climbing = true;
-  //   Tween tween = (
-  //     CreateTween().SetTrans(Tween.TransitionType.Linear)
-  //     .SetEase(Tween.EaseType.In)
-  //     .SetProcessMode(Tween.TweenProcessMode.Idle)
-  //   );
-  //   tween.TweenMethod(Callable.From<float>(t =>
-  //   {
-  //     float u = 1 - t;
-  //     Position = (u * u + t * t) * _defaultPos + 2f * u * t * _climbMarker.Position;
-  //     if (deltaY < 1f)
-  //       Position += .2f * u * t * Basis.X;
-  //     GunCamera.GlobalPosition = GlobalPosition;
-  //     GunCamera.Rotation = Rotation;
-  //   }), 0f, 1f, duration);
-  //   tween.TweenCallback(Callable.From(() => _climbing = false));
-  // }
 }

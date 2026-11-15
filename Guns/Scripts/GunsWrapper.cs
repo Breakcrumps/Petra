@@ -164,6 +164,9 @@ internal sealed partial class GunsWrapper : Node3D
 
   public override void _PhysicsProcess(double delta)
   {
+    if (_petra.CurrentState is PetraChar.PetraState.Dead)
+      return;
+    
     if (Input.IsActionJustPressed("Weapon1"))
       TryLoadData(idx: 0);
     else if (Input.IsActionJustPressed("Weapon2"))

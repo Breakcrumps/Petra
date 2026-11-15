@@ -37,7 +37,12 @@ internal sealed partial class NewEnemy : CharacterBody3D, IDamageable
     _neckLA.Influence = 0f;
     _gun.ReactionTime = _reactionTime;
     _health = _maxHealth;
+
+    GlobalInstances.Petra.Died += StopBattle;
   }
+
+  public override void _ExitTree()
+    => GlobalInstances.Petra.Died -= StopBattle;
 
   public override void _PhysicsProcess(double delta)
   {
@@ -117,9 +122,7 @@ internal sealed partial class NewEnemy : CharacterBody3D, IDamageable
     {
       if (_health <= 0f)
       {
-        _animPlayer.Play("Idle");
-        _torsoLA.Active = false;
-        _lookAtMode = LookAtMode.HeadOnly;
+        StopBattle();
         _dead = true;
       }
       return;
@@ -142,5 +145,12 @@ internal sealed partial class NewEnemy : CharacterBody3D, IDamageable
     _lookAtMode = LookAtMode.Aim;
     _torsoLA.Active = true;
     _alertArea.Alert();
+  }
+
+  private void StopBattle()
+  {
+    _animPlayer.Play("Idle");
+    _torsoLA.Active = false;
+    _lookAtMode = LookAtMode.HeadOnly;
   }
 }

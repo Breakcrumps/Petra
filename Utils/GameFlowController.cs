@@ -1,4 +1,5 @@
 using Godot;
+using Petra.Static;
 
 namespace Petra.Utils;
 
@@ -10,6 +11,8 @@ internal sealed partial class GameFlowController : Node
 
   public override void _PhysicsProcess(double delta)
   {
+    if (GlobalInstances.Petra.CurrentState is Characters.Petra.PetraChar.PetraState.Dead)
+      return;
     bool paused = GetTree().Paused;
     if (Input.IsActionJustPressed("Pause"))
     {
