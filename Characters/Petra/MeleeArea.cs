@@ -5,7 +5,7 @@ using Petra.Utils.BulletReactors;
 
 internal sealed partial class MeleeArea : Area3D
 {
-  [Export] private int _meleeDamage = 5;
+  [Export] private int _meleeDamage = 70;
 
   private CollisionShape3D _collisionShape = null!;
   

@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://o60q6hb8u1q0"]
+
+[ext_resource type="Script" uid="uid://cprrbgvfryw3m" path="res://Ui/StatLabel.cs" id="1_qqq2s"]
+
+[node name="CanvasLayer" type="CanvasLayer" unique_id=850892734]
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=64146156]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="Health" type="Label" parent="MarginContainer" unique_id=1024827296]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme_override_font_sizes/font_size = 100
+text = "100"
+script = ExtResource("1_qqq2s")
+
+[node name="Stamina" type="Label" parent="MarginContainer" unique_id=2103609672]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme_override_font_sizes/font_size = 100
+script = ExtResource("1_qqq2s")
+_stat = 1

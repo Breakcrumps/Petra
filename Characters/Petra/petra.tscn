@@ -115,11 +115,10 @@ collision_mask = 4
 [node name="MuzzleFlash" type="OmniLight3D" parent="PetraCamera" unique_id=471840539]
 light_color = Color(1, 0.8618757, 0.5293186, 1)
 
-[node name="GunsWrapper" type="Node3D" parent="PetraCamera" unique_id=1445379131 node_paths=PackedStringArray("_mainGunContainer", "_mainCamera", "_bulletSpawner", "_meleeCollision", "_shotSoundPlayer", "_slideForwardSoundPlayer", "_petra", "_camera", "_gunRay", "_muzzleFlash")]
+[node name="GunsWrapper" type="Node3D" parent="PetraCamera" unique_id=1445379131 node_paths=PackedStringArray("_mainGunContainer", "_bulletSpawner", "_meleeCollision", "_shotSoundPlayer", "_slideForwardSoundPlayer", "_petra", "_camera", "_gunRay", "_muzzleFlash")]
 transform = Transform3D(0.99939084, 0, -0.034899496, 0, 1, 0, 0.034899496, 0, 0.99939084, 0.18306011, -0.34994566, -0.58030695)
 script = ExtResource("8_ya1fb")
 _mainGunContainer = NodePath("../../SubViewportContainer")
-_mainCamera = NodePath("..")
 _gunScene1 = ExtResource("5_6be6t")
 _bulletSpawner = NodePath("BulletSpawner")
 _meleeCollision = NodePath("../MeleeArea/CollisionShape3D")
@@ -132,6 +131,7 @@ _smokeScene = ExtResource("6_522tq")
 _sparksScene = ExtResource("7_ya1fb")
 _muzzleFlashImage = ExtResource("8_la8vp")
 _muzzleFlash = NodePath("../MuzzleFlash")
+_hipConvergence = true
 
 [node name="BulletSpawner" type="Node3D" parent="PetraCamera/GunsWrapper" unique_id=754845921]
 script = ExtResource("5_wx6ak")

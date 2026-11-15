@@ -6,6 +6,7 @@
 - [ ] Ragdoll for NPC.
 - [ ] The grapple hook.
 - [ ] Get animations in order.
+- [ ] NPCs lose balance when melee-d.
 # Rejected
 - [-] Proper yaw calculation for shooting NPC. (Too hard - just rotated the bullet to hit the player)
 - [-] Parkour.

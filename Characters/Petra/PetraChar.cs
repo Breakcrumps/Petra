@@ -1,3 +1,4 @@
+using System;
 using Godot;
 using Petra.Characters.Petra.Components;
 using Petra.Objects.Guns.Scripts;
@@ -8,6 +9,9 @@ namespace Petra.Characters.Petra;
 
 internal sealed partial class PetraChar : CharacterBody3D, IDamageable
 {
+  internal event Action<int>? HealthChanged;
+  internal event Action<float>? StaminaChanged;
+  
   internal enum PetraState { Idle, Running, Crouching, Sliding }
   internal PetraState CurrentState;
 
@@ -25,7 +29,10 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   [Export] internal Marker3D HeadPoint = null!;
 
   [Export] private int _maxHealth = 100;
-  private int _health;
+  internal int Health;
+  [Export] private float _maxStamina = 100f;
+  internal float Stamina;
+  [Export] private float _staminaSpendRate = 25f;
   
   [Export] private float _walkSpeed = 5f;
   [Export] private float _runSpeed = 9f;
@@ -56,12 +63,23 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   private float _initCollisionY;
   private float _initCollisionHeight;
 
+  [Export] private float _healStartTime = 1f;
+  private float _healTimer;
+  [Export] private float _secPerHP = .5f;
+
+  [Export] private float _staminaHealStartTime = 1f;
+  private float _staminaTimer;
+  [Export] private float _staminaReplenishRate = 35f;
+
   public override void _EnterTree()
-    => GlobalInstances.Petra = this;
+  {
+    GlobalInstances.Petra = this;
+    Health = _maxHealth;
+    Stamina = _maxStamina;
+  }
 
   public override void _Ready()
   {
-    _health = _maxHealth;
     _climbTargetRaycast.Enabled = false;
     _collision = GetNode<CollisionShape3D>("CollisionShape3D");
     _initCollisionY = _collision.Position.Y;
@@ -69,7 +87,18 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
   }
   
   public override void _PhysicsProcess(double delta)
-  {    
+  {
+    _healTimer = Mathf.Max(_healTimer - (float)delta, 0f);
+    if (Health < _maxHealth && _healTimer == 0f)
+    {
+      SetHealth(Mathf.Min(Health + 1, _maxHealth));
+      _healTimer = _secPerHP;
+    }
+
+    _staminaTimer = Mathf.Max(_staminaTimer - (float)delta, 0f);
+    if (Stamina < _maxStamina && _staminaTimer == 0f)
+      SetStamina(Mathf.Min(Stamina + _staminaReplenishRate * (float)delta, _maxStamina));
+    
     _chestClimbCast.TargetPosition = -_camera.Basis.Z with { Y = 0f };
     _hipsClimbCast.TargetPosition = -_camera.Basis.Z with { Y = 0f };
 
@@ -193,6 +222,12 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
       TimeMoving += (float)delta;
     else
       TimeMoving = 0f;
+
+    if (CurrentState is PetraState.Running)
+    {
+      SetStamina(Mathf.Max(Stamina - _staminaSpendRate * (float)delta, 0f));
+      _staminaTimer = _staminaHealStartTime;
+    }
   }
 
   private void HandleSlide(double delta)
@@ -242,7 +277,7 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
 
   private void HandleIdleTransitions()
   {
-    if (Input.IsActionPressed("Run") && Velocity != Vector3.Zero)
+    if (Input.IsActionPressed("Run") && Velocity != Vector3.Zero && Stamina > 0f)
       CurrentState = PetraState.Running;
     else if (Input.IsActionJustPressed("Crouch"))
       CurrentState = PetraState.Crouching;
@@ -251,7 +286,7 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
 
   private void HandleCrouchTransitions()
   {
-    if (Input.IsActionPressed("Run") && Velocity != Vector3.Zero && IsOnFloor())
+    if (Input.IsActionPressed("Run") && Velocity != Vector3.Zero && IsOnFloor() && Stamina > 0f)
       CurrentState = PetraState.Running;
     else if (Input.IsActionJustPressed("Crouch"))
       CurrentState = PetraState.Idle;
@@ -267,7 +302,7 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
       if (Velocity == Vector3.Zero || !IsOnFloor())
         CurrentState = PetraState.Crouching;
     }
-    if (!Input.IsActionPressed("Run") || Velocity == Vector3.Zero)
+    if (!Input.IsActionPressed("Run") || Velocity == Vector3.Zero || Stamina <= 0f)
       CurrentState = PetraState.Idle;
   }
 
@@ -290,17 +325,28 @@ internal sealed partial class PetraChar : CharacterBody3D, IDamageable
 
   public void TakeDamage(Attack attack)
   {
-    _health -= attack.Damage;
+    SetHealth(Mathf.Max(Health - attack.Damage, 0));
     GD.Print("You got hit!");
     if (!_gruntPlayer.Playing)
       _gruntPlayer.Play();
-
-    if (_health <= 0f)
+    _healTimer = _healStartTime;
+    if (Health <= 0)
     {
       GD.Print("You died!");
       GetTree().Paused = true;
       Input.MouseMode = Input.MouseModeEnum.Visible;
-      _health = 100;
+      SetHealth(100);
     }
+  }
+
+  private void SetHealth(int health)
+  {
+    Health = health;
+    HealthChanged?.Invoke(Health);
+  }
+  private void SetStamina(float stamina)
+  {
+    Stamina = stamina;
+    StaminaChanged?.Invoke(Stamina);
   }
 }

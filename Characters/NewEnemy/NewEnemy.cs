@@ -24,6 +24,8 @@ internal sealed partial class NewEnemy : CharacterBody3D, IDamageable
   [Export] private EnemyGunNode _gun = null!;
   [Export] private AlertArea _alertArea = null!;
 
+  private float _shootTimer;
+
   private bool _dead;
 
   public override void _Ready()
@@ -57,13 +59,15 @@ internal sealed partial class NewEnemy : CharacterBody3D, IDamageable
   {
     _torsoTarget.GlobalPosition = GlobalInstances.Petra.HeadPoint.GlobalPosition;
     _neckTarget.GlobalPosition = GlobalInstances.Petra.HeadPoint.GlobalPosition;
+    _shootTimer = Mathf.Max(_shootTimer - deltaF, 0f);
 
     if (
       _animPlayer.CurrentAnimation != "Shoot" && _animPlayer.CurrentAnimation != "Draw"
-      && _gun.CartridgesChambered != 0 && _torsoLA.Influence >= .95f
+      && _gun.CartridgesChambered != 0 && _torsoLA.Influence >= .95f && _shootTimer == 0f
     )
     {
       _animPlayer.Play("Shoot");
+      _shootTimer = (float)_animPlayer.GetAnimation("Shoot").Length + GD.Randf() * .2f;
     }
     if (_gun.CartridgesChambered == 0)
     {
@@ -120,17 +124,19 @@ internal sealed partial class NewEnemy : CharacterBody3D, IDamageable
       }
       return;
     }
-    _animPlayer.Play("Draw");
-    _gun.AnimPlayer.Play("Cock");
-    _lookAtMode = LookAtMode.Aim;
-    _torsoLA.Active = true;
-    _alertArea.Alert();
+    InitBattle();
   }
 
-  internal void Alert()
+  internal async void Alert()
   {
     if (_dead || _lookAtMode is LookAtMode.Aim)
       return;
+    await ToSignal(GetTree().CreateTimer(_reactionTime), SceneTreeTimer.SignalName.Timeout);
+    InitBattle();
+  }
+
+  private void InitBattle()
+  {
     _animPlayer.Play("Draw");
     _gun.AnimPlayer.Play("Cock");
     _lookAtMode = LookAtMode.Aim;

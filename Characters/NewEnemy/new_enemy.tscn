@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://b6rqr16swak2d" path="res://Characters/NewEnemy/NewEnemyAnimPlayer.cs" id="3_mrahi"]
 [ext_resource type="PackedScene" uid="uid://cnkikshw6uwnv" path="res://Guns/Hi-Pow/hi_pow.tscn" id="3_u2x8w"]
 [ext_resource type="Script" uid="uid://3th44eg70slx" path="res://Characters/NewEnemy/AlertArea.cs" id="6_020a7"]
+[ext_resource type="PackedScene" uid="uid://o60q6hb8u1q0" path="res://Ui/ui.tscn" id="7_f506c"]
 [ext_resource type="AudioStream" uid="uid://df13o2w85sl5" path="res://Guns/melbeebelbee-gun-slide-forward-384508.mp3" id="7_qx8aj"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u4j2d"]
@@ -176,3 +177,5 @@ script = ExtResource("6_020a7")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" index="0" unique_id=2129624462]
 shape = SubResource("SphereShape3D_e2tg4")
+
+[node name="Control" parent="." index="9" unique_id=90036103 instance=ExtResource("7_f506c")]
